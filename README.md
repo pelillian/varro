@@ -1,2 +1,2 @@
 # fpga-evolution
-Can FPGAs be used as universal function approximators, just like neural networks?
+If FPGAs are universal function approximators, can they be used like neural networks?
