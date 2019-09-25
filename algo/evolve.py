@@ -2,11 +2,11 @@
 This module contains the main evolution loop.
 """
 
-import fpga
+from fpga.flash import flash_ecp5
 
 
 def main():
-    pass
+    flash_ecp5(None)
 
 if __name__ == "__main__":
     main()
