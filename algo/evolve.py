@@ -1,5 +1,5 @@
 """
-This module contains the main evolution loop.
+This module implements an evolutionary strategies algorithm.
 """
 
 from fpga.flash import flash_ecp5
