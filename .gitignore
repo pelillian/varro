@@ -123,3 +123,7 @@ tags
 # Persistent undo
 [._]*.un~
 
+# FPGA
+*.bit
+*.svf
+
