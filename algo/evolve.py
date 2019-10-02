@@ -6,12 +6,13 @@ This module implements an evolutionary strategies algorithm.
 # LIBRARIES #
 #############
 
-from fpga.flash import flash_ecp5
+# from fpga.flash import flash_ecp5
 from utilities import get_args, evaluate
 
 import argparse
 import numpy as np
 import random
+import functools
 from tqdm import tqdm
 from deap import base, creator, tools
 from array import array # Use this if speed is an issue
@@ -90,6 +91,24 @@ toolbox.register("evaluate",
 # MAIN FUNCTION #
 #################
 def main():
+    '''
+    Function:
+    ---------
+    Evolves weights of neural network to approximate
+    a function
+    
+    Parameters:
+    -----------
+    None.
+    
+    Returns:
+    --------
+    Population of the fittest individuals so far and a list
+    of the average fitness scores for each generation
+    '''
+    
+    # Get the Arguments parsed from file execution
+    args = get_args()
     
     # Initialize random population
     pop = toolbox.population(n=50)
@@ -97,15 +116,22 @@ def main():
     # Initialize Cross-over probability 
     # for offspring, mutation probability,
     # and number of generations to run algo
-    CXPB, MUTPB, NGEN = 0.5, 0.2, 40
+    CXPB, MUTPB, NGEN = args.cxpb, args.mutpb, args.ngen
+      
+    # Function to approximate
+    FUNC_TO_APPROX = args.func
+    
+    # Track the Average fitness scores
+    avg_fitness_scores = []
 
     # Evaluate the entire population
-    fitnesses = map(toolbox.evaluate, pop)
+    fitnesses = map(functools.partial(toolbox.evaluate, function=FUNC_TO_APPROX), pop)
+    avg_fitness_scores.append(np.mean([fitness_score for fitness in fitnesses for fitness_score in fitness]))
     for ind, fit in zip(pop, fitnesses):
         ind.fitness.values = fit
 
     # Iterate for generations
-    for g in range(NGEN):
+    for g in tqdm(range(NGEN)):
         
         # Select the next generation individuals
         offspring = toolbox.select(pop, len(pop))
@@ -143,15 +169,25 @@ def main():
                 del mutant.fitness.values
 
         # Evaluate the individuals with an invalid fitness
+        # (These are the individuals that have been mutated
+        # or the offspring after crossover with fitness deleted)
         invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
         fitnesses = map(toolbox.evaluate, invalid_ind)
         for ind, fit in zip(invalid_ind, fitnesses):
             ind.fitness.values = fit
-
+        
+        # Compute Average fitness score of generation
+        valid_ind = [ind for ind in offspring if ind.fitness.valid]
+        avg_fitness_scores.append(np.mean([fitness_score for fitness in list(fitnesses) + list(map(toolbox.evaluate, valid_ind)) for fitness_score in fitness]))
+        
         # The population is entirely replaced by the offspring
         pop[:] = offspring
-
-    return pop
+     
+    # Print Average Fitness Scores
+    for idx, avg_fitness_score in enumerate(avg_fitness_scores):
+        print('Generation {} Avg. Fitness Score: {}'.format(idx, avg_fitness_score))
+        
+    return pop, avg_fitness_scores
 
 if __name__ == "__main__":
     main()

@@ -2,6 +2,19 @@
 This module stores the utility functions to be used for the evolutionary algorithms.
 """
 
+#############
+# LIBRARIES #
+#############
+
+import argparse
+import numpy as np
+import random
+import functools
+from tqdm import tqdm
+from deap import base, creator, tools
+from array import array # Use this if speed is an issue
+from collections import defaultdict
+
 def get_args():
     '''
     Function:
@@ -22,21 +35,33 @@ def get_args():
         description='Evolves weights of neural network to approximate a function'
     )
     parser.add_argument('--cxpb',
+                        default=0.5,
+                        const=0.5,
+                        nargs='?',
                         metavar='CROSSOVER-PROBABILITY', 
                         action='store', 
                         help='Set the Cross-over probability for offspring', 
                         type=float)
-    parser.add_argument('--mutpb', 
+    parser.add_argument('--mutpb',
+                        default=0.2,
+                        const=0.2,
+                        nargs='?',
                         metavar='MUTATION-PROBABILITY', 
                         action='store', 
                         help='Set the Mutation probability', 
                         type=float)
     parser.add_argument('--ngen', 
+                        default=40,
+                        const=40,
+                        nargs='?',
                         metavar='NUMBER-OF-GENERATIONS', 
                         action='store', 
                         help='Set the Number of Generations to evolve the weights of neural net', 
                         type=float)
     parser.add_argument('--func', 
+                        default='sinx',
+                        const='sinx',
+                        nargs='?',
                         metavar='FUNCTION-TO-APPROXIMATE', 
                         action='store', 
                         choices=['x', 'sinx', 'cosx', 'tanx'], 
