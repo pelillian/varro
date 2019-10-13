@@ -92,21 +92,34 @@ def evaluate(individual, function=np.sin):
     --------
     A single scalar of the Mean Squared Error, representing fitness of the individual
     '''
-    ###################################
-    # TODO: Chris taking care of this #
-    ###################################
-    
-    # FUTURE:
-    # flash_ecp5(None)
-    training_set = np.random.randint(-1000, 1000, 500) 
-    correct_outputs = (np.sin(number) for number in training_set)
+
+    #Our neural net
     model = Sequential() 
     model.add(Dense(1, input_dim=1, activation='relu'))
     model.add(Dense(3, activation='relu'))
     model.add(Dense(2, activation='relu'))
     model.add(Dense(1, activation='sigmoid'))
-    model.set_weights(individual)
-    neural_func = model.predict(training_set)
-    mse = (np.square(correct_outputs - neural_func)).mean(axis=ax)
     
-    return (mse)
+    #TODO: build a suitable training set of examples for the neural net to test on 
+    training_set = np.random.randint(-1000, 1000, 500) 
+    correct_outputs = [function(number) for number in training_set]
+    
+    def load_weights(ind, model):
+        ind_idx = 0
+        result = []
+        for idx, x in enumerate(res):
+            if idx % 2:
+                result.append(x)
+            else: 
+                num_weights_taken = x.shape[0]*x.shape[1]
+                result.append(ind[ind_idx:ind_idx+num_weights_taken].reshape(x.shape))
+                ind_idx += num_weights_taken
+        
+        # Set Weights using individual
+        model.set_weights(result)
+        neural_func = model.predict(training_set)
+        mse = np.square(correct_outputs - neural_func).mean()
+               
+        return mse
+
+    return load_weights(individual, model)
