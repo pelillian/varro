@@ -98,6 +98,8 @@ def evaluate(individual, function=np.sin):
     
     # FUTURE:
     # flash_ecp5(None)
+    training_set = np.random.randint(-1000, 1000, 500) 
+    correct_outputs = (np.sin(number) for number in training_set)
     model = Sequential() 
     model.add(Dense(1, input_dim=1, activation='relu'))
     model.add(Dense(3, activation='relu'))
