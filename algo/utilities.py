@@ -5,7 +5,10 @@ This module stores the utility functions to be used for the evolutionary algorit
 #############
 # LIBRARIES #
 #############
-
+import keras 
+import random 
+from keras.layers import Dense, Activation
+from keras.models import Sequential
 import argparse
 import numpy as np
 import random
@@ -95,6 +98,15 @@ def evaluate(individual, function=np.sin):
     
     # FUTURE:
     # flash_ecp5(None)
+    training_set = np.random.randint(-1000, 1000, 500) 
+    correct_outputs = (np.sin(number) for number in training_set)
+    model = Sequential() 
+    model.add(Dense(1, input_dim=1, activation='relu'))
+    model.add(Dense(3, activation='relu'))
+    model.add(Dense(2, activation='relu'))
+    model.add(Dense(1, activation='sigmoid'))
+    model.set_weights(individual)
+    neural_func = model.predict(training_set)
+    mse = (np.square(correct_outputs - neural_func)).mean(axis=ax)
     
-    fitness = np.sum(individual)
-    return (fitness,)
+    return (mse)
