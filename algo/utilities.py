@@ -73,7 +73,7 @@ def get_args():
     
     return settings
 
-def evaluate_neural network(individual, function=np.sin):
+def evaluate_neural_network(individual, function=np.sin):
     '''
     Function:
     ---------
