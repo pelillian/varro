@@ -125,7 +125,6 @@ def main():
     avg_fitness_scores = []
 
     # Evaluate the entire population
-    import pdb; pdb.set_trace()
     fitnesses = map(functools.partial(toolbox.evaluate, function=FUNC_TO_APPROX), pop)
     avg_fitness_scores.append(np.mean([fitness_score for fitness in fitnesses for fitness_score in fitness]))
     for ind, fit in zip(pop, fitnesses):
