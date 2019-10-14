@@ -73,7 +73,7 @@ def get_args():
     
     return settings
 
-def evaluate_fpga(individual, function=np.sin):
+def evaluate_neural network(individual, function=np.sin):
     '''
     Function:
     ---------
@@ -123,3 +123,6 @@ def evaluate_fpga(individual, function=np.sin):
         return mse
 
     return load_weights(individual, model)
+
+def evaluate_fpga(): 
+    #TODO: evaluate FPGA board 
