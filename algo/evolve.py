@@ -2,21 +2,16 @@
 This module implements an evolutionary strategies algorithm.
 """
 
-#############
-# LIBRARIES #
-#############
+from algo.util import get_args
+from algo.nn_evolve import evaluate_neural_network
 
-# from fpga.flash import flash_ecp5
-from algo.util import get_args, evaluate_neural_network
-
-import argparse
 import numpy as np
 import random
 import functools
 from tqdm import tqdm
 from deap import base, creator, tools
-from array import array # Use this if speed is an issue
-from collections import defaultdict
+#from array import array # Use this if speed is an issue
+
 
 ##################
 # INITIALIZATION #
@@ -91,6 +86,13 @@ toolbox.register("evaluate",
 # MAIN FUNCTION #
 #################
 def main():
+    # Get the Arguments parsed from file execution
+    args = get_args()
+
+    evolve(args.cxpb, args.mutpb, args.ngen, args.func)
+
+
+def evolve(crossover_prob, mutation_prob, num_generations, func):
     '''
     Function:
     ---------
@@ -99,7 +101,10 @@ def main():
     
     Parameters:
     -----------
-    None.
+    crossover_prob: Crossover probability
+    mutation_prob: Mutation probability
+    num_generations: Number of generations to run algorithm
+    func: The function to approximate
     
     Returns:
     --------
@@ -107,31 +112,20 @@ def main():
     of the average fitness scores for each generation
     '''
     
-    # Get the Arguments parsed from file execution
-    args = get_args()
-    
     # Initialize random population
     pop = toolbox.population(n=50)
-    
-    # Initialize Cross-over probability 
-    # for offspring, mutation probability,
-    # and number of generations to run algo
-    CXPB, MUTPB, NGEN = args.cxpb, args.mutpb, args.ngen
-      
-    # Function to approximate
-    FUNC_TO_APPROX = args.func
     
     # Track the Average fitness scores
     avg_fitness_scores = []
 
     # Evaluate the entire population
-    fitnesses = map(functools.partial(toolbox.evaluate, function=FUNC_TO_APPROX), pop)
+    fitnesses = map(functools.partial(toolbox.evaluate, function=func), pop)
     avg_fitness_scores.append(np.mean([fitness_score for fitness in fitnesses for fitness_score in fitness]))
     for ind, fit in zip(pop, fitnesses):
         ind.fitness.values = fit
 
     # Iterate for generations
-    for g in tqdm(range(NGEN)):
+    for g in tqdm(range(num_generations)):
         
         # Select the next generation individuals
         offspring = toolbox.select(pop, len(pop))
@@ -145,7 +139,7 @@ def main():
         # we are doing 2-point crossover between
         # ind1, ind3 and ind2, ind4
         for child1, child2 in zip(offspring[::2], offspring[1::2]):
-            if random.random() < CXPB:
+            if random.random() < crossover_prob:
                 
                 # Crossover
                 toolbox.mate(child1, child2)
@@ -158,7 +152,7 @@ def main():
 
         # Apply mutation on the offspring
         for mutant in offspring:
-            if random.random() < MUTPB:
+            if random.random() < mutation_prob:
                 
                 # Mutate
                 toolbox.mutate(mutant)
