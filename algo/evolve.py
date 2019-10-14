@@ -7,7 +7,7 @@ This module implements an evolutionary strategies algorithm.
 #############
 
 # from fpga.flash import flash_ecp5
-from utilities import get_args, evaluate
+from algo.util import get_args, evaluate_neural_network
 
 import argparse
 import numpy as np
@@ -85,7 +85,7 @@ toolbox.register("select",
 # we will use for calculating the fitness of
 # an individual
 toolbox.register("evaluate", 
-                 evaluate)
+                 evaluate_neural_network)
 
 #################
 # MAIN FUNCTION #
@@ -125,6 +125,7 @@ def main():
     avg_fitness_scores = []
 
     # Evaluate the entire population
+    import pdb; pdb.set_trace()
     fitnesses = map(functools.partial(toolbox.evaluate, function=FUNC_TO_APPROX), pop)
     avg_fitness_scores.append(np.mean([fitness_score for fitness in fitnesses for fitness_score in fitness]))
     for ind, fit in zip(pop, fitnesses):
