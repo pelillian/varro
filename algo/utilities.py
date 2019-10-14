@@ -73,7 +73,7 @@ def get_args():
     
     return settings
 
-def evaluate(individual, function=np.sin):
+def evaluate_fpga(individual, function=np.sin):
     '''
     Function:
     ---------
