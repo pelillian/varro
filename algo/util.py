@@ -77,7 +77,3 @@ def get_args():
     return settings
 
 
-def evaluate_fpga(): 
-    #TODO: evaluate FPGA board 
-    pass
-
