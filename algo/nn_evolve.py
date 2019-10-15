@@ -19,7 +19,7 @@ def evaluate_neural_network(individual, function=np.sin):
         function: Function to be approximated by neural net
     
     Returns:
-        A single scalar of the Mean Squared Error, representing fitness of the individual
+        An np.ndarray of the fitness score(s) of the individual
 
     """
     #Our neural net
@@ -33,15 +33,27 @@ def evaluate_neural_network(individual, function=np.sin):
     training_set = np.random.randint(-1000, 1000, 500) 
     correct_outputs = [function(number) for number in training_set]
     
-    def load_weights(ind, model):
+    def load_weights(individual, model):
+        """
+
+        Args:
+            individual: An individual (represented by an np.ndarray of floats) 
+                - e.g. [0.93, 0.85, 0.24, ..., 0.19], ...}
+
+            function: Reshapes individuals to weights of a neural net
+
+        Returns:
+            An np.ndarray of the fitness score(s) of the individual
+                - e.g. [Mean Squared Error]
+        """
         ind_idx = 0
         result = []
-        for idx, x in enumerate(res):
+        for idx, x in enumerate(model.get_weights()):
             if idx % 2:
                 result.append(x)
             else: 
                 num_weights_taken = x.shape[0]*x.shape[1]
-                result.append(ind[ind_idx:ind_idx+num_weights_taken].reshape(x.shape))
+                result.append(individual[ind_idx:ind_idx+num_weights_taken].reshape(x.shape))
                 ind_idx += num_weights_taken
         
         # Set Weights using individual
@@ -49,6 +61,6 @@ def evaluate_neural_network(individual, function=np.sin):
         neural_func = model.predict(training_set)
         mse = np.square(correct_outputs - neural_func).mean()
                
-        return mse
+        return np.array([mse])
 
     return load_weights(individual, model)

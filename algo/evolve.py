@@ -2,26 +2,34 @@
 This module implements an evolutionary strategies algorithm.
 """
 
-from algo.util import get_args
-from algo.nn_evolve import evaluate_neural_network
+from util import get_args
+from nn_evolve import evaluate_neural_network
 
+import logging
+from pathlib import Path
 import numpy as np
 import random
 import functools
 from tqdm import tqdm
 from deap import base, creator, tools
-#from array import array # Use this if speed is an issue
+from functools import partial
+# from array import array # Use this if speed is an issue
 
 
 #################
 # MAIN FUNCTION #
 #################
 def main():
+
+    # Initialize logger
+    logger = logging.getLogger(__name__)
+
     # Get the Arguments parsed from file execution
     args = get_args()
 
     toolbox = init(args.isize)
 
+    logger.info('Start Evolution ...')
     evolve(toolbox=toolbox,
            crossover_prob=args.cxpb,
            mutation_prob=args.mutpb,
@@ -52,9 +60,9 @@ def init(individual_size):
     creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
 
     # Define a Class called Individual to inherit from
-    # list and has a fitness attribute
+    # array and has a fitness attribute
     # = creator.FitnessMin
-    creator.create("Individual", list, fitness=creator.FitnessMin)
+    creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
 
     # Initialzie Toolbox
     toolbox = base.Toolbox()
@@ -121,14 +129,27 @@ def evolve(toolbox, crossover_prob, mutation_prob, num_generations, func):
         avg_fitness_scores: A list of the average fitness scores for each generation
 
     """
+    # Get logger
+    logger = logging.getLogger(__name__)
+
     # Initialize random population
     pop = toolbox.population(n=50)
     
     # Track the Average fitness scores
     avg_fitness_scores = []
 
+    # Choose function
+    if func == 'sinx':
+        func_to_approx = np.sin
+    elif func == 'cosx':
+        func_to_approx = np.cos
+    elif func == 'tanx':
+        func_to_approx = np.tan
+    else:
+        func_to_approx = lambda x: x
+
     # Evaluate the entire population
-    fitnesses = map(functools.partial(toolbox.evaluate, function=func), pop)
+    fitnesses = map(functools.partial(toolbox.evaluate, function=func_to_approx), pop)
     avg_fitness_scores.append(np.mean([fitness_score for fitness in fitnesses for fitness_score in fitness]))
     for ind, fit in zip(pop, fitnesses):
         ind.fitness.values = fit
@@ -188,10 +209,21 @@ def evolve(toolbox, crossover_prob, mutation_prob, num_generations, func):
      
     # Print Average Fitness Scores
     for idx, avg_fitness_score in enumerate(avg_fitness_scores):
-        print('Generation {} Avg. Fitness Score: {}'.format(idx, avg_fitness_score))
+        logger.info('Generation {} Avg. Fitness Score: {}'.format(idx, avg_fitness_score))
         
     return pop, avg_fitness_scores
 
 if __name__ == "__main__":
+
+    # Set Logging configuration
+    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    logging.basicConfig(level=logging.INFO, 
+                        filename='logs/nn_evolve.log', 
+                        filemode='w', 
+                        format=log_fmt)
+
+    # not used in this stub but often useful for finding various files
+    project_dir = Path(__file__).resolve().parents[2]
+
     main()
 
