@@ -4,6 +4,9 @@ This module handles communication of data to the FPGA once it has already been f
 
 import os
 import flash
+import pytrellis
+
+pytrellis.load_database("~/Git/prjtrellis-db")
 
 
 def put_array(data):
@@ -15,4 +18,13 @@ def flash_from_file(filename):
     """Given a bitstream stored in a file (*.bit), flashes the FPGA with the file contents."""
     # Call the Makefile containing the compile/flash statements
     os.sys("make prog")
+
+
+class FPGA:
+    def __init__(self):
+        pass
+    def flash(self, data):
+        pass
+    def evaluate(self, data):
+        pass
 
