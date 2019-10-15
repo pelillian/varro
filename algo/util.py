@@ -6,21 +6,12 @@ import argparse
 
 
 def get_args():
-    '''
-    Function:
-    ---------
-    Utility function to read in arguments when running
-    experiment to evolve weights of neural
-    network to approximate a function
-    
-    Parameters:
-    -----------
-    None.
+    """Reads command-line arguments.
     
     Returns:
-    --------
-    (Type: Namespace) that keeps all the attributes parsed
-    '''
+        (Namespace) Parsed attributes
+
+    """
     parser = argparse.ArgumentParser(
         description='Evolves weights of neural network to approximate a function'
     )

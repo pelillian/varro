@@ -9,25 +9,19 @@ from keras.models import Sequential
 
 
 def evaluate_neural_network(individual, function=np.sin):
-    '''
-    Function:
-    ---------
-    Loads an individual (list) as the weights
-    of neural net, computes the Mean Squared Error of
-    neural net with the given weights in approximating 
-    function provided
+    """Loads an individual (list) as the weights of neural net and computes the
+    Mean Squared Error of the neural net with the given weights and provided
+    approximating function
     
-    Parameters:
-    -----------
-    individual: An individual (represented by list of floats) 
-        - e.g. [0.93, 0.85, 0.24, ..., 0.19], ...}
-    function: Function to be approximated by neural net
+    Args:
+        individual: An individual (represented by list of floats) 
+            - e.g. [0.93, 0.85, 0.24, ..., 0.19], ...}
+        function: Function to be approximated by neural net
     
     Returns:
-    --------
-    A single scalar of the Mean Squared Error, representing fitness of the individual
-    '''
+        A single scalar of the Mean Squared Error, representing fitness of the individual
 
+    """
     #Our neural net
     model = Sequential() 
     model.add(Dense(1, input_dim=1, activation='relu'))

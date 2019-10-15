@@ -33,6 +33,15 @@ def main():
 # INITIALIZATION #
 ##################
 def init(individual_size):
+    """Initializes the algorithm.
+
+    Args:
+        individual_size (int): Size of an individual in the population (array length)
+
+    Returns:
+        toolbox (deap.base.Toolbox): Initialized DEAP Toolbox for the algorithm.
+
+    """
     # Set seed
     random.seed(100)
 
@@ -99,25 +108,19 @@ def init(individual_size):
 
 
 def evolve(toolbox, crossover_prob, mutation_prob, num_generations, func):
-    '''
-    Function:
-    ---------
-    Evolves weights of neural network to approximate
-    a function
+    """Evolves weights of neural network to approximate a function
     
-    Parameters:
-    -----------
-    crossover_prob: Crossover probability
-    mutation_prob: Mutation probability
-    num_generations: Number of generations to run algorithm
-    func: The function to approximate
+    Args:
+        crossover_prob (float): Crossover probability from 0-1
+        mutation_prob (float): Mutation probability from 0-1
+        num_generations (int): Number of generations to run algorithm
+        func (function): The function to approximate
     
     Returns:
-    --------
-    Population of the fittest individuals so far and a list
-    of the average fitness scores for each generation
-    '''
-    
+        pop: Population of the fittest individuals so far
+        avg_fitness_scores: A list of the average fitness scores for each generation
+
+    """
     # Initialize random population
     pop = toolbox.population(n=50)
     
