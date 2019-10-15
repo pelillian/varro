@@ -2,8 +2,8 @@
 This module implements an evolutionary strategies algorithm.
 """
 
-from util import get_args
-from nn_evolve import evaluate_neural_network
+from algo.util import get_args
+from algo.nn_evolve import evaluate_neural_network
 
 import logging
 from pathlib import Path
