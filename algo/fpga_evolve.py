@@ -6,6 +6,6 @@ from fpga.interface import Bitstream
 
 def evaluate_fpga(individual):
     bits = Bitstream()
-    bits.flash(None)
+    bits.flash(individual)
     return bits.evaluate(None)
 

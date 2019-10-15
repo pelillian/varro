@@ -23,9 +23,13 @@ def flash_from_file(filename):
 class Bitstream:
     def __init__(self):
         self.chip = pytrellis.Chip("LFE5U-85F")
+
     def flash(self, data):
-        #self.chip.cram
-        pass
+        # TODO: Speed this up using C++
+        for i in range(self.chip.frames()):
+            for j in range(self.chip.bits()):
+                self.chip.cram.set_bit(i, j, data[i*j])
+
     def evaluate(self, data):
-        pass
+        return None
 
