@@ -13,75 +13,6 @@ from deap import base, creator, tools
 #from array import array # Use this if speed is an issue
 
 
-##################
-# INITIALIZATION #
-##################
-
-# Set seed
-random.seed(100)
-
-# Define a Class called FitnessMin to
-# define the fitness objective 
-# for the Selection of individuals
-# to become offspring
-creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
-
-# Define a Class called Individual to inherit from
-# list and has a fitness attribute
-# = creator.FitnessMin
-creator.create("Individual", list, fitness=creator.FitnessMin)
-
-# Size of each individual
-IND_SIZE = 12
-
-# Initialzie Toolbox
-toolbox = base.Toolbox()
-
-# Define an attribute variable
-toolbox.register("attribute", random.random)
-
-# Define an individual that has 
-toolbox.register("individual", 
-                 tools.initRepeat, 
-                 creator.Individual,
-                 toolbox.attribute, 
-                 n=IND_SIZE)
-
-# Define a population of individuals
-toolbox.register("population", 
-                 tools.initRepeat, 
-                 list, 
-                 toolbox.individual)
-
-# Defines a mating function that takes in 
-# 2 tuples (2 individuals) and performs 2 point cross over
-toolbox.register("mate", 
-                 tools.cxTwoPoint)
-
-# Defines a mutation function that takes in
-# a single tuple (an individual) and for each
-# entry in the tuple, we have a different probability
-# of mutation given by indpb, and parameters for
-# how much to mutate each entry by, using a gaussian
-# distribution
-toolbox.register("mutate", 
-                 tools.mutGaussian, 
-                 mu=0, 
-                 sigma=1, 
-                 indpb=0.1)
-                 
-# Defines the selection method for the mating
-# pool / offspring 
-toolbox.register("select", 
-                 tools.selTournament, 
-                 tournsize=3)
-                 
-# Defines the evaluation function
-# we will use for calculating the fitness of
-# an individual
-toolbox.register("evaluate", 
-                 evaluate_neural_network)
-
 #################
 # MAIN FUNCTION #
 #################
@@ -89,10 +20,85 @@ def main():
     # Get the Arguments parsed from file execution
     args = get_args()
 
-    evolve(args.cxpb, args.mutpb, args.ngen, args.func)
+    toolbox = init(args.isize)
+
+    evolve(toolbox=toolbox,
+           crossover_prob=args.cxpb,
+           mutation_prob=args.mutpb,
+           num_generations=args.ngen,
+           func=args.func)
 
 
-def evolve(crossover_prob, mutation_prob, num_generations, func):
+##################
+# INITIALIZATION #
+##################
+def init(individual_size):
+    # Set seed
+    random.seed(100)
+
+    # Define a Class called FitnessMin to
+    # define the fitness objective 
+    # for the Selection of individuals
+    # to become offspring
+    creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
+
+    # Define a Class called Individual to inherit from
+    # list and has a fitness attribute
+    # = creator.FitnessMin
+    creator.create("Individual", list, fitness=creator.FitnessMin)
+
+    # Initialzie Toolbox
+    toolbox = base.Toolbox()
+
+    # Define an attribute variable
+    toolbox.register("attribute", random.random)
+
+    # Define an individual that has 
+    toolbox.register("individual", 
+                     tools.initRepeat, 
+                     creator.Individual,
+                     toolbox.attribute, 
+                     n=individual_size)
+
+    # Define a population of individuals
+    toolbox.register("population", 
+                     tools.initRepeat, 
+                     list, 
+                     toolbox.individual)
+
+    # Defines a mating function that takes in 
+    # 2 tuples (2 individuals) and performs 2 point cross over
+    toolbox.register("mate", 
+                     tools.cxTwoPoint)
+
+    # Defines a mutation function that takes in
+    # a single tuple (an individual) and for each
+    # entry in the tuple, we have a different probability
+    # of mutation given by indpb, and parameters for
+    # how much to mutate each entry by, using a gaussian
+    # distribution
+    toolbox.register("mutate", 
+                     tools.mutGaussian, 
+                     mu=0, 
+                     sigma=1, 
+                     indpb=0.1)
+                     
+    # Defines the selection method for the mating
+    # pool / offspring 
+    toolbox.register("select", 
+                     tools.selTournament, 
+                     tournsize=3)
+                     
+    # Defines the evaluation function
+    # we will use for calculating the fitness of
+    # an individual
+    toolbox.register("evaluate", 
+                     evaluate_neural_network)
+
+    return toolbox
+
+
+def evolve(toolbox, crossover_prob, mutation_prob, num_generations, func):
     '''
     Function:
     ---------

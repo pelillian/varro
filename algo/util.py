@@ -48,6 +48,14 @@ def get_args():
                         action='store', 
                         help='Set the Number of Generations to evolve the weights of neural net', 
                         type=float)
+    parser.add_argument('--isize', 
+                        default=12,
+                        const=12,
+                        nargs='?',
+                        metavar='INDIVIDUAL-SIZE', 
+                        action='store', 
+                        help='Size of each individual in the population', 
+                        type=float)
     parser.add_argument('--func', 
                         default='sinx',
                         const='sinx',
@@ -56,6 +64,14 @@ def get_args():
                         action='store', 
                         choices=['x', 'sinx', 'cosx', 'tanx'], 
                         help='Set function to approximate using evolutionary strategy on neural network weights')
+    parser.add_argument('--target', 
+                        default='nn',
+                        const='nn',
+                        nargs='?',
+                        metavar='TARGET-TO-OPTIMIZE', 
+                        action='store', 
+                        choices=['fpga', 'nn'], 
+                        help='The target platform that the parameters are evaluated on')
     settings = parser.parse_args()
     
     return settings
