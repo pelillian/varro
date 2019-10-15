@@ -20,10 +20,11 @@ def flash_from_file(filename):
     os.sys("make prog")
 
 
-class FPGA:
+class Bitstream:
     def __init__(self):
-        pass
+        self.chip = pytrellis.Chip("LFE5U-85F")
     def flash(self, data):
+        #self.chip.cram
         pass
     def evaluate(self, data):
         pass

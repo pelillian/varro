@@ -2,10 +2,10 @@
 This module contains code for interfacing the evolutionary algorithm with FPGA bitstreams
 """
 
-from fpga.interface import FPGA
+from fpga.interface import Bitstream
 
 def evaluate_fpga(individual):
-    fpga = FPGA()
-    fpga.flash(None)
-    return fpga.evaluate(None)
+    bits = Bitstream()
+    bits.flash(None)
+    return bits.evaluate(None)
 
