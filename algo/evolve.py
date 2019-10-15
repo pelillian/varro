@@ -2,9 +2,10 @@
 This module implements an evolutionary strategies algorithm.
 """
 
-from algo.util import get_args
-from algo.nn_evolve import evaluate_neural_network
+from algo.util import get_args_func_approx, mkdir
+from algo.nn_func_approx import evaluate_nn_function_approx
 
+import os
 import logging
 from pathlib import Path
 import numpy as np
@@ -25,7 +26,7 @@ def main():
     logger = logging.getLogger(__name__)
 
     # Get the Arguments parsed from file execution
-    args = get_args()
+    args = get_args_func_approx()
 
     toolbox = init(args.isize)
 
@@ -110,7 +111,7 @@ def init(individual_size):
     # we will use for calculating the fitness of
     # an individual
     toolbox.register("evaluate", 
-                     evaluate_neural_network)
+                     evaluate_nn_function_approx)
 
     return toolbox
 
@@ -131,6 +132,7 @@ def evolve(toolbox, crossover_prob, mutation_prob, num_generations, func):
     """
     # Get logger
     logger = logging.getLogger(__name__)
+    logging.basicConfig(filename='./logs/evolve_func_approx_{}.log'.format(func))
 
     # Initialize random population
     pop = toolbox.population(n=50)
@@ -215,11 +217,12 @@ def evolve(toolbox, crossover_prob, mutation_prob, num_generations, func):
 
 if __name__ == "__main__":
 
+    # Create Logs folder if not created
+    mkdir('./algo/logs/')
+
     # Set Logging configuration
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO, 
-                        filename='logs/nn_evolve.log', 
-                        filemode='w', 
+    logging.basicConfig(level=logging.INFO,
                         format=log_fmt)
 
     # not used in this stub but often useful for finding various files

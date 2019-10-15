@@ -2,10 +2,23 @@
 This module stores the utility functions to be used for the evolutionary algorithms.
 """
 
+import os
 import argparse
 
 
-def get_args():
+def mkdir(path):
+    """Creates new folder
+
+    """
+    try: 
+        os.makedirs(path)
+    except OSError:
+        if not os.path.isdir(path):
+            raise
+        else:
+            print("(%s) already exists" % (path))
+
+def get_args_func_approx():
     """Reads command-line arguments.
     
     Returns:
