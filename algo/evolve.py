@@ -130,9 +130,18 @@ def evolve(toolbox, crossover_prob, mutation_prob, num_generations, func):
         avg_fitness_scores: A list of the average fitness scores for each generation
 
     """
+
+    # Create Logs folder if not created
+    mkdir('./algo/logs/')
+
+    # Set Logging configuration
+    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    logging.basicConfig(filename='./algo/logs/evolve_func_approx_{}.log'.format(func),
+                        level=logging.INFO,
+                        format=log_fmt)
+
     # Get logger
     logger = logging.getLogger(__name__)
-    logging.basicConfig(filename='./logs/evolve_func_approx_{}.log'.format(func))
 
     # Initialize random population
     pop = toolbox.population(n=50)
@@ -204,26 +213,19 @@ def evolve(toolbox, crossover_prob, mutation_prob, num_generations, func):
         
         # Compute Average fitness score of generation
         valid_ind = [ind for ind in offspring if ind.fitness.valid]
-        avg_fitness_scores.append(np.mean([fitness_score for fitness in list(fitnesses) + list(map(toolbox.evaluate, valid_ind)) for fitness_score in fitness]))
+        avg_fitness_score = np.mean([fitness_score \
+                                        for fitness in list(fitnesses) + list(map(toolbox.evaluate, valid_ind)) \
+                                        for fitness_score in fitness])
+        avg_fitness_scores.append(avg_fitness_score)
+        logger.info('Generation {} Avg. Fitness Score: {}'.format(g, avg_fitness_score))
         
         # The population is entirely replaced by the offspring
         pop[:] = offspring
-     
-    # Print Average Fitness Scores
-    for idx, avg_fitness_score in enumerate(avg_fitness_scores):
-        logger.info('Generation {} Avg. Fitness Score: {}'.format(idx, avg_fitness_score))
+        
         
     return pop, avg_fitness_scores
 
 if __name__ == "__main__":
-
-    # Create Logs folder if not created
-    mkdir('./algo/logs/')
-
-    # Set Logging configuration
-    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO,
-                        format=log_fmt)
 
     # not used in this stub but often useful for finding various files
     project_dir = Path(__file__).resolve().parents[2]

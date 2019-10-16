@@ -3,7 +3,6 @@ This module contains code for testing the evolutionary algorithm on a neural net
 """
 
 import numpy as np
-from sklearn.metrics import mean_squared_error
 import keras 
 from keras.layers import Dense, Activation
 from keras.models import Sequential
@@ -34,7 +33,7 @@ def evaluate_nn_function_approx(individual, function=np.sin):
     # 500 random integers from -1000 to 1000
     training_set = np.random.randint(-1000, 1000, 500) 
     y_true = np.array(list(map(function, training_set)))
-    
+
     def load_weights(individual, model):
         """Reshapes individual as weights of the neural net architecture
         prespecified
@@ -68,7 +67,7 @@ def evaluate_nn_function_approx(individual, function=np.sin):
 
         # Get the mean squared error of the 
         # individual
-        mse = np.square(y_true - y_pred).mean()
+        mse = np.mean(np.square(y_true - y_pred))
                
         return np.array([mse])
 
