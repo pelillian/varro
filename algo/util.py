@@ -45,13 +45,13 @@ def get_args():
                         help='Set the Mutation probability', 
                         type=float)
     parser.add_argument('--ngen', 
-                        default=40,
-                        const=40,
+                        default=100,
+                        const=100,
                         nargs='?',
                         metavar='NUMBER-OF-GENERATIONS', 
                         action='store', 
                         help='Set the Number of Generations to evolve the weights of neural net', 
-                        type=float)
+                        type=int)
     parser.add_argument('--isize', 
                         default=12,
                         const=12,

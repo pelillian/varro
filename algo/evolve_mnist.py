@@ -142,7 +142,7 @@ def evolve(toolbox, crossover_prob, mutation_prob, num_generations):
     logger = logging.getLogger(__name__)
 
     # Initialize random population
-    pop = toolbox.population(n=50)
+    pop = toolbox.population(n=100)
     
     # Track the Average fitness scores
     avg_fitness_scores = []
