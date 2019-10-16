@@ -1,10 +1,9 @@
-
-import os
-
-
 """
 This module handles flashing of a bitstream file to the FPGA.
 """
+
+import os
+
 
 CFG_FILE = "~/sft/share/trellis/misc/openocd/ecp5-evn.cfg"
 
