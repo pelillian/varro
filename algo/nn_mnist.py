@@ -8,6 +8,7 @@ from keras.datasets import mnist
 from keras.layers import Dense, Activation
 from keras.models import Sequential
 import keras.backend as K
+import tensorflow as tf
 
 
 def evaluate_nn_mnist(individual):
@@ -72,7 +73,8 @@ def evaluate_nn_mnist(individual):
         y_pred = np.array(model.predict(flattened_x_train))
 
         # Calculate the categorical accuracy
-        categorical_accuracy = K.mean(K.equal(K.argmax(one_hot_labels, axis=-1), K.argmax(y_pred, axis=-1))).numpy()
+        categorical_accuracy = tf.Session().run(\
+            K.mean(K.equal(K.argmax(one_hot_labels, axis=-1), K.argmax(y_pred, axis=-1))))
                
         return np.array([-categorical_accuracy])
 
