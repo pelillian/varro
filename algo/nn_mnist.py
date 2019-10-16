@@ -35,8 +35,7 @@ def evaluate_nn_mnist(individual):
 
     # Basic Neural net model
     model = Sequential() 
-    model.add(Dense(256, input_dim=input_dim, activation='relu'))
-    model.add(Dense(128, activation='relu'))
+    model.add(Dense(128, input_dim=input_dim, activation='relu'))
     model.add(Dense(64, activation='relu'))
     model.add(Dense(num_classes, activation='softmax'))
 
