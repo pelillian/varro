@@ -8,6 +8,7 @@ from keras.datasets import mnist
 from keras.layers import Dense, Activation
 from keras.models import Sequential
 import keras.backend as K
+import tensorflow as tf
 
 
 def evaluate_nn_mnist(individual):
