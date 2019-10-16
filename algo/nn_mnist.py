@@ -3,38 +3,43 @@ This module contains code for testing the evolutionary algorithm on a neural net
 """
 
 import numpy as np
-from sklearn.metrics import mean_squared_error
 import keras 
+from keras.datasets import mnist
 from keras.layers import Dense, Activation
 from keras.models import Sequential
+import keras.backend as K
 
 
-def evaluate_nn_function_approx(individual, function=np.sin):
+def evaluate_nn_mnist(individual):
     """Loads an individual (list) as the weights of neural net and computes the
-    Mean Squared Error of the neural net with the given weights and provided
-    approximating function
+    Negative Categorical Accuracy of the individual
     
     Args:
         individual: An individual (represented by list of floats) 
             - e.g. [0.93, 0.85, 0.24, ..., 0.19], ...}
-        function: Function to be approximated by neural net
     
     Returns:
         An np.ndarray of the fitness score(s) of the individual
 
     """
+    # Load mnist data from Keras
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    num_classes = len(np.unique(y_train)) # Get number of classes for mnist (10)
+    input_dim = np.prod(x_train[0].shape) # Get input dimension of the flattened mnist image
+
+    # Flatten the MNIST images into a 784 dimension vector
+    flattened_x_train = np.array([x.flatten() for x in x_train])
+
+    # Convert labels to categorical one-hot encoding
+    one_hot_labels = keras.utils.to_categorical(y=y_train, num_classes=num_classes)
+
     # Basic Neural net model
     model = Sequential() 
-    model.add(Dense(1, input_dim=1, activation='relu'))
-    model.add(Dense(3, activation='relu'))
-    model.add(Dense(2, activation='relu'))
-    model.add(Dense(1, activation='sigmoid'))
-    
-    # Training set of examples for the neural net to test on 
-    # 500 random integers from -1000 to 1000
-    training_set = np.random.randint(-1000, 1000, 500) 
-    y_true = list(map(function, training_set))
-    
+    model.add(Dense(256, input_dim=input_dim, activation='relu'))
+    model.add(Dense(128, activation='relu'))
+    model.add(Dense(64, activation='relu'))
+    model.add(Dense(num_classes, activation='softmax'))
+
     def load_weights(individual, model):
         """Reshapes individual as weights of the neural net architecture
         prespecified
@@ -58,18 +63,18 @@ def evaluate_nn_function_approx(individual, function=np.sin):
             if idx % 2:
                 new_weights.append(x)
             else: 
-                num_weights_taken = x.shape[0]*x.shape[1]
+                # Number of weights we'll take from the individual for this layer
+                num_weights_taken = np.prod(x.shape)
                 new_weights.append(individual[ind_idx:ind_idx+num_weights_taken].reshape(x.shape))
                 ind_idx += num_weights_taken
         
         # Set Weights using individual
         model.set_weights(new_weights)
-        y_pred = model.predict(training_set)
+        y_pred = np.array(model.predict(flattened_x_train))
 
-        # Get the mean squared error of the 
-        # individual
-        mse = np.square(y_true - y_pred).mean()
+        # Calculate the categorical accuracy
+        categorical_accuracy = K.mean(K.equal(K.argmax(one_hot_labels, axis=-1), K.argmax(y_pred, axis=-1))).numpy()
                
-        return np.array([mse])
+        return np.array([-categorical_accuracy])
 
     return load_weights(individual, model)

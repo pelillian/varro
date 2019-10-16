@@ -18,7 +18,7 @@ def mkdir(path):
         else:
             print("(%s) already exists" % (path))
 
-def get_args_func_approx():
+def get_args():
     """Reads command-line arguments.
     
     Returns:
@@ -59,7 +59,7 @@ def get_args_func_approx():
                         metavar='INDIVIDUAL-SIZE', 
                         action='store', 
                         help='Size of each individual in the population', 
-                        type=float)
+                        type=int)
     parser.add_argument('--func', 
                         default='sinx',
                         const='sinx',

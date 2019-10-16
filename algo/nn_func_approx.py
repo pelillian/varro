@@ -57,7 +57,8 @@ def evaluate_nn_function_approx(individual, function=np.sin):
             if idx % 2:
                 new_weights.append(x)
             else: 
-                num_weights_taken = x.shape[0]*x.shape[1]
+                # Number of weights we'll take from the individual for this layer
+                num_weights_taken = np.prod(x.shape)
                 new_weights.append(individual[ind_idx:ind_idx+num_weights_taken].reshape(x.shape))
                 ind_idx += num_weights_taken
         

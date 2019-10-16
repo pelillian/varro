@@ -3,7 +3,7 @@ This module implements an evolutionary strategies algorithm.
 """
 
 from algo.util import get_args, mkdir
-from algo.nn_func_approx import evaluate_nn_function_approx
+from algo.nn_mnist import evaluate_nn_mnist
 
 import os
 import logging
@@ -34,8 +34,7 @@ def main():
     evolve(toolbox=toolbox,
            crossover_prob=args.cxpb,
            mutation_prob=args.mutpb,
-           num_generations=args.ngen,
-           func=args.func)
+           num_generations=args.ngen)
 
 
 ##################
@@ -111,19 +110,18 @@ def init(individual_size):
     # we will use for calculating the fitness of
     # an individual
     toolbox.register("evaluate", 
-                     evaluate_nn_function_approx)
+                     evaluate_nn_mnist)
 
     return toolbox
 
 
-def evolve(toolbox, crossover_prob, mutation_prob, num_generations, func):
-    """Evolves weights of neural network to approximate a function
+def evolve(toolbox, crossover_prob, mutation_prob, num_generations):
+    """Evolves weights of neural network to train classifier for MNIST
     
     Args:
         crossover_prob (float): Crossover probability from 0-1
         mutation_prob (float): Mutation probability from 0-1
         num_generations (int): Number of generations to run algorithm
-        func (function): The function to approximate
     
     Returns:
         pop: Population of the fittest individuals so far
@@ -136,7 +134,7 @@ def evolve(toolbox, crossover_prob, mutation_prob, num_generations, func):
 
     # Set Logging configuration
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(filename='./algo/logs/evolve_func_approx_{}.log'.format(func),
+    logging.basicConfig(filename='./algo/logs/evolve_mnist.log',
                         level=logging.INFO,
                         format=log_fmt)
 
@@ -149,18 +147,8 @@ def evolve(toolbox, crossover_prob, mutation_prob, num_generations, func):
     # Track the Average fitness scores
     avg_fitness_scores = []
 
-    # Choose function
-    if func == 'sinx':
-        func_to_approx = np.sin
-    elif func == 'cosx':
-        func_to_approx = np.cos
-    elif func == 'tanx':
-        func_to_approx = np.tan
-    else:
-        func_to_approx = lambda x: x
-
     # Evaluate the entire population
-    fitnesses = map(functools.partial(toolbox.evaluate, function=func_to_approx), pop)
+    fitnesses = map(toolbox.evaluate, pop)
     avg_fitness_scores.append(np.mean([fitness_score for fitness in fitnesses for fitness_score in fitness]))
     for ind, fit in zip(pop, fitnesses):
         ind.fitness.values = fit
