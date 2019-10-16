@@ -33,7 +33,7 @@ def evaluate_nn_function_approx(individual, function=np.sin):
     # Training set of examples for the neural net to test on 
     # 500 random integers from -1000 to 1000
     training_set = np.random.randint(-1000, 1000, 500) 
-    y_true = list(map(function, training_set))
+    y_true = np.array(list(map(function, training_set)))
     
     def load_weights(individual, model):
         """Reshapes individual as weights of the neural net architecture
@@ -64,7 +64,7 @@ def evaluate_nn_function_approx(individual, function=np.sin):
         
         # Set Weights using individual
         model.set_weights(new_weights)
-        y_pred = model.predict(training_set)
+        y_pred = np.array(model.predict(training_set))
 
         # Get the mean squared error of the 
         # individual
