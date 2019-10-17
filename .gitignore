@@ -129,6 +129,8 @@ tags
 # FPGA
 *.bit
 *.svf
+*.json
+*.config
 
 .DS_Store
 .idea
