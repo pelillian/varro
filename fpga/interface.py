@@ -7,7 +7,7 @@ from fpga.util import make_path, get_new_id, get_bitstream_dir
 import os
 import pytrellis
 
-pytrellis.load_database("~/Git/prjtrellis-db")
+pytrellis.load_database("../prjtrellis-db")
 
 
 def put_array(data):
