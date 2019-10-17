@@ -17,16 +17,17 @@ def send_char(arduino, val):
 
     send_byte = int(val).to_bytes(1, byteorder="little") # Makes sure that the value can be represented as one byte
     #send_byte = int(val)
-    print ("Python value sent: ")
-    print (send_byte)
-    print("Number of bytes: ")
+
+    print('Sending {}'.format(send_byte))
+
     retval = arduino.write(send_byte)
-    print("Retval: {}".format(retval))
     arduino.flush()
 
     return retval
 
 def send_and_recieve(arduino, val, wait_time):
+
+    print("Python message: {}".format(val))
 
     send_char(arduino, val)
 
@@ -42,20 +43,25 @@ ard = initialize_connection()
 
 i = 0
 
+zero = True
+
 while (i < 4):
     # Serial write section
 
-    setTempCar1 = 63
-    setTempCar2 = 37
     ard.flush()
-    setTemp1 = str(setTempCar1)
-    setTemp2 = str(setTempCar2)
+
+    if zero:
+        val = 0
+    else:
+        val = 1
 
     # Serial read section
-    msg = send_and_recieve(ard, setTemp1, 2)
+    msg = send_and_recieve(ard, val, 2)
     print ("Message from arduino: ")
     print (msg.decode("utf-8"))
+    
     i = i + 1
+    zero = False if zero else True
 else:
     print("Exiting")
 exit()
