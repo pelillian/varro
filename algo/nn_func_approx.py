@@ -2,6 +2,9 @@
 This module contains code for testing the evolutionary algorithm on a neural network.
 """
 
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
 import numpy as np
 import keras 
 from keras.layers import Dense, Activation
