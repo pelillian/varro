@@ -9,8 +9,10 @@ import keras
 from keras.layers import Dense, Activation
 from keras.models import Sequential
 
-def funcTraining(function):
-   
+def func_training(function):
+   """
+   Loads in random training data and appropriate labes, returns tuple of numpy arrays  
+   """
     training_set = np.random.randint(-1000, 1000, 500) 
     y_true = np.array(list(map(function, training_set)))
     
