@@ -133,3 +133,6 @@ tags
 .DS_Store
 .idea
 
+# bitstream folder
+bitstreams
+
