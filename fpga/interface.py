@@ -33,10 +33,17 @@ class Bitstream:
                 self.chip.cram.set_bit(i, j, bool(data[i,j]))
 
         with open(self.get_config(), "w") as f:
+            print(".device {}".format(self.chip.info.name), file=f)
+            print("", file=f)
+            for meta in self.chip.metadata:
+                print(".comment {}".format(meta), file=f)
+            print("", file=f)
+
             for tile in self.chip.get_all_tiles():
                 config = tile.dump_config()
                 if len(config.strip()) > 0:
-                    f.write(config)
+                    print(".tile {}".format(tile.info.name), file=f)
+                    print(config, file=f)
 
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
