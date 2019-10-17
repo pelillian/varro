@@ -130,3 +130,5 @@ tags
 *.bit
 *.svf
 
+# bitstream folder
+bitstreams
