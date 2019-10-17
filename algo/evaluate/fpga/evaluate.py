@@ -8,4 +8,3 @@ def evaluate_fpga(individual):
     bits = Bitstream()
     bits.flash(individual)
     return bits.evaluate(None)
-
