@@ -1,5 +1,5 @@
 """
-This module stores the utility functions to be used for the evolutionary algorithms.
+This module contains evolutionary algorithm utility functions.
 """
 
 import os
