@@ -17,25 +17,7 @@ from functools import partial
 # from array import array # Use this if speed is an issue
 
 
-#################
-# MAIN FUNCTION #
-#################
-def main():
 
-    # Initialize logger
-    logger = logging.getLogger(__name__)
-    
-    # Get the Arguments parsed from file execution
-    args = get_args()
-
-    toolbox = init(args.isize)
-
-    logger.info('Start Evolution ...')
-    evolve(toolbox=toolbox,
-           crossover_prob=args.cxpb,
-           mutation_prob=args.mutpb,
-           num_generations=args.ngen,
-           func=args.func)
 
 
 ##################
