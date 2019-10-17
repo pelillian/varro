@@ -24,7 +24,7 @@ def main():
 
     # Initialize logger
     logger = logging.getLogger(__name__)
-
+    
     # Get the Arguments parsed from file execution
     args = get_args()
 

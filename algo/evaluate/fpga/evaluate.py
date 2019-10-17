@@ -1,5 +1,5 @@
 """
-This module contains code for interfacing the evolutionary algorithm with FPGA bitstreams
+This module contains code for interfacing betwee the evolutionary algorithm with FPGA bitstreams
 """
 
 from fpga.interface import Bitstream
