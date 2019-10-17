@@ -2,13 +2,13 @@ import serial
 import time
 
 #The following line is for serial over GPIO
-port = '/dev/ttyACM0'
+SERIAL_PORT = '/dev/ttyACM0'
 
 
 def initialize_connection():
 
-    ard = serial.Serial(port,9600,timeout=5)
-    time.sleep(2) # wait for Arduino to initialize
+    ard = serial.Serial(SERIAL_PORT,9600,timeout=5)
+    time.sleep(2) # wait for the Arduino to initialize
     ard.flush()
 
     return ard
@@ -16,7 +16,6 @@ def initialize_connection():
 def send_char(arduino, val):
 
     send_byte = int(val).to_bytes(1, byteorder="little") # Makes sure that the value can be represented as one byte
-    #send_byte = int(val)
 
     print('Sending {}'.format(send_byte))
 
@@ -27,8 +26,6 @@ def send_char(arduino, val):
 
 def send_and_recieve(arduino, val, wait_time):
 
-    print("Python message: {}".format(val))
-
     send_char(arduino, val)
 
     time.sleep(wait_time)
@@ -38,30 +35,22 @@ def send_and_recieve(arduino, val, wait_time):
     return msg
 
 
+if __name__=="__main__":
 
-ard = initialize_connection()
+    arduino = initialize_connection()
 
-i = 0
+    val = 1
 
-zero = True
+    while True:
+        # Serial write section
 
-while (i < 4):
-    # Serial write section
+        arduino.flush()
 
-    ard.flush()
+        # Serial read section
+        print("Python message: {}".format(val))
+        msg = send_and_recieve(arduino, val, 2)
+        print ("Message from arduino: ")
+        print (msg.decode("utf-8"))
+        
+        val = 0 if val else 1
 
-    if zero:
-        val = 0
-    else:
-        val = 1
-
-    # Serial read section
-    msg = send_and_recieve(ard, val, 2)
-    print ("Message from arduino: ")
-    print (msg.decode("utf-8"))
-    
-    i = i + 1
-    zero = False if zero else True
-else:
-    print("Exiting")
-exit()

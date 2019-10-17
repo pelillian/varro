@@ -1,11 +1,14 @@
 
 
+const int OUTPUT_PIN = LED_BUILTIN;
+const int INPUT_PIN = 2;
+
 void setup()
 {
 
   Serial.begin(9600);  // initialize serial communications at 9600 bps
-  pinMode(LED_BUILTIN, OUTPUT);
-
+  pinMode(OUTPUT_PIN, OUTPUT);
+  pinMode(INPUT_PIN, INPUT);
 
 }
 
@@ -21,11 +24,11 @@ void loop()
 
   if(c == 0)
   {
-    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+    digitalWrite(OUTPUT_PIN, HIGH);   // turn the LED on (HIGH is the voltage level)
     Serial.println("LED set to high");
 
   } else if(c == 1){
-    digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+    digitalWrite(OUTPUT_PIN, LOW);   // turn the LED on (HIGH is the voltage level)
     Serial.println("LED set to low");
     
   } else {
@@ -33,6 +36,11 @@ void loop()
     Serial.println((int)c);
 
   }
+
+  int inputVal = digitalRead(INPUT_PIN);
+  Serial.print("Read value: ");
+  Serial.println('1' ? inputVal : '0');
+
 
   Serial.flush();
 
