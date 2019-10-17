@@ -130,3 +130,6 @@ tags
 *.bit
 *.svf
 
+.DS_Store
+.idea
+
