@@ -26,7 +26,8 @@ def get_args():
 
     """
     parser = argparse.ArgumentParser(
-        description='Evolves weights of neural network to approximate a function'
+        description='Runs an evolutionary algorithm to optimize \
+            the weights of a neural network or circuit configuration of an FPGA'
     )
     parser.add_argument('--cxpb',
                         default=0.5,
@@ -50,24 +51,8 @@ def get_args():
                         nargs='?',
                         metavar='NUMBER-OF-GENERATIONS', 
                         action='store', 
-                        help='Set the Number of Generations to evolve the weights of neural net', 
+                        help='Set the number of generations to evolve', 
                         type=int)
-    parser.add_argument('--isize', 
-                        default=12,
-                        const=12,
-                        nargs='?',
-                        metavar='INDIVIDUAL-SIZE', 
-                        action='store', 
-                        help='Size of each individual in the population', 
-                        type=int)
-    parser.add_argument('--func', 
-                        default='sinx',
-                        const='sinx',
-                        nargs='?',
-                        metavar='FUNCTION-TO-APPROXIMATE', 
-                        action='store', 
-                        choices=['x', 'sinx', 'cosx', 'tanx'], 
-                        help='Set function to approximate using evolutionary strategy on neural network weights')
     parser.add_argument('--target', 
                         default='nn',
                         const='nn',
@@ -75,6 +60,22 @@ def get_args():
                         metavar='TARGET-TO-OPTIMIZE', 
                         action='store', 
                         choices=['fpga', 'nn'], 
+                        help='The target platform that the parameters are evaluated on')
+    parser.add_argument('--problem', 
+                        default='sinx',
+                        const='sinx',
+                        nargs='?',
+                        metavar='PROBLEM-TO-TACKLE', 
+                        action='store', 
+                        choices=['x', 'sinx', 'cosx', 'tanx', 'mnist'], 
+                        help='The target platform that the parameters are evaluated on')
+    parser.add_argument('--strategy', 
+                        default='ea',
+                        const='ea',
+                        nargs='?',
+                        metavar='OPTIMIZATION-STRATEGY', 
+                        action='store', 
+                        choices=['ea', 'cma-es', 'ns'], 
                         help='The target platform that the parameters are evaluated on')
     settings = parser.parse_args()
     
