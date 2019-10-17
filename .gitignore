@@ -130,5 +130,9 @@ tags
 *.bit
 *.svf
 
+.DS_Store
+.idea
+
 # bitstream folder
 bitstreams
+
