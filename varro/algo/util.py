@@ -8,7 +8,7 @@ from functools import partial
 import numpy as np
 
 from algo.problems import func_approx, mnist
-from algo.models.models import get_model
+from algo.models.models import get_nn_model
 from algo.strategies.ea.evolve import evolve
 from algo.strategies.ea.toolbox import nn_toolbox, fpga_toolbox
 from algo.evaluate.evaluate import evaluate_mnist_nn, evaluate_func_approx_nn, evaluate_mnist_fpga, evaluate_func_approx_fpga
@@ -168,7 +168,7 @@ def optimize(target,
 			input_dim = np.prod(X_train[0].shape) # Get input dimension of the flattened mnist image
 
 			# Get the neural net architecture
-			model, num_weights = get_model(problem, input_dim=input_dim, output_dim=num_classes)
+			model, num_weights = get_nn_model(problem, input_dim=input_dim, output_dim=num_classes)
 
 			evaluate_population = partial(evaluate_mnist_nn, 
 										  model=model, 
@@ -183,7 +183,7 @@ def optimize(target,
 			X_train, y_train = func_approx.training_set(problem=problem)
 
 			# Get the neural net architecture
-			model, num_weights = get_model(problem, input_dim=1, output_dim=1)
+			model, num_weights = get_nn_model(problem, input_dim=1, output_dim=1)
 
 			evaluate_population = partial(evaluate_func_approx_nn, 
 										  model=model, 

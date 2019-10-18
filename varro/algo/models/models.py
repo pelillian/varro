@@ -5,7 +5,7 @@ import numpy as np
 from keras.layers import Dense
 from keras.models import Sequential
 
-def get_model(problem, input_dim, output_dim):
+def get_nn_model(problem, input_dim, output_dim):
 	"""Creates the neural network architecture specific to the
 	problem to optimize
 

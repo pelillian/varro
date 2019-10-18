@@ -5,12 +5,10 @@ This module contains FPGA utility functions.
 import os
 from os.path import join
 
+from misc.util import make_path
+
 BITSTREAM_DIR = "fpga/bitstreams"
 
-
-def make_path(dir):
-    """Ensures a given path exists."""
-    os.makedirs(dir, exist_ok=True)
 
 def get_bitstream_dir():
     """Returns the directory containing the bitstream folders."""
