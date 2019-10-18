@@ -7,6 +7,7 @@ import keras
 from sklearn.metrics import accuracy_score
 
 from algo.evaluate.util import load_weights
+from fpga.interface import FpgaConfig
 
 
 def evaluate_mnist_nn(population, model, X, y):
@@ -41,9 +42,6 @@ def evaluate_mnist_nn(population, model, X, y):
 	# Flatten the MNIST images into a 784 dimension vector
 	flattened_X = np.array([x.flatten() for x in X])
 
-	# Convert labels to categorical one-hot encoding
-	one_hot_labels = keras.utils.to_categorical(y=y, num_classes=num_classes)
-	
 	# Get fitness score for each individual in population
 	for individual in population:
 		
@@ -103,7 +101,7 @@ def evaluate_func_approx_nn(population, model, X, y):
 
 
 def evaluate_mnist_fpga(population, X, y):
-	"""Evaluates an entire population on the mnist dataset on the neural net
+	"""Evaluates an entire population on the mnist dataset on the FPGA
 	architecture specified by the model, and calculates the negative categorical
 	accuracy of each individual
 	
@@ -133,18 +131,21 @@ def evaluate_mnist_fpga(population, X, y):
 	# Flatten the MNIST images into a 784 dimension vector
 	flattened_X = np.array([x.flatten() for x in X])
 
-	# Convert labels to categorical one-hot encoding
-	one_hot_labels = keras.utils.to_categorical(y=y, num_classes=num_classes)
-	
-	# TODO
 	# Get fitness score for each individual in population
-	fitness_scores = flash_fpga(problem='mnist', X=flattened_X)
+	for individual in population:
+		config = FpgaConfig()
+		config.flash(individual)
+
+		y_pred = config.evaluate(flattened_X)
+
+		categorical_accuracy = accuracy_score(y_true=y, y_pred=np.argmax(y_pred, axis=-1))
+		fitness_scores.append([-categorical_accuracy])
 		   
 	return np.array(fitness_scores)
 
 
 def evaluate_func_approx_fpga(population, X, y):
-	"""Evaluates an entire population on X on the neural net
+	"""Evaluates an entire population on X on the FPGA
 	architecture specified by the model, and calculates the mean 
 	squared error of each individual
 	
@@ -155,8 +156,8 @@ def evaluate_func_approx_fpga(population, X, y):
 					...,
 					np.array([1, 1, 0, ..., 0])]
 		model (keras model): Model to be used for the neural network
-		X: Training Input for the neural network
-		y: Training Labels for the neural network
+		X: Training Input
+		y: Training Labels
 
 	
 	Returns:
@@ -166,8 +167,15 @@ def evaluate_func_approx_fpga(population, X, y):
 	# Initialize list to keep the fitness scores
 	fitness_scores = []
 
-	# TODO
 	# Get fitness score for each individual in population
-	fitness_scores = flash_fpga(problem='func_approx', X=X)
-		   
+	for individual in population:
+		config = FpgaConfig()
+		config.flash(individual)
+
+		y_pred = config.evaluate(X)
+
+		mse = np.mean(np.square(y - y_pred))
+		fitness_scores.append([mse])
+	
 	return np.array(fitness_scores)
+
