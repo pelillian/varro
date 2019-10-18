@@ -226,7 +226,8 @@ def optimize(target,
 
 	# 3. Choose Strategy
 	if strategy == 'ea':
-	  pop, avg_fitness_scores = evolve(toolbox=toolbox,
+	  pop, avg_fitness_scores = evolve(problem=problem,
+	  								   toolbox=toolbox,
 									   crossover_prob=cxpb,
 									   mutation_prob=mutpb,
 									   pop_size=popsize,

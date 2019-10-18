@@ -9,10 +9,11 @@ import functools
 from tqdm import tqdm
 
 
-def evolve(toolbox, crossover_prob, mutation_prob, pop_size, num_generations):
+def evolve(problem, toolbox, crossover_prob, mutation_prob, pop_size, num_generations):
 	"""Evolves weights of neural network to train classifier for MNIST
 	
 	Args:
+		problem (str): A string specifying what type of problem we're trying to optimize
 		toolbox (deap.ToolBox): DEAP's configured toolbox
 		crossover_prob (float): Crossover probability from 0-1
 		mutation_prob (float): Mutation probability from 0-1
@@ -28,7 +29,7 @@ def evolve(toolbox, crossover_prob, mutation_prob, pop_size, num_generations):
 
 	# Set Logging configuration
 	log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-	logging.basicConfig(filename='./algo/logs/evolve.log',
+	logging.basicConfig(filename='./algo/logs/evolve-{}-popsize{}-ngen{}.log'.format(problem, pop_size, num_generations),
 						level=logging.INFO,
 						format=log_fmt)
 
