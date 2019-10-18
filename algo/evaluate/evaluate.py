@@ -50,6 +50,7 @@ def evaluate_mnist_nn(population, model, X, y):
 		
 		# Load Weights into model using individual
 		model = load_weights(individual, model)
+		print(individual)
 		
 		# Predict labels
 		y_pred = np.array(model.predict(flattened_X))

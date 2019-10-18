@@ -13,7 +13,6 @@ def training_set():
     Returns:
     	Tuple of the ground truth dataset (X_train: features, y_train: labels)
     """
-    
     (X_train, y_train), (X_test, y_test) = mnist.load_data()
     
     return X_train, y_train

@@ -24,6 +24,7 @@ def main():
 			 strategy=args.strategy, 
 			 cxpb=args.cxpb, 
 			 mutpb=args.mutpb, 
+			 popsize=args.popsize,
 			 ngen=args.ngen)
 
 if __name__ == "__main__":
