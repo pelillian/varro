@@ -2,8 +2,6 @@
 This module contains a function that returns the training set for mnist
 """
 
-import numpy as np
-import keras 
 from keras.datasets import mnist
 
 
