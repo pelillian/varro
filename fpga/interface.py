@@ -45,10 +45,6 @@ class Bitstream:
                     print(".tile {}".format(tile.info.name), file=f)
                     print(config, file=f)
 
-        cc = pytrellis.ChipConfig.from_chip(self.chip)
-        with open(self.get_config() + "_c", "w") as f:
-            print(cc.to_string(), file=f)
-
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
         return None
