@@ -233,7 +233,7 @@ def optimize(target,
 									   num_generations=ngen)
 	elif strategy == 'cma-es':
 	  pass
-	elif strategy == 'cma-es':
+	elif strategy == 'ns':
 	  pass
 	else:
 	  pass

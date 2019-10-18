@@ -50,13 +50,12 @@ def evaluate_mnist_nn(population, model, X, y):
 		
 		# Load Weights into model using individual
 		model = load_weights(individual, model)
-		print(individual)
 		
 		# Predict labels
 		y_pred = np.array(model.predict(flattened_X))
 
 		# Calculate the categorical accuracy
-		categorical_accuracy = tf.Session().run(\
+		categorical_accuracy = tf.compat.v1.Session().run(\
 			K.mean(K.equal(K.argmax(one_hot_labels, axis=-1), K.argmax(y_pred, axis=-1))))
 
 		fitness_scores.append([-categorical_accuracy])
@@ -153,10 +152,10 @@ def evaluate_func_approx_fpga(population, X, y):
 	
 	Args:
 		population: A list of np.ndarrays that represent the individuals
-			- e.g. [np.array([0.93, 0.85, 0.24, ..., 0.19]),
-					np.array([0.93, 0.85, 0.24, ..., 0.19]),
+			- e.g. [np.array([0, 1, 0, ..., 0]),
+					np.array([1, 0, 0, ..., 1]),
 					...,
-					np.array([0.93, 0.85, 0.24, ..., 0.19])]
+					np.array([1, 1, 0, ..., 0])]
 		model (keras model): Model to be used for the neural network
 		X: Training Input for the neural network
 		y: Training Labels for the neural network

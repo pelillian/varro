@@ -106,7 +106,6 @@ def evolve(toolbox, crossover_prob, mutation_prob, pop_size, num_generations):
 										for fitness_score in fitness_scores_ind])
 		avg_fitness_scores.append(avg_fitness_score)
 		logger.info('Generation {} Avg. Fitness Score: {}'.format(g, avg_fitness_score))
-		print(avg_fitness_score)
 		
 		# The population is entirely replaced by the offspring
 		pop[:] = offspring
