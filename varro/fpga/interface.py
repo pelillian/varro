@@ -2,11 +2,11 @@
 This module handles communication of data to the FPGA
 """
 
-from fpga.util import make_path, get_new_id, get_bitstream_dir
-
 import os
 from os.path import join
 import pytrellis
+
+from varro.fpga.util import make_path, get_new_id, get_bitstream_dir
 
 pytrellis.load_database("../prjtrellis-db")
 

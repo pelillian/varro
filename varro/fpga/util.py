@@ -5,7 +5,7 @@ This module contains FPGA utility functions.
 import os
 from os.path import join
 
-from misc.util import make_path
+from varro.misc.util import make_path
 
 BITSTREAM_DIR = "fpga/bitstreams"
 

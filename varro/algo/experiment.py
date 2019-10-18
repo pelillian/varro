@@ -4,7 +4,7 @@ experiment to solve the problem using a specified
 evolutionary algorithm
 """
 
-from algo.util import get_args, optimize, mkdir
+from varro.algo.util import get_args, optimize, mkdir
 
 
 #################

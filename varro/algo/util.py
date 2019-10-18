@@ -7,11 +7,11 @@ import argparse
 from functools import partial
 import numpy as np
 
-from algo.problems import func_approx, mnist
-from algo.models.models import get_nn_model
-from algo.strategies.ea.evolve import evolve
-from algo.strategies.ea.toolbox import nn_toolbox, fpga_toolbox
-from algo.evaluate.evaluate import evaluate_mnist_nn, evaluate_func_approx_nn, evaluate_mnist_fpga, evaluate_func_approx_fpga
+from varro.algo.problems import func_approx, mnist
+from varro.algo.models.models import get_nn_model
+from varro.algo.strategies.ea.evolve import evolve
+from varro.algo.strategies.ea.toolbox import nn_toolbox, fpga_toolbox
+from varro.algo.evaluate.evaluate import evaluate_mnist_nn, evaluate_func_approx_nn, evaluate_mnist_fpga, evaluate_func_approx_fpga
 
 FPGA_BITSTREAM_SHAPE = (13294, 1136)
 

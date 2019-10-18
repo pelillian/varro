@@ -6,8 +6,8 @@ import numpy as np
 import keras
 from sklearn.metrics import accuracy_score
 
-from algo.evaluate.util import load_weights
-from fpga.interface import FpgaConfig
+from varro.algo.evaluate.util import load_weights
+from varro.fpga.interface import FpgaConfig
 
 
 def evaluate_mnist_nn(population, model, X, y):
