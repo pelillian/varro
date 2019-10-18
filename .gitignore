@@ -138,3 +138,5 @@ tags
 # bitstream folder
 bitstreams
 
+# arduino flashing
+arduino/fpga-communication/build-uno/

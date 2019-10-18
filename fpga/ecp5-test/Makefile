@@ -1,4 +1,4 @@
-PROJ=blinky
+PROJ=interface
 TRELLIS=~/sft/share/trellis
 
 all: ${PROJ}.bit
