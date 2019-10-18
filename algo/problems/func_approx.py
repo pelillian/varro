@@ -2,6 +2,7 @@
 This module contains a function that returns training set for functions to approximate
 """
 
+import random
 import numpy as np
 
 
@@ -18,6 +19,7 @@ def rastrigin(x):
     n = len(x)
     return 10*n + sum( x**2 - 10 * cos( 2 * pi * x ))
 
+
 def rosenbrock(x):
     """Rosenbrock function
 
@@ -33,32 +35,40 @@ def rosenbrock(x):
     return (sum( (1 - x0) **2 )
         + 100 * sum( (x1 - x0**2) **2 ))
 
-def training_set(func_to_approx):
+
+def training_set(problem):
 	"""Loads in random training data and appropriate labes, 
 	returns tuple of numpy arrays  
 
 	Args:
-		func_to_approx (str): String representing the function to approximate
+		problem (str): String representing the function to approximate
 
 	Returns:
 		Tuple of the ground truth dataset (X_train: features, y_train: labels)
 	"""
 
+	# Set seed
+	random.seed(100)
+
 	# Get the function to approximate
-	if func_to_approx == 'sinx':
-		# Apply function to each of the inputs
-	    X_train = np.random.randint(-1000, 1000, 500) 
-	    y_train = np.array(list(map(np.sin, X)))
-	elif func_to_approx == 'cosx':
-		func = np.cos
-	elif func_to_approx == 'tanx':
-		func = np.tan
-	elif func_to_approx == 'x':
-		func = lambda x: x
-	elif func_to_approx == 'ras':
-		func = rastrigin
-	elif func_to_approx == 'rosen':
-		func = rosenbrock
+	if problem == 'sinx':
+	    X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
+	    y_train = np.sin(X_train)
+	elif problem == 'cosx':
+		X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
+	    y_train = np.sin(X_train)
+	elif problem == 'tanx':
+		X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
+	    y_train = np.sin(X_train)
+	elif problem == 'x':
+		X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
+	    y_train = X_train
+	elif problem == 'ras':
+		X_train = random.sample(list(np.arange(-5.12, 5.12, 0.1)), k=500)
+	    y_train = np.sin(X_train)
+	elif problem == 'rosen':
+		X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
+	    y_train = np.sin(X_train)
 	else:
 		pass
     

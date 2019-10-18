@@ -5,6 +5,15 @@ This module contains the utility functions to run the experiment.py
 import os
 import argparse
 
+from algo.problems import func_approx, 
+                          mnist
+from algo.models.model import get_model
+from algo.strategies.ea.evolve import evolve
+from algo.strategies.ea.toolbox import nn_toolbox, 
+                                       fpga_toolbox
+
+FPGA_BITSTREAM_SHAPE = (13294, 1136)
+
 
 def mkdir(path):
     """Creates new folder
@@ -17,6 +26,7 @@ def mkdir(path):
             raise
         else:
             print("(%s) already exists" % (path))
+
 
 def get_args():
     """Reads command-line arguments.
@@ -51,7 +61,7 @@ def get_args():
                         nargs='?',
                         metavar='PROBLEM-TO-TACKLE', 
                         action='store', 
-                        choices=['x', 'sinx', 'cosx', 'tanx', 'rastrigin', 'mnist'], 
+                        choices=['x', 'sinx', 'cosx', 'tanx', 'ras', 'rosen', 'mnist'], 
                         help='The problem to solve / optimize using an evolutionary strategy')
 
     ##########################################################
@@ -106,4 +116,108 @@ def get_args():
     
     return settings
 
+
+def optimize(target, 
+             problem, 
+             strategy, 
+             cxpb=None, 
+             mutpb=None, 
+             ngen=None):
+    """Control center to call other modules to execute the optimization
+
+    Args:
+        target (str): A string specifying whether we're optimizing on a neural network
+            or field programmable gate array
+        problem (str): A string specifying what type of problem we're trying to optimize
+        strategy (str): A string specifying what type of optimization algorithm to use
+        cxpb (float): Cross-over probability for evolutionary algorithm
+        mutpb (float): Mutation probability for evolutionary algorithm
+        ngen (int): Number of generations to run an evolutionary algorithm
+
+    Returns:
+        None.
+    """
+    # Initialize logger
+    logger = logging.getLogger(__name__)
+
+    # 1. Choose Target Platform
+    # Neural Network
+    if args.target == 'nn':
+
+        # 2. Choose Problem and get the specific evaluation function 
+        # for that problem
+        if problem == 'mnist':
+
+            # Get the neural net architecture
+            model, num_weights = get_model(problem)
+
+            # Get training set for MNIST
+            # and set the evaluation function
+            # for the population
+            X_train, y_train = mnist.training_set()
+            evaluate_population = partial(evaluate_mnist_nn, 
+                                          model=model, 
+                                          X=X_train, 
+                                          y=y_train)
+
+        else:
+
+            # Get the neural net architecture
+            model, num_weights = get_model(problem)
+
+            # Get training set for function approximation
+            # and set the evaluation function
+            # for the population
+            X_train, y_train = func_approx.training_set(problem=problem)
+            evaluate_population = partial(evaluate_func_approx_nn, 
+                                          model=model, 
+                                          X=X_train, 
+                                          y=y_train)
+
+        # Set the individual size to the number of weights
+        # we can alter in the neural network architecture specified
+        toolbox = nn_toolbox(i_size=num_weights,
+                             evaluate_population=evaluate_population)
+
+    # FPGA
+    else:
+
+        # 2. Choose Problem and get the specific evaluation function 
+        # for that problem
+        if problem == 'mnist':
+
+            # Get training set for MNIST
+            # and set the evaluation function
+            # for the population
+            X_train, y_train = mnist.training_set()
+            evaluate_population = partial(evaluate_mnist_fpga, 
+                                          X=X_train, 
+                                          y=y_train)
+
+        else:
+
+            # Get training set for function approximation
+            # and set the evaluation function
+            # for the population
+            X_train, y_train = func_approx.training_set(problem=problem)
+            evaluate_population = partial(evaluate_func_approx_fpga, 
+                                          X=X_train, 
+                                          y=y_train)
+
+        # Set the individual according to the FPGA Bitstream shape
+        toolbox = fpga_toolbox(i_shape=FPGA_BITSTREAM_SHAPE,
+                               evaluate_population=evaluate_population)
+
+    # 3. Choose Strategy
+    if args.strategy == 'ea':
+      pop, avg_fitness_scores = evolve(toolbox=toolbox,
+                                       crossover_prob=args.cxpb,
+                                       mutation_prob=args.mutpb,
+                                       num_generations=args.ngen)
+    elif args.strategy == 'cma-es':
+      pass
+    elif args.strategy == 'cma-es':
+      pass
+    else:
+      pass
 

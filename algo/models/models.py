@@ -1,30 +1,40 @@
 """
 This module contains the class for defining a Neural Net model
 """
-import os
-os.environ['KMP_DUPLICATE_LIB_OK']='True'
-
 import numpy as np
 import keras 
 from keras.layers import Dense, Activation
 from keras.models import Sequential
+import keras.backend as K
+import tensorflow as tf
 
-class Model(model): 
-    
-    def __init__(self, model):
-        self.model = model 
-        self.isize = get_i_size() 
+def get_model(problem):
+    """Creates the neural network architecture specific to the
+    problem to optimize
+
+    Args:
+        problem (str): String specifying the type of problem 
+        we're dealing with
+
+    Returns:
+        A keras model with architecture specified for the problem
     """
-    Figure out how many weights there are and return them in a numpy array 
-    """
-    def get_i_size(): 
-        num_weights = 0
-        for idx, x in enumerate(self.model.get_weights()):
-            if idx % 2:
-                pass 
-            else: 
-                # Number of weights we'll take from the individual for this layer
-                num_weights += np.prod(x.shape)
-        return num_weights
+    if problem == 'mnist':
+
+        # Basic Neural net model for MNIST
+        model = Sequential() 
+        model.add(Dense(128, input_dim=input_dim, activation='relu'))
+        model.add(Dense(64, activation='relu'))
+        model.add(Dense(num_classes, activation='softmax'))
     
+    else:
+
+        # Basic Neural net model for approximating functions
+        model = Sequential() 
+        model.add(Dense(1, input_dim=1, activation='relu'))
+        model.add(Dense(3, activation='relu'))
+        model.add(Dense(2, activation='relu'))
+        model.add(Dense(1, activation='sigmoid'))
+
+    return model
     

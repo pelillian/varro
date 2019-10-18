@@ -12,6 +12,7 @@ def evolve(toolbox, crossover_prob, mutation_prob, num_generations):
     """Evolves weights of neural network to train classifier for MNIST
     
     Args:
+        toolbox (deap.ToolBox): DEAP's configured toolbox
         crossover_prob (float): Crossover probability from 0-1
         mutation_prob (float): Mutation probability from 0-1
         num_generations (int): Number of generations to run algorithm
@@ -33,7 +34,7 @@ def evolve(toolbox, crossover_prob, mutation_prob, num_generations):
     logger.info('Start Evolution ...')
 
     # Initialize random population
-    pop = toolbox.population(n=100)
+    pop = toolbox.population(n=num_generations)
     
     # Track the Average fitness scores
     avg_fitness_scores = []
