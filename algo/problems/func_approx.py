@@ -63,7 +63,7 @@ def training_set(problem):
 		X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
 		y_train = X_train
 	elif problem == 'ras':
-		X_train = random.sample(list(np.arange(-5.12, 5.12, 0.1)), k=500)
+		X_train = random.sample(list(np.arange(-5.12, 5.12, 0.01)), k=500)
 		y_train = rastrigin(X_train)
 	elif problem == 'rosen':
 		X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
