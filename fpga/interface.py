@@ -11,7 +11,7 @@ import pytrellis
 pytrellis.load_database("../prjtrellis-db")
 
 
-class Bitstream:
+class FpgaConfig:
     def __init__(self):
         """This class handles flashing and evaluating the FGPA bitstream"""
         self.chip = pytrellis.Chip("LFE5U-85F")
@@ -47,5 +47,5 @@ class Bitstream:
 
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
-        return None
+        return [0] * len(data)
 
