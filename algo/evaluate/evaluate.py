@@ -14,7 +14,7 @@ def evaluate_mnist_nn(population, model, X, y):
 	"""Evaluates an entire population on the mnist dataset on the neural net
 	architecture specified by the model, and calculates the negative categorical
 	accuracy of each individual
-	
+
 	Args:
 		population: A list of np.ndarrays that represent the individuals
 			- e.g. [np.array([0.93, 0.85, 0.24, ..., 0.19]),
@@ -25,7 +25,7 @@ def evaluate_mnist_nn(population, model, X, y):
 		X: Training Input for mnist
 		y: Training Labels for mnist
 
-	
+
 	Returns:
 		An np.ndarray of the fitness scores (list) of the individuals
 
@@ -34,20 +34,20 @@ def evaluate_mnist_nn(population, model, X, y):
 	fitness_scores = []
 
 	# Get number of classes for mnist (10)
-	num_classes = len(np.unique(y)) 
+	num_classes = len(np.unique(y))
 
 	# Get input dimension of the flattened mnist image
-	input_dim = np.prod(X[0].shape) 
+	input_dim = np.prod(X[0].shape)
 
 	# Flatten the MNIST images into a 784 dimension vector
 	flattened_X = np.array([x.flatten() for x in X])
 
 	# Get fitness score for each individual in population
 	for individual in population:
-		
+
 		# Load Weights into model using individual
 		model = load_weights(individual, model)
-		
+
 		# Predict labels
 		y_pred = np.array(model.predict(flattened_X))
 
@@ -55,15 +55,15 @@ def evaluate_mnist_nn(population, model, X, y):
 		categorical_accuracy = accuracy_score(y_true=y, y_pred=np.argmax(y_pred, axis=-1))
 
 		fitness_scores.append([-categorical_accuracy])
-		   
+
 	return np.array(fitness_scores)
 
 
 def evaluate_func_approx_nn(population, model, X, y):
 	"""Evaluates an entire population on X on the neural net
-	architecture specified by the model, and calculates the mean 
+	architecture specified by the model, and calculates the mean
 	squared error of each individual
-	
+
 	Args:
 		population: A list of np.ndarrays that represent the individuals
 			- e.g. [np.array([0.93, 0.85, 0.24, ..., 0.19]),
@@ -74,7 +74,7 @@ def evaluate_func_approx_nn(population, model, X, y):
 		X: Training Input for the neural network
 		y: Training Labels for the neural network
 
-	
+
 	Returns:
 		An np.ndarray of the fitness scores (list) of the individuals
 
@@ -84,19 +84,19 @@ def evaluate_func_approx_nn(population, model, X, y):
 
 	# Get fitness score for each individual in population
 	for individual in population:
-		
+
 		# Load Weights into model using individual
 		model = load_weights(individual, model)
-		
+
 		# Predict labels
 		y_pred = np.array(model.predict(X))
 
-		# Get the mean squared error of the 
+		# Get the mean squared error of the
 		# individual
 		mse = np.mean(np.square(y - y_pred))
 
 		fitness_scores.append([mse])
-		   
+
 	return np.array(fitness_scores)
 
 
@@ -104,7 +104,7 @@ def evaluate_mnist_fpga(population, X, y):
 	"""Evaluates an entire population on the mnist dataset on the FPGA
 	architecture specified by the model, and calculates the negative categorical
 	accuracy of each individual
-	
+
 	Args:
 		population: A list of boolean np.ndarrays that represent the individuals
 			- e.g. [np.array([0, 1, 0, ..., 0]),
@@ -114,7 +114,7 @@ def evaluate_mnist_fpga(population, X, y):
 		X: Training Input for mnist
 		y: Training Labels for mnist
 
-	
+
 	Returns:
 		An np.ndarray of the fitness scores (list) of the individuals
 
@@ -123,10 +123,10 @@ def evaluate_mnist_fpga(population, X, y):
 	fitness_scores = []
 
 	# Get number of classes for mnist (10)
-	num_classes = len(np.unique(y)) 
+	num_classes = len(np.unique(y))
 
 	# Get input dimension of the flattened mnist image
-	input_dim = np.prod(X[0].shape) 
+	input_dim = np.prod(X[0].shape)
 
 	# Flatten the MNIST images into a 784 dimension vector
 	flattened_X = np.array([x.flatten() for x in X])
@@ -140,15 +140,15 @@ def evaluate_mnist_fpga(population, X, y):
 
 		categorical_accuracy = accuracy_score(y_true=y, y_pred=np.argmax(y_pred, axis=-1))
 		fitness_scores.append([-categorical_accuracy])
-		   
+
 	return np.array(fitness_scores)
 
 
 def evaluate_func_approx_fpga(population, X, y):
 	"""Evaluates an entire population on X on the FPGA
-	architecture specified by the model, and calculates the mean 
+	architecture specified by the model, and calculates the mean
 	squared error of each individual
-	
+
 	Args:
 		population: A list of np.ndarrays that represent the individuals
 			- e.g. [np.array([0, 1, 0, ..., 0]),
@@ -159,7 +159,7 @@ def evaluate_func_approx_fpga(population, X, y):
 		X: Training Input
 		y: Training Labels
 
-	
+
 	Returns:
 		An np.ndarray of the fitness scores (list) of the individuals
 
@@ -176,6 +176,6 @@ def evaluate_func_approx_fpga(population, X, y):
 
 		mse = np.mean(np.square(y - y_pred))
 		fitness_scores.append([mse])
-	
+
 	return np.array(fitness_scores)
 
