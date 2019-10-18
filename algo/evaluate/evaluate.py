@@ -44,6 +44,9 @@ def evaluate_mnist_nn(population, model, X, y):
 
 	# Convert labels to categorical one-hot encoding
 	one_hot_labels = keras.utils.to_categorical(y=y, num_classes=num_classes)
+
+	# Initialize tensorflow session
+	sess = tf.compat.v1.Session()
 	
 	# Get fitness score for each individual in population
 	for individual in population:
@@ -54,8 +57,10 @@ def evaluate_mnist_nn(population, model, X, y):
 		# Predict labels
 		y_pred = np.array(model.predict(flattened_X))
 
+		improt pdb; pdb.set_trace()
+
 		# Calculate the categorical accuracy
-		categorical_accuracy = tf.compat.v1.Session().run(\
+		categorical_accuracy = sess.run(\
 			K.mean(K.equal(K.argmax(one_hot_labels, axis=-1), K.argmax(y_pred, axis=-1))))
 
 		fitness_scores.append([-categorical_accuracy])
