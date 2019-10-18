@@ -17,7 +17,7 @@ def rastrigin(x):
 	"""
 	x = np.asarray_chkfinite(x)
 	n = len(x)
-	return 10*n + sum( x**2 - 10 * cos( 2 * pi * x ))
+	return 10*n + np.sum(x**2 - 10 * np.cos( 2 * np.pi * x))
 
 
 def rosenbrock(x):
@@ -32,7 +32,7 @@ def rosenbrock(x):
     x = np.asarray_chkfinite(x)
     x0 = x[:-1]
     x1 = x[1:]
-    return (sum( (1 - x0) **2 ) + 100 * sum( (x1 - x0**2) **2 ))
+    return (np.sum( (1 - x0) **2 ) + 100 * np.sum( (x1 - x0**2) **2 ))
 
 
 def training_set(problem):
@@ -63,11 +63,11 @@ def training_set(problem):
 		X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
 		y_train = X_train
 	elif problem == 'ras':
-		X_train = random.sample(list(np.arange(-5.12, 5.12, 0.1)), k=500)
+		X_train = random.sample(list(np.arange(-5.12, 5.12, 0.01)), k=500)
 		y_train = rastrigin(X_train)
 	elif problem == 'rosen':
 		X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
-		_train = rosenbrock(X_train)
+		y_train = rosenbrock(X_train)
 	else:
 		pass
 

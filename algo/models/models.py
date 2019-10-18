@@ -2,11 +2,8 @@
 This module contains the class for defining a Neural Net model
 """
 import numpy as np
-import keras 
-from keras.layers import Dense, Activation
+from keras.layers import Dense
 from keras.models import Sequential
-import keras.backend as K
-import tensorflow as tf
 
 def get_model(problem, input_dim, output_dim):
 	"""Creates the neural network architecture specific to the
