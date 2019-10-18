@@ -101,8 +101,20 @@ def get_args():
 						help='Set the Mutation probability', 
 						type=float)
 
+	#########################################
+	# 3c. What population size do you want? #
+	#########################################
+	parser.add_argument('--popsize', 
+						default=10,
+						const=10,
+						nargs='?',
+						metavar='POPULATION-SIZE', 
+						action='store', 
+						help='Set number of individuals in population', 
+						type=int)
+
 	################################################################################
-	# 3c. What number of generations do you want to run the evolutionary algo for? #
+	# 3d. What number of generations do you want to run the evolutionary algo for? #
 	################################################################################
 	parser.add_argument('--ngen', 
 						default=100,
@@ -123,6 +135,7 @@ def optimize(target,
 			 strategy, 
 			 cxpb=None, 
 			 mutpb=None, 
+			 popsize=None,
 			 ngen=None):
 	"""Control center to call other modules to execute the optimization
 
@@ -216,6 +229,7 @@ def optimize(target,
 	  pop, avg_fitness_scores = evolve(toolbox=toolbox,
 									   crossover_prob=cxpb,
 									   mutation_prob=mutpb,
+									   pop_size=popsize,
 									   num_generations=ngen)
 	elif strategy == 'cma-es':
 	  pass

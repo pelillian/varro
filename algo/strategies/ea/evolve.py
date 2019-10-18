@@ -9,7 +9,7 @@ import functools
 from tqdm import tqdm
 
 
-def evolve(toolbox, crossover_prob, mutation_prob, num_generations):
+def evolve(toolbox, crossover_prob, mutation_prob, pop_size, num_generations):
 	"""Evolves weights of neural network to train classifier for MNIST
 	
 	Args:
@@ -37,13 +37,14 @@ def evolve(toolbox, crossover_prob, mutation_prob, num_generations):
 	logger.info('Start Evolution ...')
 
 	# Initialize random population
-	pop = toolbox.population(n=num_generations)
+	pop = toolbox.population(n=pop_size)
 	
 	# Track the Average fitness scores
 	avg_fitness_scores = []
 
 	# Evaluate the entire population
 	fitness_scores_population = toolbox.evaluate_population(pop)
+
 	# WARNING: BE CAREFUL HERE WHEN WE HAVE MUTLIPLE DISTINCT
 	# FITNESS SCORES IN THE FUTURE
 	avg_fitness_scores.append(np.mean([fitness_score \
@@ -105,6 +106,7 @@ def evolve(toolbox, crossover_prob, mutation_prob, num_generations):
 										for fitness_score in fitness_scores_ind])
 		avg_fitness_scores.append(avg_fitness_score)
 		logger.info('Generation {} Avg. Fitness Score: {}'.format(g, avg_fitness_score))
+		print(avg_fitness_score)
 		
 		# The population is entirely replaced by the offspring
 		pop[:] = offspring
