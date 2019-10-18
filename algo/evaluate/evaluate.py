@@ -57,7 +57,7 @@ def evaluate_mnist_nn(population, model, X, y):
 		# Predict labels
 		y_pred = np.array(model.predict(flattened_X))
 
-		improt pdb; pdb.set_trace()
+		import pdb; pdb.set_trace()
 
 		# Calculate the categorical accuracy
 		categorical_accuracy = sess.run(\
