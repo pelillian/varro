@@ -67,7 +67,7 @@ def training_set(problem):
 		y_train = rastrigin(X_train)
 	elif problem == 'rosen':
 		X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
-		_train = rosenbrock(X_train)
+		y_train = rosenbrock(X_train)
 	else:
 		pass
 
