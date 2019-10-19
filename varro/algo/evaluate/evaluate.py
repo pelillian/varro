@@ -133,8 +133,8 @@ def evaluate_mnist_fpga(population, X, y):
 
 	# Get fitness score for each individual in population
 	for individual in population:
-		config = FpgaConfig()
-		config.flash(individual)
+		config = FpgaConfig(individual)
+		config.flash()
 
 		y_pred = config.evaluate(flattened_X)
 
@@ -169,8 +169,8 @@ def evaluate_func_approx_fpga(population, X, y):
 
 	# Get fitness score for each individual in population
 	for individual in population:
-		config = FpgaConfig()
-		config.flash(individual)
+		config = FpgaConfig(individual)
+		config.flash()
 
 		y_pred = config.evaluate(X)
 

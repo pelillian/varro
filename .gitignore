@@ -135,8 +135,9 @@ tags
 .DS_Store
 .idea
 
-# bitstream folder
-bitstreams
+# data & bitstream folders
+data
+config
 
 # arduino flashing
 arduino/fpga-communication/build-uno/

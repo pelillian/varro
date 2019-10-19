@@ -7,13 +7,13 @@ from os.path import join
 
 from varro.misc.util import make_path
 
-BITSTREAM_DIR = "fpga/bitstreams"
+CONFIG_DIR = "data/config"
 
 
 def get_bitstream_dir():
     """Returns the directory containing the bitstream folders."""
-    make_path(BITSTREAM_DIR)
-    return BITSTREAM_DIR
+    make_path(CONFIG_DIR)
+    return CONFIG_DIR
 
 def is_int(str):
     """Determines if a number is an integer."""
