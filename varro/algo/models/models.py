@@ -101,7 +101,10 @@ class ModelFPGA(Model):
 
 		Args:
 			weights (np.ndarray of floats): The new values for the weights
-				- e.g. [0.93, 0.85, 0.24, ..., 0.19]
+				- e.g. [[0, 1, 0, 1, ..., 0],
+						[1, 0, 1, 1, ..., 1],
+						...
+						[0, 0, 1, 0, ..., 0]]
 
 		"""
 		self.config = FpgaConfig(weights)

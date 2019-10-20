@@ -20,7 +20,7 @@ def fit(model_type,
 		strategy,
 		cxpb=None,
 		mutpb=None,
-		popsize=None
+		popsize=None,
 		ngen=None):
 	"""Control center to call other modules to execute the optimization
 
