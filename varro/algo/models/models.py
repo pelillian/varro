@@ -104,7 +104,7 @@ class ModelFPGA(Model):
 
         """
         self.config = FpgaConfig(weights)
-        self.config.flash()
+        self.config.load_fpga()
     
     def predict(self, X):
         """Evaluates the model on given data."""

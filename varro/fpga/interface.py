@@ -7,6 +7,7 @@ from os.path import join
 import pytrellis
 
 from varro.fpga.util import make_path, get_new_id, get_config_dir
+from varro.fpga.flash import flash_config_file
 
 pytrellis.load_database("../prjtrellis-db")
 
@@ -23,7 +24,7 @@ class FpgaConfig:
         """Returns this bitstream's directory."""
         return join(get_config_dir(), str(self.id))
 
-    def get_config_path(self):
+    def this_config_dir(self):
         """Returns this bitstream's config file."""
         return join(self.get_dir(), str(self.id) + ".config")
 
@@ -34,7 +35,7 @@ class FpgaConfig:
                 self.chip.cram.set_bit(i, j, bool(config_data[i,j]))
 
     def write_config_file(self):
-        with open(self.get_config_path(), "w") as f:
+        with open(self.this_config_dir(), "w") as f:
             print(".device {}".format(self.chip.info.name), file=f)
             print("", file=f)
             for meta in self.chip.metadata:
@@ -47,10 +48,11 @@ class FpgaConfig:
                     print(".tile {}".format(tile.info.name), file=f)
                     print(config, file=f)
 
-    def flash(self, config_data):
-        """Flashes a 2d array of configuration data to the FPGA"""
+    def load_fpga(self, config_data):
+        """Loads a 2d array of configuration data onto to the FPGA"""
         self.load_cram(config_data)
         self.write_config_file()
+        flash_config_file(self.this_config_dir())
 
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
