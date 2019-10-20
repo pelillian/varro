@@ -4,7 +4,6 @@ experiment to solve the problem using a specified
 evolutionary algorithm
 """
 
-import os
 from functools import partial
 import numpy as np
 
