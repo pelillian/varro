@@ -8,6 +8,7 @@ from functools import partial
 import numpy as np
 
 from varro.misc.util import make_path
+from varro.misc.variables import ABSOLUTE_ALGO_LOGS_PATH
 from varro.algo.util import get_args
 from varro.algo.problems import ProblemFuncApprox, ProblemMNIST
 from varro.algo.strategies.ea.evolve import evolve
@@ -80,7 +81,7 @@ def predict(model_type, problem_type):
 
 def main():
     # Create Logs folder if not created
-    make_path('logs/')
+    make_path(ABSOLUTE_ALGO_LOGS_PATH)
 
     # Get the Arguments parsed from file execution
     args = get_args()
