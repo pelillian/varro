@@ -46,7 +46,7 @@ def get_args():
 	######################################################
 	# 2. What problem are we trying to solve / optimize? #
 	######################################################
-	parser.add_argument('--problem', 
+	parser.add_argument('--problem_type', 
 						default='sinx',
 						const='sinx',
 						nargs='?',

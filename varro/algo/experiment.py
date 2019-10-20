@@ -8,7 +8,7 @@ from functools import partial
 import numpy as np
 
 from varro.algo.util import get_args, mkdir
-from varro.algo.problems import func_approx, ProblemMNIST
+from varro.algo.problems import ProblemFuncApprox, ProblemMNIST
 from varro.algo.models.models import get_nn_model
 from varro.algo.strategies.ea.evolve import evolve
 from varro.algo.strategies.ea.toolbox import nn_toolbox, fpga_toolbox
@@ -18,7 +18,7 @@ FPGA_BITSTREAM_SHAPE = (13294, 1136)
 
 
 def optimize(model, 
-			 problem, 
+			 problem_type, 
 			 strategy, 
 			 cxpb=None, 
 			 mutpb=None, 
@@ -29,7 +29,7 @@ def optimize(model,
 	Args:
 		model (str): A string specifying whether we're optimizing on a neural network
 			or field programmable gate array
-		problem (str): A string specifying what type of problem we're trying to optimize
+		problem_type (str): A string specifying what type of problem we're trying to optimize
 		strategy (str): A string specifying what type of optimization algorithm to use
 		cxpb (float): Cross-over probability for evolutionary algorithm
 		mutpb (float): Mutation probability for evolutionary algorithm
@@ -45,7 +45,7 @@ def optimize(model,
 
 		# 2. Choose Problem and get the specific evaluation function 
 		# for that problem
-		if problem == 'mnist':
+		if problem_type == 'mnist':
 
 			# Get training set for MNIST
 			# and set the evaluation function
@@ -53,7 +53,7 @@ def optimize(model,
 			problem = ProblemMNIST()
 
 			# Get the neural net architecture
-			model, num_weights = get_nn_model(problem, input_dim=problem.input_dim, output_dim=problem.output_dim)
+			model, num_weights = get_nn_model(problem_type, input_dim=problem.input_dim, output_dim=problem.output_dim)
 
 			evaluate_population = partial(evaluate_mnist_nn, 
 										  model=model, 
@@ -65,15 +65,15 @@ def optimize(model,
 			# Get training set for function approximation
 			# and set the evaluation function
 			# for the population
-			X_train, y_train = func_approx.training_set(problem=problem)
+			problem = ProblemFuncApprox(problem_type)
 
 			# Get the neural net architecture
-			model, num_weights = get_nn_model(problem, input_dim=1, output_dim=1)
+			model, num_weights = get_nn_model(problem_type, input_dim=problem.input_dim, output_dim=problem.output_dim)
 
 			evaluate_population = partial(evaluate_func_approx_nn, 
 										  model=model, 
-										  X=X_train, 
-										  y=y_train)
+										  X=problem.X_train, 
+										  y=problem.y_train)
 
 		# Set the individual size to the number of weights
 		# we can alter in the neural network architecture specified
@@ -85,7 +85,7 @@ def optimize(model,
 
 		# 2. Choose Problem and get the specific evaluation function 
 		# for that problem
-		if problem == 'mnist':
+		if problem_type == 'mnist':
 
 			# Get training set for MNIST
 			# and set the evaluation function
@@ -100,7 +100,7 @@ def optimize(model,
 			# Get training set for function approximation
 			# and set the evaluation function
 			# for the population
-			X_train, y_train = func_approx.training_set(problem=problem)
+			X_train, y_train = func_approx.training_set(problem=problem_type)
 			evaluate_population = partial(evaluate_func_approx_fpga, 
 										  X=X_train, 
 										  y=y_train)
@@ -111,7 +111,7 @@ def optimize(model,
 
 	# 3. Choose Strategy
 	if strategy == 'ea':
-		pop, avg_fitness_scores = evolve(problem=problem,
+		pop, avg_fitness_scores = evolve(problem=problem_type,
 										 toolbox=toolbox,
 										 crossover_prob=cxpb,
 										 mutation_prob=mutpb,
@@ -134,7 +134,7 @@ def main():
 
 	# Start Optimization
 	optimize(model=args.model, 
-			 problem=args.problem, 
+			 problem_type=args.problem_type, 
 			 strategy=args.strategy, 
 			 cxpb=args.cxpb, 
 			 mutpb=args.mutpb, 
