@@ -8,7 +8,7 @@ from functools import partial
 import numpy as np
 
 from varro.algo.util import get_args, mkdir
-from varro.algo.problems import func_approx, mnist
+from varro.algo.problems import func_approx, ProblemMNIST
 from varro.algo.models.models import get_nn_model
 from varro.algo.strategies.ea.evolve import evolve
 from varro.algo.strategies.ea.toolbox import nn_toolbox, fpga_toolbox
@@ -50,13 +50,11 @@ def optimize(model,
 			# Get training set for MNIST
 			# and set the evaluation function
 			# for the population
+			mnist = ProblemMNIST()
 			X_train, y_train = mnist.training_set()
 
-			num_classes = len(np.unique(y_train)) # Get number of classes for mnist (10)
-			input_dim = np.prod(X_train[0].shape) # Get input dimension of the flattened mnist image
-
 			# Get the neural net architecture
-			model, num_weights = get_nn_model(problem, input_dim=input_dim, output_dim=num_classes)
+			model, num_weights = get_nn_model(problem, input_dim=mnist.input_dim, output_dim=mnist.output_dim)
 
 			evaluate_population = partial(evaluate_mnist_nn, 
 										  model=model, 
