@@ -10,15 +10,12 @@ import numpy as np
 from varro.misc.util import make_path
 from varro.algo.util import get_args
 from varro.algo.problems import ProblemFuncApprox, ProblemMNIST
-from varro.algo.models import ModelNN
 from varro.algo.strategies.ea.evolve import evolve
-from varro.algo.strategies.ea.toolbox import nn_toolbox, fpga_toolbox
-from varro.algo.evaluate import evaluate, evaluate_mnist_fpga, evaluate_func_approx_fpga
-
-FPGA_BITSTREAM_SHAPE = (13294, 1136)
+from varro.algo.strategies.ea.toolbox import ea_toolbox
+from varro.algo.evaluate import evaluate
 
 
-def optimize(model, 
+def optimize(model_type, 
 			 problem_type, 
 			 strategy, 
 			 cxpb=None, 
@@ -28,7 +25,7 @@ def optimize(model,
 	"""Control center to call other modules to execute the optimization
 
 	Args:
-		model (str): A string specifying whether we're optimizing on a neural network
+		model_type (str): A string specifying whether we're optimizing on a neural network
 			or field programmable gate array
 		problem_type (str): A string specifying what type of problem we're trying to optimize
 		strategy (str): A string specifying what type of optimization algorithm to use
@@ -37,55 +34,29 @@ def optimize(model,
 		ngen (int): Number of generations to run an evolutionary algorithm
 
 	"""
-	# 1. Choose Target Platform
-	# Neural Network
-	if model == 'nn':
-
-		# 2. Choose Problem and get the specific evaluation function 
-		# for that problem
-		if problem_type == 'mnist':
-			problem = ProblemMNIST()
-		else:
-			problem = ProblemFuncApprox(problem_type)
-
-		# Get the neural net architecture
-		model = ModelNN(problem)
-
-		evaluate_population = partial(evaluate, model=model, X=problem.X_train, y=problem.y_train, approx_type=problem.approx_type)
-
-		# Set the individual size to the number of weights
-		# we can alter in the neural network architecture specified
-		toolbox = nn_toolbox(i_size=model.num_weights_alterable,
-							 evaluate_population=evaluate_population)
-
-	# FPGA
+	# 1. Choose Problem and get the specific evaluation function 
+	# for that problem
+	if problem_type == 'mnist':
+		problem = ProblemMNIST()
 	else:
+		problem = ProblemFuncApprox(problem_type)
 
-		# 2. Choose Problem and get the specific evaluation function 
-		# for that problem
-		if problem_type == 'mnist':
+	# 2. Choose Target Platform
+	# Neural Network
+	if model_type == 'nn':
+		from varro.algo.models import ModelNN  # Import here so we don't load tensorflow if not needed
+		model = ModelNN(problem)
+	elif model_type == 'fpga':
+		from varro.algo.models import ModelFPGA
+		model = ModelFPGA()
 
-			# Get training set for MNIST
-			# and set the evaluation function
-			# for the population
-			X_train, y_train = mnist.training_set()
-			evaluate_population = partial(evaluate_mnist_fpga, 
-										  X=X_train, 
-										  y=y_train)
+	evaluate_population = partial(evaluate, model=model, X=problem.X_train, y=problem.y_train, approx_type=problem.approx_type)
 
-		else:
-
-			# Get training set for function approximation
-			# and set the evaluation function
-			# for the population
-			X_train, y_train = func_approx.training_set(problem=problem_type)
-			evaluate_population = partial(evaluate_func_approx_fpga, 
-										  X=X_train, 
-										  y=y_train)
-
-		# Set the individual according to the FPGA Bitstream shape
-		toolbox = fpga_toolbox(i_shape=FPGA_BITSTREAM_SHAPE,
-							   evaluate_population=evaluate_population)
+	# Set the individual size to the number of weights
+	# we can alter in the neural network architecture specified
+	toolbox = ea_toolbox(i_size=model.weights_shape,
+							evaluate_population=evaluate_population,
+							model_type=model_type)
 
 	# 3. Choose Strategy
 	if strategy == 'ea':
@@ -111,7 +82,7 @@ def main():
 	args = get_args()
 
 	# Start Optimization
-	optimize(model=args.model, 
+	optimize(model_type=args.model_type, 
 			 problem_type=args.problem_type, 
 			 strategy=args.strategy, 
 			 cxpb=args.cxpb, 

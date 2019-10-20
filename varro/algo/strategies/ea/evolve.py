@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 
 def evolve(problem, toolbox, crossover_prob, mutation_prob, pop_size, num_generations):
-	"""Evolves weights of neural network to train classifier for MNIST
+	"""Evolves weights to train a model on a dataset.
 	
 	Args:
 		problem (str): A string specifying what type of problem we're trying to optimize

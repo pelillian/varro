@@ -21,7 +21,7 @@ def get_args():
 	##########################
 	# 1. FPGA or Neural Net? #
 	##########################
-	parser.add_argument('--model', 
+	parser.add_argument('--model_type', 
 						default='nn',
 						const='nn',
 						nargs='?',

@@ -60,7 +60,7 @@ class ProblemFuncApprox(Problem):
             self.X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
             self.y_train = rosenbrock(self.X_train)
         else:
-            raise ValueError('Function \'' + str(func) + '\' not recognised')
+            raise ValueError('Problem \'' + str(func) + '\' not recognised')
 
         self._input_dim = 1
         self._output_dim = 1
