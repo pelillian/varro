@@ -15,12 +15,3 @@ class ProblemMNIST(Problem):
         self._output_dim = len(np.unique(self.y_train))
         self._approx_type = Problem.CLASSIFICATION
 
-    def training_set(self):
-        """Loading MNIST training data from keras in two np.arrays
-
-        Returns:
-            Tuple of the ground truth dataset (X_train: features, y_train: labels)
-
-        """
-        return self.X_train, self.y_train
-

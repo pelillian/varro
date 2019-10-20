@@ -50,16 +50,15 @@ def optimize(model,
 			# Get training set for MNIST
 			# and set the evaluation function
 			# for the population
-			mnist = ProblemMNIST()
-			X_train, y_train = mnist.training_set()
+			problem = ProblemMNIST()
 
 			# Get the neural net architecture
-			model, num_weights = get_nn_model(problem, input_dim=mnist.input_dim, output_dim=mnist.output_dim)
+			model, num_weights = get_nn_model(problem, input_dim=problem.input_dim, output_dim=problem.output_dim)
 
 			evaluate_population = partial(evaluate_mnist_nn, 
 										  model=model, 
-										  X=X_train, 
-										  y=y_train)
+										  X=problem.X_train, 
+										  y=problem.y_train)
 
 		else:
 
