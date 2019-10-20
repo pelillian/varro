@@ -83,6 +83,8 @@ def predict(model_type, problem_type):
 
 def main():
     # Create Logs folder if not created
+    print(ROOT_DIR)
+    print(ABSOLUTE_LOGS_PATH)
     make_path(ABSOLUTE_LOGS_PATH)
 
     # Get the Arguments parsed from file execution
