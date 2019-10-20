@@ -15,13 +15,13 @@ from varro.algo.strategies.ea.toolbox import ea_toolbox
 from varro.algo.evaluate import evaluate
 
 
-def optimize(model_type, 
-			 problem_type, 
-			 strategy, 
-			 cxpb=None, 
-			 mutpb=None, 
-			 popsize=None,
-			 ngen=None):
+def fit(model_type,
+		problem_type,
+		strategy,
+		cxpb=None,
+		mutpb=None,
+		popsize=None
+		ngen=None):
 	"""Control center to call other modules to execute the optimization
 
 	Args:
@@ -74,6 +74,10 @@ def optimize(model_type,
 		raise NotImplementedError
 
 
+def predict(model_type, problem_type):
+	raise NotImplementedError
+
+
 def main():
 	# Create Logs folder if not created
 	make_path('logs/')
@@ -82,13 +86,13 @@ def main():
 	args = get_args()
 
 	# Start Optimization
-	optimize(model_type=args.model_type, 
-			 problem_type=args.problem_type, 
-			 strategy=args.strategy, 
-			 cxpb=args.cxpb, 
-			 mutpb=args.mutpb, 
-			 popsize=args.popsize,
-			 ngen=args.ngen)
+	fit(model_type=args.model_type,
+		problem_type=args.problem_type,
+		strategy=args.strategy,
+		cxpb=args.cxpb,
+		mutpb=args.mutpb,
+		popsize=args.popsize
+		ngen=args.ngen)
 
 if __name__ == "__main__":
 	main()
