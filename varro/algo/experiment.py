@@ -20,7 +20,7 @@ def fit(model_type,
 		strategy,
 		cxpb=None,
 		mutpb=None,
-		popsize=None
+		popsize=None,
 		ngen=None):
 	"""Control center to call other modules to execute the optimization
 
@@ -91,7 +91,7 @@ def main():
 		strategy=args.strategy,
 		cxpb=args.cxpb,
 		mutpb=args.mutpb,
-		popsize=args.popsize
+		popsize=args.popsize,
 		ngen=args.ngen)
 
 if __name__ == "__main__":
