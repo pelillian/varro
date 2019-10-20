@@ -62,10 +62,10 @@ class FpgaConfig:
         """Evaluates given data on the FPGA."""
 
         # Send the data and recieves a string back
-        retval = arduino_connection.send_and_recieve(arduino, data, 0.2)
-
+        retval = arduino.send_and_recieve(arduino_connection, data, 0.2)
+        
         # Parse the correct value from the string
-        retval = retval.split("Read value: ", 1)[1][0]
+        retval = retval.decode("utf-8").split("Read value: ", 1)[1][0]
 
         return int(retval)
 
