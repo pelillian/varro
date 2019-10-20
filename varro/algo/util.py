@@ -6,19 +6,6 @@ import os
 import argparse
 
 
-def mkdir(path):
-	"""Creates new folder
-
-	"""
-	try: 
-		os.makedirs(path)
-	except OSError:
-		if not os.path.isdir(path):
-			raise
-		else:
-			print("(%s) already exists" % (path))
-
-
 def get_args():
 	"""Reads command-line arguments.
 	

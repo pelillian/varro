@@ -7,12 +7,13 @@ evolutionary algorithm
 from functools import partial
 import numpy as np
 
-from varro.algo.util import get_args, mkdir
+from varro.misc.util import make_path
+from varro.algo.util import get_args
 from varro.algo.problems import ProblemFuncApprox, ProblemMNIST
-from varro.algo.models.models import get_nn_model
+from varro.algo.models import ModelNN
 from varro.algo.strategies.ea.evolve import evolve
 from varro.algo.strategies.ea.toolbox import nn_toolbox, fpga_toolbox
-from varro.algo.evaluate.evaluate import evaluate_mnist_nn, evaluate_func_approx_nn, evaluate_mnist_fpga, evaluate_func_approx_fpga
+from varro.algo.evaluate import evaluate, evaluate_mnist_fpga, evaluate_func_approx_fpga
 
 FPGA_BITSTREAM_SHAPE = (13294, 1136)
 
@@ -35,9 +36,6 @@ def optimize(model,
 		mutpb (float): Mutation probability for evolutionary algorithm
 		ngen (int): Number of generations to run an evolutionary algorithm
 
-	Returns:
-		None.
-
 	"""
 	# 1. Choose Target Platform
 	# Neural Network
@@ -46,38 +44,18 @@ def optimize(model,
 		# 2. Choose Problem and get the specific evaluation function 
 		# for that problem
 		if problem_type == 'mnist':
-
-			# Get training set for MNIST
-			# and set the evaluation function
-			# for the population
 			problem = ProblemMNIST()
-
-			# Get the neural net architecture
-			model, num_weights = get_nn_model(problem_type, input_dim=problem.input_dim, output_dim=problem.output_dim)
-
-			evaluate_population = partial(evaluate_mnist_nn, 
-										  model=model, 
-										  X=problem.X_train, 
-										  y=problem.y_train)
-
 		else:
-
-			# Get training set for function approximation
-			# and set the evaluation function
-			# for the population
 			problem = ProblemFuncApprox(problem_type)
 
-			# Get the neural net architecture
-			model, num_weights = get_nn_model(problem_type, input_dim=problem.input_dim, output_dim=problem.output_dim)
+		# Get the neural net architecture
+		model = ModelNN(problem)
 
-			evaluate_population = partial(evaluate_func_approx_nn, 
-										  model=model, 
-										  X=problem.X_train, 
-										  y=problem.y_train)
+		evaluate_population = partial(evaluate, model=model, X=problem.X_train, y=problem.y_train, approx_type=problem.approx_type)
 
 		# Set the individual size to the number of weights
 		# we can alter in the neural network architecture specified
-		toolbox = nn_toolbox(i_size=num_weights,
+		toolbox = nn_toolbox(i_size=model.num_weights_alterable,
 							 evaluate_population=evaluate_population)
 
 	# FPGA
@@ -118,16 +96,16 @@ def optimize(model,
 										 pop_size=popsize,
 										 num_generations=ngen)
 	elif strategy == 'cma-es':
-		pass
+		raise NotImplementedError
 	elif strategy == 'ns':
-		pass
+		raise NotImplementedError
 	else:
-		pass
+		raise NotImplementedError
 
 
 def main():
 	# Create Logs folder if not created
-	mkdir('./algo/logs/')
+	make_path('logs/')
 
 	# Get the Arguments parsed from file execution
 	args = get_args()

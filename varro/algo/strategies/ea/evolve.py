@@ -29,7 +29,7 @@ def evolve(problem, toolbox, crossover_prob, mutation_prob, pop_size, num_genera
 
 	# Set Logging configuration
 	log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-	logging.basicConfig(filename='./algo/logs/evolve-{}-popsize{}-ngen{}-cxpb{}-mutpb{}.log'.format(problem, pop_size, num_generations, crossover_prob, mutation_prob),
+	logging.basicConfig(filename='logs/evolve-{}-popsize{}-ngen{}-cxpb{}-mutpb{}.log'.format(problem, pop_size, num_generations, crossover_prob, mutation_prob),
 						level=logging.INFO,
 						format=log_fmt)
 
