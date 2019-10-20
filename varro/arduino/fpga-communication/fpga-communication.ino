@@ -1,6 +1,6 @@
 
 
-const int OUTPUT_PIN = LED_BUILTIN;
+const int OUTPUT_PIN = 13;
 const int INPUT_PIN = 2;
 
 void setup()
