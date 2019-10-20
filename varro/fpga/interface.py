@@ -11,7 +11,7 @@ from varro.fpga.flash import flash_config_file
 import varro.fpga.arduino as arduino
 
 pytrellis.load_database("../prjtrellis-db")
-
+arduino_connection = arduino.initialize_connection()
 
 class FpgaConfig:
     def __init__(self, config_data=None):
@@ -61,7 +61,11 @@ class FpgaConfig:
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
 
-        arduino.send_and_recieve(arduino, val, wait_time)
+        # Send the data and recieves a string back
+        retval = arduino_connection.send_and_recieve(arduino, data, 0.2)
 
-        return [0] * len(data)
+        # Parse the correct value from the string
+        retval = retval.split("Read value: ", 1)[1][0]
+
+        return int(retval)
 
