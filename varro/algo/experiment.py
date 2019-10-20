@@ -8,15 +8,13 @@ import os
 from functools import partial
 import numpy as np
 
-from varro.misc.util import make_path
+from varro.misc.util import make_path, ABSOLUTE_ALGO_LOGS_PATH
 from varro.algo.util import get_args
 from varro.algo.problems import ProblemFuncApprox, ProblemMNIST
 from varro.algo.strategies.ea.evolve import evolve
 from varro.algo.strategies.ea.toolbox import ea_toolbox
 from varro.algo.evaluate import evaluate
 
-ROOT_DIR = '/'.join(os.path.dirname(os.path.abspath(__file__)).split('/')[:-2]) # This is the Project Root
-ABSOLUTE_LOGS_PATH = os.path.join(ROOT_DIR, 'logs/varro/algo')
 
 def fit(model_type,
         problem_type,
