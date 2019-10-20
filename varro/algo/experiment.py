@@ -14,7 +14,7 @@ from varro.algo.strategies.ea.evolve import evolve
 from varro.algo.strategies.ea.toolbox import ea_toolbox
 from varro.algo.evaluate import evaluate
 
-LOGS_PATH = 'varro/varro/logs/algo'
+LOGS_PATH = '../logs/algo/'
 
 def fit(model_type,
         problem_type,
