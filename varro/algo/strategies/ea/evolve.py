@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 from varro.misc.util import make_path
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__)) # This is the Project Root
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__)).split('/')[:-2] # This is the Project Root
 ABSOLUTE_LOGS_PATH = os.path.join(ROOT_DIR, 'logs/varro/algo')
 
 
