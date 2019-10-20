@@ -54,7 +54,7 @@ class ModelNN(Model):
         else:
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
         
-        self.num_weights_alterable = np.sum([np.prod(layer.shape) for layer in self.model.get_weights()[::2]])
+        self.num_weights_alterable = np.sum([np.prod(layer.shape) for layer in self.model.get_weights()])
     
     def load_weights(self, weights):
         """Loads an array of weights into this model.
@@ -69,14 +69,10 @@ class ModelNN(Model):
         ind_idx = 0
         new_weights = []
         for idx, layer in enumerate(self.model.get_weights()):
-            # Ignore odd layers with biases
-            if idx % 2:
-                new_weights.append(layer)
-            else: 
-                # Number of weights we'll take from the individual for this layer
-                num_weights_taken = np.prod(layer.shape)
-                new_weights.append(weights[ind_idx:ind_idx+num_weights_taken].reshape(layer.shape))
-                ind_idx += num_weights_taken
+            # Number of weights we'll take from the individual for this layer
+            num_weights_taken = np.prod(layer.shape)
+            new_weights.append(weights[ind_idx:ind_idx+num_weights_taken].reshape(layer.shape))
+            ind_idx += num_weights_taken
 
         # Set Weights using individual
         self.model.set_weights(new_weights)
