@@ -29,6 +29,8 @@ def ea_toolbox(i_size, evaluate_population, model_type, p=0.5):
     # Define objective, individuals, population, and evaluation
     creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
     creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
+
+    # Defines Individual
     if model_type == 'nn':
         toolbox.register("attribute", random.random)
         toolbox.register("individual", 
