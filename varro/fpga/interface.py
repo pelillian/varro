@@ -8,6 +8,7 @@ import pytrellis
 
 from varro.fpga.util import make_path, get_new_id, get_config_dir
 from varro.fpga.flash import flash_config_file
+import varro.fpga.arduino as arduino
 
 pytrellis.load_database("../prjtrellis-db")
 
@@ -20,14 +21,15 @@ class FpgaConfig:
         if config_data is not None:
             self.load_cram(config_data)
 
-    def get_dir(self):
+    @property
+    def basedir(self):
         """Returns this bitstream's directory."""
         return join(get_config_dir(), str(self.id))
 
     @property
-    def config_file(self):
-        """Returns this bitstream's config file."""
-        return join(self.get_dir(), str(self.id) + ".config")
+    def base_file_name(self):
+        """Returns this bitstream's base file name"""
+        return join(self.basedir, str(self.id))
 
     def load_cram(self, config_data):
         # TODO: Speed this loop up using C++
@@ -49,13 +51,17 @@ class FpgaConfig:
                     print(".tile {}".format(tile.info.name), file=f)
                     print(config, file=f)
 
-    def load_fpga(self, config_data):
+    def load_fpga(self, config_data=None):
         """Loads a 2d array of configuration data onto to the FPGA"""
+
         self.load_cram(config_data)
         self.write_config_file()
-        flash_config_file(self)
+        flash_config_file(self.base_file_name)
 
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
+
+        arduino.send_and_recieve(arduino, val, wait_time)
+
         return [0] * len(data)
 
