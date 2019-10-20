@@ -9,7 +9,10 @@ import numpy as np
 import functools
 from tqdm import tqdm
 
-LOGS_PATH = '../logs/algo/'
+from varro.misc.util import make_path
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__)) # This is the Project Root
+ABSOLUTE_LOGS_PATH = os.path.join(ROOT_DIR, 'logs/varro/algo')
 
 
 def evolve(problem, toolbox, crossover_prob, mutation_prob, pop_size, num_generations):
@@ -32,7 +35,7 @@ def evolve(problem, toolbox, crossover_prob, mutation_prob, pop_size, num_genera
 
     # Set Logging configuration
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(filename=os.path.join(LOGS_PATH, 'experiment-{}-popsize{}-ngen{}-cxpb{}-mutpb{}.log'.format(problem, pop_size, num_generations, crossover_prob, mutation_prob)),
+    logging.basicConfig(filename=os.path.join(ABSOLUTE_LOGS_PATH, 'experiment-{}-popsize{}-ngen{}-cxpb{}-mutpb{}.log'.format(problem, pop_size, num_generations, crossover_prob, mutation_prob)),
                         level=logging.INFO,
                         format=log_fmt)
 

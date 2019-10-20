@@ -14,7 +14,8 @@ from varro.algo.strategies.ea.evolve import evolve
 from varro.algo.strategies.ea.toolbox import ea_toolbox
 from varro.algo.evaluate import evaluate
 
-LOGS_PATH = '../logs/algo/'
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__)) # This is the Project Root
+ABSOLUTE_LOGS_PATH = os.path.join(ROOT_DIR, 'logs/varro/algo')
 
 def fit(model_type,
         problem_type,
@@ -81,7 +82,7 @@ def predict(model_type, problem_type):
 
 def main():
     # Create Logs folder if not created
-    make_path(LOGS_PATH)
+    make_path(ABSOLUTE_LOGS_PATH)
 
     # Get the Arguments parsed from file execution
     args = get_args()
