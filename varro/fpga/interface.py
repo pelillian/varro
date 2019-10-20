@@ -24,7 +24,8 @@ class FpgaConfig:
         """Returns this bitstream's directory."""
         return join(get_config_dir(), str(self.id))
 
-    def this_config_dir(self):
+    @property
+    def config_file(self):
         """Returns this bitstream's config file."""
         return join(self.get_dir(), str(self.id) + ".config")
 
@@ -35,7 +36,7 @@ class FpgaConfig:
                 self.chip.cram.set_bit(i, j, bool(config_data[i,j]))
 
     def write_config_file(self):
-        with open(self.this_config_dir(), "w") as f:
+        with open(self.config_file, "w") as f:
             print(".device {}".format(self.chip.info.name), file=f)
             print("", file=f)
             for meta in self.chip.metadata:
@@ -52,7 +53,7 @@ class FpgaConfig:
         """Loads a 2d array of configuration data onto to the FPGA"""
         self.load_cram(config_data)
         self.write_config_file()
-        flash_config_file(self.this_config_dir())
+        flash_config_file(self)
 
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
