@@ -6,7 +6,7 @@ import os
 from os.path import join
 import pytrellis
 
-from varro.fpga.util import make_path, get_new_id, get_bitstream_dir
+from varro.fpga.util import make_path, get_new_id, get_config_dir
 
 pytrellis.load_database("../prjtrellis-db")
 
@@ -21,7 +21,7 @@ class FpgaConfig:
 
     def get_dir(self):
         """Returns this bitstream's directory."""
-        return join(get_bitstream_dir(), str(self.id))
+        return join(get_config_dir(), str(self.id))
 
     def get_config_path(self):
         """Returns this bitstream's config file."""

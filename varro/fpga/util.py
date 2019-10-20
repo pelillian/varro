@@ -7,13 +7,13 @@ from os.path import join
 
 from varro.misc.util import make_path
 
-CONFIG_DIR = "data/config"
+FPGA_CONFIG_DIR = "data/config"
 
 
-def get_bitstream_dir():
-    """Returns the directory containing the bitstream folders."""
-    make_path(CONFIG_DIR)
-    return CONFIG_DIR
+def get_config_dir():
+    """Returns the directory containing the bitstream/config folders."""
+    make_path(FPGA_CONFIG_DIR)
+    return FPGA_CONFIG_DIR
 
 def is_int(str):
     """Determines if a number is an integer."""
@@ -24,9 +24,9 @@ def is_int(str):
         return False
 
 def get_max_id():
-    """Finds the maximum id in the bitstream."""
+    """Finds the maximum id in the config folder."""
     max_id = 0
-    for filename in os.listdir(get_bitstream_dir()):
+    for filename in os.listdir(get_config_dir()):
         if is_int(filename):
             file_id = int(filename)
             if file_id > max_id:
@@ -36,5 +36,5 @@ def get_max_id():
 def get_new_id():
     """Generates a new id for a new bitstream."""
     new_id = get_max_id() + 1
-    make_path(join(get_bitstream_dir(), str(new_id)))
+    make_path(join(get_config_dir(), str(new_id)))
     return new_id
