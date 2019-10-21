@@ -31,6 +31,11 @@ class FpgaConfig:
         """Returns this bitstream's base file name"""
         return join(self.basedir, str(self.id))
 
+    @property
+    def config_file(self):
+        """Returns this bitstream's base file name"""
+        return self.base_file_name + ".config"
+
     def load_cram(self, config_data):
         # TODO: Speed this loop up using C++
         for i in range(self.chip.cram.frames()):
@@ -63,7 +68,7 @@ class FpgaConfig:
 
         # Send the data and recieves a string back
         retval = arduino.send_and_recieve(arduino_connection, data, 0.2)
-        
+
         # Parse the correct value from the string
         retval = retval.decode("utf-8").split("Read value: ", 1)[1][0]
 
