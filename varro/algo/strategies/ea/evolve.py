@@ -172,7 +172,7 @@ def evolve(problem, toolbox, crossover_prob, mutation_prob, pop_size, num_genera
         halloffame = pop[0]
         for ind in pop:
             if ind.fitness.values[0] < halloffame.fitness.values[0]:
-                halloffame = ind # Fittest individual
+                halloffame = ind # Fittest individual (Lowest score)
         record = stats.compile(pop)
         logbook.record(gen=g, evals=len(invalid_ind), **record)
 
@@ -180,8 +180,11 @@ def evolve(problem, toolbox, crossover_prob, mutation_prob, pop_size, num_genera
         if g % FREQ == 0:
 
             # Fill the dictionary using the dict(key=value[, ...]) constructor
-            cp = dict(population=pop, generation=g, halloffame=halloffame,
-                      logbook=logbook, rndstate=random.getstate())
+            cp = dict(population=pop,
+                        generation=g, 
+                        halloffame=halloffame,
+                        logbook=logbook, 
+                        rndstate=random.getstate())
 
             with open(os.path.join(experiment_checkpoints_dir, 'checkpoint_gen{}.pkl'.format(g)), "wb") as cp_file:
                 pickle.dump(cp, cp_file)
