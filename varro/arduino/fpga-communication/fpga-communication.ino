@@ -30,9 +30,9 @@ void loop()
   } else if(c == 1){
     digitalWrite(OUTPUT_PIN, LOW);   // turn the LED on (HIGH is the voltage level)
     Serial.println("LED set to low");
-    
+
   } else {
-    Serial.print("Could not process input: ");    
+    Serial.print("Could not process input: ");
     Serial.println((int)c);
 
   }
