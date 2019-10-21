@@ -57,20 +57,6 @@ def get_args():
                         action='store',
                         help='The labels to be used for predict')
 
-    # If we are predicting, we need to specify a 
-    # checkpoint file, else we can fit the NN or
-    # FPGA from scratch / evolve from the checpoint
-    if parser.parse_args().purpose == 'predict' \
-        and parser.parse_args().ckpt is None \
-        and parser.parse_args().X is None:
-        parser.error("--purpose == 'predict' requires --ckpt and --X to be specified.")
-
-    # Check that X and y are .npy files
-    if parser.parse_args().X.split('.')[1] != 'npy':
-        parser.error("--X needs to be a .npy file.")
-    if parser.parse_args().y.split('.')[1] != 'npy':
-        parser.error("--y needs to be a .npy file.")
-
     ##########################
     # 1. FPGA or Neural Net? #
     ##########################
@@ -156,6 +142,20 @@ def get_args():
                         type=int)
 
     settings = parser.parse_args()
+
+    # If we are predicting, we need to specify a 
+    # checkpoint file, else we can fit the NN or
+    # FPGA from scratch / evolve from the checpoint
+    if settings.purpose == 'predict' \
+        and settings.ckpt is None \
+        and settings.X is None:
+        parser.error("--purpose == 'predict' requires --ckpt and --X to be specified.")
+
+    # Check that X and y are .npy files
+    if settings.X and settings.X.split('.')[1] != 'npy':
+        parser.error("--X needs to be a .npy file.")
+    if settings.y and settings.y.split('.')[1] != 'npy':
+        parser.error("--y needs to be a .npy file.")
     
     return settings
 
