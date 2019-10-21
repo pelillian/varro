@@ -1,4 +1,4 @@
-import serial 
+import serial
 import time
 
 #The following line is for serial over GPIO
@@ -51,6 +51,6 @@ if __name__=="__main__":
         msg = send_and_recieve(arduino, val, 2)
         print ("Message from arduino: ")
         print (msg.decode("utf-8"))
-        
+
         val = 0 if val else 1
 

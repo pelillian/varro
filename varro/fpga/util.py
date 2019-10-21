@@ -17,7 +17,7 @@ def get_config_dir():
 
 def is_int(str):
     """Determines if a number is an integer."""
-    try: 
+    try:
         int(str)
         return True
     except ValueError:

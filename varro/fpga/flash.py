@@ -13,7 +13,6 @@ def flash_ecp5(file_base_name):
     os.system("openocd -f {0} -c \"transport select jtag; init; svf {1}.svf; exit\" >/dev/null 2>&1".format(CFG_FILE, file_base_name))
 
 def flash_config_file(file_base_name):
-
     os.system("ecppack --svf {0}.svf {0}.config {0}.bit".format(file_base_name))
     flash_ecp5(file_base_name)
 
