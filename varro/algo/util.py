@@ -152,9 +152,9 @@ def get_args():
         parser.error("--purpose == 'predict' requires --ckpt and --X to be specified.")
 
     # Check that X and y are .npy files
-    if settings.X.split('.')[1] != 'npy':
+    if settings.X and settings.X.split('.')[1] != 'npy':
         parser.error("--X needs to be a .npy file.")
-    if settings.y.split('.')[1] != 'npy':
+    if settings.y and settings.y.split('.')[1] != 'npy':
         parser.error("--y needs to be a .npy file.")
     
     return settings
