@@ -72,7 +72,9 @@ def evolve(problem, toolbox, crossover_prob, mutation_prob, pop_size, num_genera
         random.seed(100) # Set seed
         pop = toolbox.population(n=pop_size)
         start_gen = 0
-        halloffame = tools.HallOfFame(maxsize=1)
+        # Truth value of the list of fitness scores is ambiguous
+        # halloffame = tools.HallOfFame(maxsize=1)
+        halloffame = None
         logbook = tools.Logbook()
      
 
@@ -91,12 +93,16 @@ def evolve(problem, toolbox, crossover_prob, mutation_prob, pop_size, num_genera
                                         for fitness_scores_ind in fitness_scores_population \
                                         for fitness_score in fitness_scores_ind]))
     for ind, fitness_scores_ind in zip(pop, fitness_scores_population):
-        ind.fitness.values = fitness_scores_ind 
+
+        # fitness_scores_ind is a list of fitness scores for each 
+        # individual because there might be different 
+        # fitness scores for each individual
+        ind.fitness.values = fitness_scores_ind
 
     # Save statistics about our current population loaded
     stats = tools.Statistics(lambda ind: ind.fitness.values)
-    stats.register("avg", numpy.mean)
-    stats.register("max", numpy.max)
+    stats.register("avg", np.mean)
+    stats.register("max", np.max)
 
 
     #################################
@@ -144,14 +150,15 @@ def evolve(problem, toolbox, crossover_prob, mutation_prob, pop_size, num_genera
         # (These are the individuals that have been mutated
         # or the offspring after crossover with fitness deleted)
         invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
-        fitness_scores_population = toolbox.evaluate_population(invalid_ind)
-        for ind, fitness_scores_ind in zip(invalid_ind, fitness_scores_population):
+        fitness_scores_invalid_population = toolbox.evaluate_population(invalid_ind)
+        for ind, fitness_scores_ind in zip(invalid_ind, fitness_scores_invalid_population):
             ind.fitness.values = fitness_scores_ind
         
         # Compute Average fitness score of generation
         valid_ind = [ind for ind in offspring if ind.fitness.valid]
+        fitness_scores_valid_population = toolbox.evaluate_population(valid_ind)
         avg_fitness_score = np.mean([fitness_score \
-                                        for fitness_scores_ind in list(fitness_scores_population) + list(toolbox.evaluate_population(valid_ind)) \
+                                        for fitness_scores_ind in list(fitness_scores_population) + list(fitness_scores_valid_population) \
                                         for fitness_score in fitness_scores_ind])
         avg_fitness_scores.append(avg_fitness_score)
 
@@ -162,12 +169,15 @@ def evolve(problem, toolbox, crossover_prob, mutation_prob, pop_size, num_genera
         pop[:] = offspring
 
         # Update population statistics
-        halloffame.update(pop)
+        halloffame = pop[0]
+        for ind in pop:
+            if ind.fitness.values[0] < halloffame.fitness.values[0]:
+                halloffame = ind # Fittest individual
         record = stats.compile(pop)
         logbook.record(gen=g, evals=len(invalid_ind), **record)
 
         # Save snapshot of population (offspring)
-        if gen % FREQ == 0:
+        if g % FREQ == 0:
 
             # Fill the dictionary using the dict(key=value[, ...]) constructor
             cp = dict(population=pop, generation=g, halloffame=halloffame,
