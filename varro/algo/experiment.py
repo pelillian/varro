@@ -4,8 +4,11 @@ experiment to solve the problem using a specified
 evolutionary algorithm
 """
 
+import os
 from functools import partial
 import numpy as np
+import pickle
+import logging
 
 from varro.misc.util import make_path
 from varro.misc.variables import ABSOLUTE_ALGO_LOGS_PATH
@@ -79,6 +82,7 @@ def fit(model_type,
 
 
 def predict(model_type, 
+            problem_type,
             X, 
             ckpt):
     """Predicts the output from loading the model saved in checkpoint
@@ -87,10 +91,21 @@ def predict(model_type,
     Args:
         model_type (str): A string specifying whether we're optimizing on a neural network
             or field programmable gate array
+        problem_type (str): A string specifying what type of problem we're trying to optimize
         X (str): Path to the .npy that stores the np.ndarray to use as Input data for model
         ckpt (str): Location of checkpoint to load the population
 
     """
+    # Get logger
+    logger = logging.getLogger(__name__)
+
+    # 1. Choose Problem and get the specific evaluation function 
+    # for that problem
+    if problem_type == 'mnist':
+        problem = ProblemMNIST()
+    else:
+        problem = ProblemFuncApprox(problem_type)
+
     # 1. Choose Target Platform
     # Neural Network
     if model_type == 'nn':
@@ -101,18 +116,23 @@ def predict(model_type,
         model = ModelFPGA()
 
     # Load data from pickle file
-    with open(checkpoint, "r") as cp_file:
+    with open(ckpt, "rb") as cp_file:
+        from deap import base, creator, tools;
+        # Define objective, individuals, population, and evaluation
+        creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
+        creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
         cp = pickle.load(cp_file)
     halloffame = cp["halloffame"] # Load the best individual in the population
 
     # Load Weights into model using individual
-    model.load_weights(halloffame.ind)
+    model.load_weights(halloffame)
 
     # Predict labels using np array in X
     y_pred = np.array(model.predict(np.load(X)))
 
     # Save the y_pred into a file
-    np.save(os.path.join(X.split('.')[0] + '_y_pred', '.npy'))
+    np.save(os.path.join(X[:-4] + '_y_pred.npy'), y_pred)
+    logger.info('Predictions saved in {}!'.format(os.path.join(X[:-4] + '_y_pred.npy')))
 
 
 def main():
@@ -138,7 +158,10 @@ def main():
     else:
 
         # Make prediction
-        predict()
+        predict(model_type=args.model_type, 
+                problem_type=args.problem_type,
+                X=args.X,
+                ckpt=args.ckpt)
 
 if __name__ == "__main__":
     main()
