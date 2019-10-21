@@ -41,7 +41,7 @@ def evolve(problem, toolbox, crossover_prob, mutation_prob, pop_size, num_genera
 
     # Create experiment folder to store
     # snapshots of population
-    make_path(experiment_snapshots_dir)
+    make_path(experiment_checkpoints_dir)
 
     # Set Logging configuration
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
