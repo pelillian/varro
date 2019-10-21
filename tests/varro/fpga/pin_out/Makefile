@@ -21,3 +21,6 @@ clean:
 	rm -f *.svf *.bit *.config *.json
 
 PHONY: prog clean
+
+.SECONDARY:
+
