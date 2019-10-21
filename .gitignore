@@ -173,4 +173,8 @@ data
 config
 
 # arduino flashing
-arduino/fpga-communication/build-uno/
+build-pro/
+build-uno/
+
+# FPGA Communication
+*.arduino.*

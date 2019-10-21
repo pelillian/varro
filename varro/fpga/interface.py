@@ -6,10 +6,12 @@ import os
 from os.path import join
 import pytrellis
 
-from varro.fpga.util import make_path, get_new_id, get_bitstream_dir
+from varro.fpga.util import make_path, get_new_id, get_config_dir
+from varro.fpga.flash import flash_config_file
+import varro.fpga.arduino as arduino
 
 pytrellis.load_database("../prjtrellis-db")
-
+arduino_connection = arduino.initialize_connection()
 
 class FpgaConfig:
     def __init__(self, config_data=None):
@@ -19,13 +21,15 @@ class FpgaConfig:
         if config_data is not None:
             self.load_cram(config_data)
 
-    def get_dir(self):
+    @property
+    def basedir(self):
         """Returns this bitstream's directory."""
-        return join(get_bitstream_dir(), str(self.id))
+        return join(get_config_dir(), str(self.id))
 
-    def get_config_path(self):
-        """Returns this bitstream's config file."""
-        return join(self.get_dir(), str(self.id) + ".config")
+    @property
+    def base_file_name(self):
+        """Returns this bitstream's base file name"""
+        return join(self.basedir, str(self.id))
 
     def load_cram(self, config_data):
         # TODO: Speed this loop up using C++
@@ -34,7 +38,7 @@ class FpgaConfig:
                 self.chip.cram.set_bit(i, j, bool(config_data[i,j]))
 
     def write_config_file(self):
-        with open(self.get_config_path(), "w") as f:
+        with open(self.config_file, "w") as f:
             print(".device {}".format(self.chip.info.name), file=f)
             print("", file=f)
             for meta in self.chip.metadata:
@@ -47,12 +51,21 @@ class FpgaConfig:
                     print(".tile {}".format(tile.info.name), file=f)
                     print(config, file=f)
 
-    def flash(self, config_data):
-        """Flashes a 2d array of configuration data to the FPGA"""
+    def load_fpga(self, config_data=None):
+        """Loads a 2d array of configuration data onto to the FPGA"""
+
         self.load_cram(config_data)
         self.write_config_file()
+        flash_config_file(self.base_file_name)
 
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
-        return [0] * len(data)
+
+        # Send the data and recieves a string back
+        retval = arduino.send_and_recieve(arduino_connection, data, 0.2)
+        
+        # Parse the correct value from the string
+        retval = retval.decode("utf-8").split("Read value: ", 1)[1][0]
+
+        return int(retval)
 
