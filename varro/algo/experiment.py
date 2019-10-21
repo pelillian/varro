@@ -10,7 +10,7 @@ import numpy as np
 from varro.misc.util import make_path
 from varro.misc.variables import ABSOLUTE_ALGO_LOGS_PATH
 from varro.algo.util import get_args
-from varro.algo.problems import ProblemFuncApprox, ProblemMNIST
+from varro.algo.problems import Problem, ProblemFuncApprox, ProblemMNIST
 from varro.algo.strategies.ea.evolve import evolve
 from varro.algo.strategies.ea.toolbox import ea_toolbox
 from varro.algo.evaluate import evaluate
@@ -22,7 +22,8 @@ def fit(model_type,
         cxpb=None,
         mutpb=None,
         popsize=None,
-        ngen=None):
+        ngen=None, 
+        ckpt=None):
     """Control center to call other modules to execute the optimization
 
     Args:
@@ -33,6 +34,7 @@ def fit(model_type,
         cxpb (float): Cross-over probability for evolutionary algorithm
         mutpb (float): Mutation probability for evolutionary algorithm
         ngen (int): Number of generations to run an evolutionary algorithm
+        ckpt (str): Location of checkpoint to load the population
 
     """
     # 1. Choose Problem and get the specific evaluation function 
@@ -66,7 +68,8 @@ def fit(model_type,
                                          crossover_prob=cxpb,
                                          mutation_prob=mutpb,
                                          pop_size=popsize,
-                                         num_generations=ngen)
+                                         num_generations=ngen, 
+                                         checkpoint=ckpt)
     elif strategy == 'cma-es':
         raise NotImplementedError
     elif strategy == 'ns':
@@ -75,8 +78,41 @@ def fit(model_type,
         raise NotImplementedError
 
 
-def predict(model_type, problem_type):
-    raise NotImplementedError
+def predict(model_type, 
+            X, 
+            ckpt):
+    """Predicts the output from loading the model saved in checkpoint
+    and saves y_pred into same path as X but with a _y_pred in the name
+
+    Args:
+        model_type (str): A string specifying whether we're optimizing on a neural network
+            or field programmable gate array
+        X (str): Path to the .npy that stores the np.ndarray to use as Input data for model
+        ckpt (str): Location of checkpoint to load the population
+
+    """
+    # 1. Choose Target Platform
+    # Neural Network
+    if model_type == 'nn':
+        from varro.algo.models import ModelNN  # Import here so we don't load tensorflow if not needed
+        model = ModelNN(problem)
+    elif model_type == 'fpga':
+        from varro.algo.models import ModelFPGA
+        model = ModelFPGA()
+
+    # Load data from pickle file
+    with open(checkpoint, "r") as cp_file:
+        cp = pickle.load(cp_file)
+    halloffame = cp["halloffame"] # Load the best individual in the population
+
+    # Load Weights into model using individual
+    model.load_weights(halloffame.ind)
+
+    # Predict labels using np array in X
+    y_pred = np.array(model.predict(np.load(X)))
+
+    # Save the y_pred into a file
+    np.save(os.path.join(X.split('.')[0] + '_y_pred', '.npy'))
 
 
 def main():
@@ -86,14 +122,23 @@ def main():
     # Get the Arguments parsed from file execution
     args = get_args()
 
-    # Start Optimization
-    fit(model_type=args.model_type,
-        problem_type=args.problem_type,
-        strategy=args.strategy,
-        cxpb=args.cxpb,
-        mutpb=args.mutpb,
-        popsize=args.popsize,
-        ngen=args.ngen)
+    # Check if we're fitting or predicting
+    if args.purpose == 'fit':
+        
+        # Start Optimization
+        fit(model_type=args.model_type,
+            problem_type=args.problem_type,
+            strategy=args.strategy,
+            cxpb=args.cxpb,
+            mutpb=args.mutpb,
+            popsize=args.popsize,
+            ngen=args.ngen, 
+            ckpt=args.ckpt)
+    
+    else:
+
+        # Make prediction
+        predict()
 
 if __name__ == "__main__":
     main()
