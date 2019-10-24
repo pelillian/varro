@@ -56,6 +56,7 @@ def fit(model_type,
         from varro.algo.models import ModelFPGA
         model = ModelFPGA()
 
+    # Evaluate Population
     evaluate_population = partial(evaluate, model=model, X=problem.X_train, y=problem.y_train, approx_type=problem.approx_type)
 
     # Set the individual size to the number of weights
@@ -128,7 +129,7 @@ def predict(model_type,
     model.load_weights(halloffame)
 
     # Predict labels using np array in X
-    y_pred = np.array(model.predict(np.load(X)))
+    y_pred = p.array(model.predict(np.load(X)))
 
     # Save the y_pred into a file
     np.save(os.path.join(X[:-4] + '_y_pred.npy'), y_pred)

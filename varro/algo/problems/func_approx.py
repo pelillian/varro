@@ -40,29 +40,35 @@ class ProblemFuncApprox(Problem):
         # Set seed
         random.seed(100)
 
+        # Choose classification or regression
+        self._approx_type = Problem.REGRESSION
+
         # Get the function to approximate
         if func == 'sinx':
-            self.X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
+            self.X_train = random.sample(list(np.arange(-1, 1, 0.001)), k=500)
             self.y_train = np.sin(self.X_train)
         elif func == 'cosx':
-            self.X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
+            self.X_train = random.sample(list(np.arange(-1, 1, 0.001)), k=500)
             self.y_train = np.cos(self.X_train)
         elif func == 'tanx':
-            self.X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
+            self.X_train = random.sample(list(np.arange(-1, 1, 0.001)), k=500)
             self.y_train = np.tan(self.X_train)
         elif func == 'x':
-            self.X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
+            self.X_train = random.sample(list(np.arange(-1, 1, 0.001)), k=500)
             self.y_train = self.X_train
         elif func == 'ras':
             self.X_train = random.sample(list(np.arange(-5.12, 5.12, 0.01)), k=500)
             self.y_train = rastrigin(self.X_train)
         elif func == 'rosen':
-            self.X_train = random.sample(list(np.arange(-100, 100, 0.1)), k=500)
+            self.X_train = random.sample(list(np.arange(-1, 1, 0.001)), k=500)
             self.y_train = rosenbrock(self.X_train)
+        elif func == 'step':
+            self.X_train = random.sample(list(np.arange(-1, 1, 0.001)), k=500)
+            self.y_train = (self.X_train > 0).astype(int)
+            self._approx_type = Problem.CLASSIFICATION
         else:
             raise ValueError('Problem \'' + str(func) + '\' not recognised')
 
         self._input_dim = 1
         self._output_dim = 1
-        self._approx_type = Problem.REGRESSION
 
