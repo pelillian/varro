@@ -133,8 +133,8 @@ def evolve(problem,
 
         # Keep the elite individuals for next generation
         # without mutation
-        elite = offspring[:elite_size*pop_size]
-        non_elite = offspring[elite_size*pop_size:]
+        elite = offspring[:int(elite_size*pop_size)]
+        non_elite = offspring[int(elite_size*pop_size):]
 
         # Apply crossover on the non-elite offspring by
         # choosing alternate offsprings

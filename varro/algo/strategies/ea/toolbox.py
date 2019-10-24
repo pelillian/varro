@@ -1,5 +1,5 @@
 """
-This module contains functions to configure the toolbox 
+This module contains functions to configure the toolbox
 for neural net / fpga
 """
 
@@ -33,34 +33,33 @@ def ea_toolbox(i_size, evaluate_population, model_type, p=0.5):
     # Defines Individual
     if model_type == 'nn':
         toolbox.register("attribute", random.random)
-        toolbox.register("individual", 
-                         tools.initRepeat, 
+        toolbox.register("individual",
+                         tools.initRepeat,
                          creator.Individual,
-                         toolbox.attribute, 
+                         toolbox.attribute,
                          n=i_size)
-        toolbox.register("mutate", 
-                         tools.mutGaussian, 
-                         mu=0, 
-                         sigma=1, 
+        toolbox.register("mutate",
+                         tools.mutGaussian,
+                         mu=0,
+                         sigma=5, 
                          indpb=0.1)
     elif model_type == 'fpga':
-        toolbox.register("individual", 
+        toolbox.register("individual",
                          np.random.choice(a=[False, True], size=i_shape, p=[p, 1-p]))
-        toolbox.register("mutate", 
+        toolbox.register("mutate",
                          tools.mutFlipBit,
                          indpb=0.1)
 
-    toolbox.register("population", 
-                     tools.initRepeat, 
-                     list, 
+    toolbox.register("population",
+                     tools.initRepeat,
+                     list,
                      toolbox.individual)
-    toolbox.register("mate", 
+    toolbox.register("mate",
                      tools.cxTwoPoint)
-    toolbox.register("select", 
-                     tools.selTournament, 
+    toolbox.register("select",
+                     tools.selTournament,
                      tournsize=3)
-    toolbox.register("evaluate_population", 
+    toolbox.register("evaluate_population",
                      evaluate_population)
-    
-    return toolbox
 
+    return toolbox
