@@ -109,8 +109,8 @@ def get_args():
     # 3b. What mutation probability do you want for the evolutionary algo? #
     ########################################################################
     parser.add_argument('--mutpb',
-                        default=0.2,
-                        const=0.2,
+                        default=0.01,
+                        const=0.01,
                         nargs='?',
                         metavar='MUTATION-PROBABILITY',
                         action='store',

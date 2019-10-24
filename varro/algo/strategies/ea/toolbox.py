@@ -41,7 +41,7 @@ def ea_toolbox(i_size, evaluate_population, model_type, p=0.5):
         toolbox.register("mutate",
                          tools.mutGaussian,
                          mu=0,
-                         sigma=5, 
+                         sigma=1, 
                          indpb=0.1)
     elif model_type == 'fpga':
         toolbox.register("individual",
