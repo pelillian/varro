@@ -2,7 +2,7 @@
 This module contains classes for defining each type of model.
 """
 import numpy as np
-from keras.layers import Dense
+from keras.layers import Dense, BatchNormalization
 from keras.models import Sequential
 
 from varro.algo.problems import Problem
@@ -48,8 +48,8 @@ class ModelNN(Model):
             self.model.add(Dense(problem.output_dim, activation='softmax'))
         elif problem.approx_type == Problem.REGRESSION:
             self.model.add(Dense(1, input_dim=problem.input_dim, activation='relu'))
-            self.model.add(Dense(3, activation='relu'))
-            self.model.add(Dense(2, activation='relu'))
+            self.model.add(Dense(12, activation='sigmoid'))
+            self.model.add(Dense(12, activation='sigmoid'))
             self.model.add(Dense(problem.output_dim, activation='sigmoid'))
         else:
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))

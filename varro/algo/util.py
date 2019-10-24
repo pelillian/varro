@@ -158,4 +158,3 @@ def get_args():
         parser.error("--y needs to be a .npy file.")
     
     return settings
-
