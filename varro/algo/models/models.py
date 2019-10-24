@@ -7,8 +7,6 @@ from keras.models import Sequential
 
 from varro.algo.problems import Problem
 
-from varro.fpga.interface import FpgaConfig
-
 
 class Model:
     def __init__(self):
@@ -53,9 +51,9 @@ class ModelNN(Model):
             self.model.add(Dense(problem.output_dim, activation='sigmoid'))
         else:
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
-        
+
         self.num_weights_alterable = np.sum([np.prod(layer.shape) for layer in self.model.get_weights()])
-    
+
     def load_weights(self, weights):
         """Loads an array of weights into this model.
 
@@ -90,8 +88,8 @@ class ModelFPGA(Model):
 
     def __init__(self):
         """FPGA architecture wrapper class"""
-        pass
-    
+        from varro.fpga.interface import FpgaConfig
+
     def load_weights(self, weights):
         """Loads an array of weights into this model.
 
@@ -105,7 +103,7 @@ class ModelFPGA(Model):
         """
         self.config = FpgaConfig(weights)
         self.config.load_fpga()
-    
+
     def predict(self, X):
         """Evaluates the model on given data."""
         return self.config.evaluate(X)
