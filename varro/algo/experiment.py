@@ -1,6 +1,6 @@
 """
-This module contains the main function we'll use to run the 
-experiment to solve the problem using a specified 
+This module contains the main function we'll use to run the
+experiment to solve the problem using a specified
 evolutionary algorithm
 """
 
@@ -25,7 +25,8 @@ def fit(model_type,
         cxpb=None,
         mutpb=None,
         popsize=None,
-        ngen=None, 
+        elitesize=None,
+        ngen=None,
         ckpt=None):
     """Control center to call other modules to execute the optimization
 
@@ -36,11 +37,13 @@ def fit(model_type,
         strategy (str): A string specifying what type of optimization algorithm to use
         cxpb (float): Cross-over probability for evolutionary algorithm
         mutpb (float): Mutation probability for evolutionary algorithm
+        popsize (int): Number of individuals to keep in each Population
+        elitesize (float): Percentage of fittest individuals to pass on to next generation
         ngen (int): Number of generations to run an evolutionary algorithm
         ckpt (str): Location of checkpoint to load the population
 
     """
-    # 1. Choose Problem and get the specific evaluation function 
+    # 1. Choose Problem and get the specific evaluation function
     # for that problem
     if problem_type == 'mnist':
         problem = ProblemMNIST()
@@ -72,7 +75,8 @@ def fit(model_type,
                                          crossover_prob=cxpb,
                                          mutation_prob=mutpb,
                                          pop_size=popsize,
-                                         num_generations=ngen, 
+                                         elite_size=elitesize,
+                                         num_generations=ngen,
                                          checkpoint=ckpt)
     elif strategy == 'cma-es':
         raise NotImplementedError
@@ -82,9 +86,9 @@ def fit(model_type,
         raise NotImplementedError
 
 
-def predict(model_type, 
+def predict(model_type,
             problem_type,
-            X, 
+            X,
             ckpt):
     """Predicts the output from loading the model saved in checkpoint
     and saves y_pred into same path as X but with a _y_pred in the name
@@ -100,7 +104,7 @@ def predict(model_type,
     # Get logger
     logger = logging.getLogger(__name__)
 
-    # 1. Choose Problem and get the specific evaluation function 
+    # 1. Choose Problem and get the specific evaluation function
     # for that problem
     if problem_type == 'mnist':
         problem = ProblemMNIST()
@@ -145,7 +149,7 @@ def main():
 
     # Check if we're fitting or predicting
     if args.purpose == 'fit':
-        
+
         # Start Optimization
         fit(model_type=args.model_type,
             problem_type=args.problem_type,
@@ -153,17 +157,17 @@ def main():
             cxpb=args.cxpb,
             mutpb=args.mutpb,
             popsize=args.popsize,
-            ngen=args.ngen, 
+            elitesize=args.elitesize,
+            ngen=args.ngen,
             ckpt=args.ckpt)
-    
+
     else:
 
         # Make prediction
-        predict(model_type=args.model_type, 
+        predict(model_type=args.model_type,
                 problem_type=args.problem_type,
                 X=args.X,
                 ckpt=args.ckpt)
 
 if __name__ == "__main__":
     main()
-

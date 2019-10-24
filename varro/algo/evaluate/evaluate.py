@@ -38,9 +38,8 @@ def evaluate(population, model, X, y, approx_type):
 
         if approx_type == Problem.CLASSIFICATION:
             categorical_accuracy = accuracy_score(y_true=y, y_pred=(np.array(y_pred) > 0.5).astype(float))
+            print(np.sum(y_pred == 0.))
             # categorical_accuracy = accuracy_score(y_true=y, y_pred=np.argmax(y_pred, axis=-1))
-            print('y: {}'.format(y))
-            print('y_pred: {}'.format(y_pred))
             fitness_scores.append([-categorical_accuracy])
         elif approx_type == Problem.REGRESSION:
             mse = np.mean(np.square(y - y_pred))
