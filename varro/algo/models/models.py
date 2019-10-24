@@ -43,7 +43,8 @@ class ModelNN(Model):
         if problem.approx_type == Problem.CLASSIFICATION:
             self.model.add(Dense(128, input_dim=problem.input_dim, activation='relu'))
             self.model.add(Dense(64, activation='relu'))
-            self.model.add(Dense(problem.output_dim, activation='softmax'))
+            # self.model.add(Dense(problem.output_dim, activation='softmax'))
+            self.model.add(Dense(problem.output_dim, activation='sigmoid'))
         elif problem.approx_type == Problem.REGRESSION:
             self.model.add(Dense(1, input_dim=problem.input_dim, activation='relu'))
             self.model.add(Dense(12, activation='sigmoid'))

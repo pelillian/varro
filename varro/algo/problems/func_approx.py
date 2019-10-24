@@ -64,7 +64,7 @@ class ProblemFuncApprox(Problem):
             self.y_train = rosenbrock(self.X_train)
         elif func == 'step':
             self.X_train = random.sample(list(np.arange(-1, 1, 0.001)), k=500)
-            self.y_train = (self.X_train > 0).astype(int)
+            self.y_train = (np.array(self.X_train) > 0).astype(float)
             self._approx_type = Problem.CLASSIFICATION
         else:
             raise ValueError('Problem \'' + str(func) + '\' not recognised')
