@@ -38,7 +38,6 @@ def evaluate(population, model, X, y, approx_type):
 
         if approx_type == Problem.CLASSIFICATION:
             categorical_accuracy = accuracy_score(y_true=y, y_pred=(np.array(y_pred) > 0.5).astype(float))
-            print(np.sum(y_pred == 0.))
             # categorical_accuracy = accuracy_score(y_true=y, y_pred=np.argmax(y_pred, axis=-1))
             fitness_scores.append([-categorical_accuracy])
         elif approx_type == Problem.REGRESSION:
@@ -48,4 +47,3 @@ def evaluate(population, model, X, y, approx_type):
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
 
     return np.array(fitness_scores)
-
