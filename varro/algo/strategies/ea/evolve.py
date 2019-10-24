@@ -184,9 +184,6 @@ def evolve(problem,
                                         for fitness_score in fitness_scores_ind])
         avg_fitness_scores.append(avg_fitness_score)
 
-        # Log Average score of population
-        logger.info('Generation {} Avg. Fitness Score: {}'.format(g, avg_fitness_score))
-
         # The population is entirely replaced by the offspring
         pop[:] = offspring
 
@@ -210,6 +207,11 @@ def evolve(problem,
 
             with open(os.path.join(experiment_checkpoints_dir, 'checkpoint_gen{}.pkl'.format(g)), "wb") as cp_file:
                 pickle.dump(cp, cp_file)
+
+        # Log Average score of population
+        logger.info('Generation {} Avg. Fitness Score: {} | Fittest Score: {}'.format(g,
+                                                                                      avg_fitness_score,
+                                                                                      halloffame.fitness.values[0]))
 
 
     return pop, avg_fitness_scores
