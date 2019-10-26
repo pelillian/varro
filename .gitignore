@@ -178,3 +178,6 @@ build-uno/
 
 # FPGA Communication
 *.arduino.*
+
+checkpoints
+
