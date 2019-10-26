@@ -45,7 +45,7 @@ def ea_toolbox(i_shape, evaluate_population, model_type, p=0.5):
                          indpb=0.1)
     elif model_type == 'fpga':
         toolbox.register("individual",
-                         np.random.choice(a=[False, True], size=i_shape, p=[p, 1-p]))
+                         np.random.choice, a=[False, True], size=i_shape, p=[p, 1-p])
         toolbox.register("mutate",
                          tools.mutFlipBit,
                          indpb=0.1)
