@@ -3,7 +3,6 @@ This module contains the class for Evaluate, with one constructor for FPGA and o
 """
 
 import numpy as np
-import keras
 from sklearn.metrics import accuracy_score
 
 from varro.algo.problems import Problem

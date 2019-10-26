@@ -2,10 +2,6 @@
 This module contains classes for defining each type of model.
 """
 
-import numpy as np
-from keras.layers import Dense, BatchNormalization
-from keras.models import Sequential
-
 from varro.algo.models import Model
 from varro.algo.problems import Problem
 
@@ -18,6 +14,10 @@ class ModelNN(Model):
             problem (str): String specifying the type of problem we're dealing with
 
         """
+        import numpy as np
+        from keras.layers import Dense, BatchNormalization
+        from keras.models import Sequential
+
         self.model = Sequential()
         if problem.approx_type == Problem.CLASSIFICATION:
             self.model.add(Dense(128, input_dim=problem.input_dim, activation='relu'))
