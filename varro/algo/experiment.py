@@ -64,7 +64,7 @@ def fit(model_type,
 
     # Set the individual size to the number of weights
     # we can alter in the neural network architecture specified
-    toolbox = ea_toolbox(i_size=model.weights_shape,
+    toolbox = ea_toolbox(i_shape=model.weights_shape,
                             evaluate_population=evaluate_population,
                             model_type=model_type)
 
