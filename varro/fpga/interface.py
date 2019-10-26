@@ -13,6 +13,7 @@ import varro.fpga.arduino as arduino
 pytrellis.load_database("../prjtrellis-db")
 arduino_connection = arduino.initialize_connection()
 
+
 class FpgaConfig:
     def __init__(self, config_data=None):
         """This class handles flashing and evaluating the FGPA bitstream"""

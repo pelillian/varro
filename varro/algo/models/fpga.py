@@ -3,7 +3,6 @@ This module contains classes for defining each type of model.
 """
 
 from varro.algo.models import Model
-from varro.fpga.interface import FpgaConfig
 
 
 class ModelFPGA(Model):
@@ -24,6 +23,7 @@ class ModelFPGA(Model):
                         [0, 0, 1, 0, ..., 0]]
 
         """
+        from varro.fpga.interface import FpgaConfig
         self.config = FpgaConfig(weights)
         self.config.load_fpga()
 
