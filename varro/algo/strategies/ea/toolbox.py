@@ -8,11 +8,11 @@ import numpy as np
 from deap import base, creator, tools
 
 
-def ea_toolbox(i_size, evaluate_population, model_type, p=0.5):
+def ea_toolbox(i_shape, evaluate_population, model_type, p=0.5):
     """Initializes and configures the DEAP toolbox for evolving the weights of a model.
 
     Args:
-        i_size (int): Size of an individual in the population (array length)
+        i_shape (int or tuple): Size or shape of an individual in the population
         evaluate_population (function): Function to evaluate an entire population
         p: Probability that random bit in each individual is 0 / 1
 
@@ -37,7 +37,7 @@ def ea_toolbox(i_size, evaluate_population, model_type, p=0.5):
                          tools.initRepeat,
                          creator.Individual,
                          toolbox.attribute,
-                         n=i_size)
+                         n=i_shape)
         toolbox.register("mutate",
                          tools.mutGaussian,
                          mu=0,
