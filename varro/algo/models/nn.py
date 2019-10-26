@@ -1,35 +1,14 @@
 """
 This module contains classes for defining each type of model.
 """
+
 import numpy as np
 from keras.layers import Dense, BatchNormalization
 from keras.models import Sequential
 
+from varro.algo.models import Model
 from varro.algo.problems import Problem
 
-
-class Model:
-    def __init__(self):
-        """Wrapper class for different types of models."""
-        pass
-
-    def load_weights(self, weights):
-        """Loads an array of weights into this model.
-
-        Args:
-            weights (np.ndarray of floats): The new values for the weights
-                - e.g. [0.93, 0.85, 0.24, ..., 0.19]
-
-        """
-        pass
-
-    def predict(self, X):
-        """Evaluates the model on given data."""
-        pass
-
-    @property
-    def weights_shape(self):
-        pass
 
 class ModelNN(Model):
     def __init__(self, problem):
@@ -83,33 +62,4 @@ class ModelNN(Model):
     @property
     def weights_shape(self):
         return self.num_weights_alterable
-
-class ModelFPGA(Model):
-    FPGA_BITSTREAM_SHAPE = (13294, 1136)
-
-    def __init__(self):
-        """FPGA architecture wrapper class"""
-        from varro.fpga.interface import FpgaConfig
-
-    def load_weights(self, weights):
-        """Loads an array of weights into this model.
-
-        Args:
-            weights (np.ndarray of floats): The new values for the weights
-                - e.g. [[0, 1, 0, 1, ..., 0],
-                        [1, 0, 1, 1, ..., 1],
-                        ...
-                        [0, 0, 1, 0, ..., 0]]
-
-        """
-        self.config = FpgaConfig(weights)
-        self.config.load_fpga()
-
-    def predict(self, X):
-        """Evaluates the model on given data."""
-        return self.config.evaluate(X)
-
-    @property
-    def weights_shape(self):
-        return ModelFPGA.FPGA_BITSTREAM_SHAPE
 
