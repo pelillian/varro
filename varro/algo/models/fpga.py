@@ -38,7 +38,10 @@ class ModelFPGA(Model):
             X *= 255.0 / (problem.maximum - problem.minimum)
             X = X.astype(int)
 
-        return self.config.evaluate(X)
+        y = self.config.evaluate(X)
+        #TODO: scale y
+        return y
+
 
     @property
     def weights_shape(self):
