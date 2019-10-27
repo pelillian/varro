@@ -48,7 +48,7 @@ def fit(model_type,
     if problem_type == 'mnist':
         problem = ProblemMNIST()
     else:
-        problem = ProblemFuncApprox(problem_type)
+        problem = ProblemFuncApprox(func=problem_type, model_type=model_type)
 
     # 2. Choose Target Platform
     # Neural Network
@@ -109,7 +109,7 @@ def predict(model_type,
     if problem_type == 'mnist':
         problem = ProblemMNIST()
     else:
-        problem = ProblemFuncApprox(problem_type)
+        problem = ProblemFuncApprox(func=problem_type, model_type=model_type)
 
     # 1. Choose Target Platform
     # Neural Network

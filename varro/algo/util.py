@@ -78,7 +78,6 @@ def get_args():
                         nargs='?',
                         metavar='PROBLEM-TO-TACKLE',
                         action='store',
-                        choices=['x', 'sinx', 'cosx', 'tanx', 'ras', 'rosen', 'step', 'mnist'],
                         help='The problem to solve / optimize using an evolutionary strategy')
 
     ##########################################################
