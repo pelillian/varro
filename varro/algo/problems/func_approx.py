@@ -47,6 +47,8 @@ class ProblemFuncApprox(Problem):
         self._output_dim = 1
 
         def sample_float(start, end, step):
+            self.minimum = start
+            self.maximum = end
             return random.sample(list(np.arange(start, end, step)), k=500)
 
         # Get the function to approximate

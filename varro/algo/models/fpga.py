@@ -27,8 +27,13 @@ class ModelFPGA(Model):
         self.config = FpgaConfig(weights)
         self.config.load_fpga(weights)
 
-    def predict(self, X):
+    def predict(self, X, problem=None):
         """Evaluates the model on given data."""
+        if isinstance(X[0], numbers.Real):
+            X -= problem.minimum
+            X *= 255.0 / (problem.maximum - problem.minimum)
+            data = data.astype(int)
+
         return self.config.evaluate(X)
 
     @property

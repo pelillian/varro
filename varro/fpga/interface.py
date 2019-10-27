@@ -4,9 +4,7 @@ This module handles communication of data to the FPGA
 
 import os
 from os.path import join
-import numpy as np
 import pytrellis
-import numbers
 
 from varro.fpga.util import make_path, get_new_id, get_config_dir
 from varro.fpga.flash import flash_config_file
@@ -68,10 +66,6 @@ class FpgaConfig:
 
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
-
-        if isinstance(data[0], numbers.Real):
-            data *= 255.0 / np.max(data)
-            data = data.astype(int)
 
         results = []
         for datum in data:

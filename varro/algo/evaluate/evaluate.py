@@ -36,7 +36,7 @@ def evaluate(population, model, problem):
         model.load_weights(individual)
 
         # Predict labels
-        y_pred = np.array(model.predict(X))
+        y_pred = np.array(model.predict(X, problem=problem))
 
         if approx_type == Problem.CLASSIFICATION:
             categorical_accuracy = accuracy_score(y_true=y, y_pred=(np.array(y_pred) > 0.5).astype(float))

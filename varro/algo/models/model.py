@@ -18,7 +18,7 @@ class Model:
         """
         pass
 
-    def predict(self, X):
+    def predict(self, X, problem=None):
         """Evaluates the model on given data."""
         pass
 

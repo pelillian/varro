@@ -56,7 +56,7 @@ class ModelNN(Model):
         # Set Weights using individual
         self.model.set_weights(new_weights)
 
-    def predict(self, X):
+    def predict(self, X, problem=None):
         """Evaluates the model on given data."""
         return self.model.predict(X)
 
