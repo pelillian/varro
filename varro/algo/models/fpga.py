@@ -2,6 +2,9 @@
 This module contains classes for defining each type of model.
 """
 
+import numbers
+import numpy as np
+
 from varro.algo.models import Model
 
 
@@ -29,10 +32,11 @@ class ModelFPGA(Model):
 
     def predict(self, X, problem=None):
         """Evaluates the model on given data."""
+        X = np.asarray(X)
         if isinstance(X[0], numbers.Real):
             X -= problem.minimum
             X *= 255.0 / (problem.maximum - problem.minimum)
-            data = data.astype(int)
+            X = X.astype(int)
 
         return self.config.evaluate(X)
 
