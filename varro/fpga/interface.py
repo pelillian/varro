@@ -4,6 +4,7 @@ This module handles communication of data to the FPGA
 
 import os
 from os.path import join
+import numpy as np
 import pytrellis
 import numbers
 
