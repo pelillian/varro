@@ -25,7 +25,7 @@ class ModelFPGA(Model):
         """
         from varro.fpga.interface import FpgaConfig
         self.config = FpgaConfig(weights)
-        self.config.load_fpga()
+        self.config.load_fpga(weights)
 
     def predict(self, X):
         """Evaluates the model on given data."""
