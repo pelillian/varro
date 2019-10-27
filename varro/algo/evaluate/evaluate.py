@@ -8,7 +8,7 @@ from sklearn.metrics import accuracy_score
 from varro.algo.problems import Problem
 
 
-def evaluate(population, model, X, y, approx_type):
+def evaluate(population, model, problem):
     """Evaluates an entire population on a dataset on the neural net
     architecture specified by the model, and calculates the negative categorical
     accuracy of each individual.
@@ -23,6 +23,9 @@ def evaluate(population, model, X, y, approx_type):
         (np.ndarray): the fitness scores (list) of the individuals
 
     """
+    X = problem.X_train
+    y = problem.y_train
+    approx_type = problem.approx_type
     # Initialize list to keep the fitness scores
     fitness_scores = []
 

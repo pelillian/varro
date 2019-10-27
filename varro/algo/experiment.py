@@ -60,7 +60,7 @@ def fit(model_type,
         model = ModelFPGA()
 
     # Evaluate Population
-    evaluate_population = partial(evaluate, model=model, X=problem.X_train, y=problem.y_train, approx_type=problem.approx_type)
+    evaluate_population = partial(evaluate, model=model, problem=problem)
 
     # Set the individual size to the number of weights
     # we can alter in the neural network architecture specified
