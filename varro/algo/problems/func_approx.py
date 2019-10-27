@@ -51,6 +51,11 @@ class ProblemFuncApprox(Problem):
             self.maximum = end
             return random.sample(list(np.arange(start, end, step)), k=500)
 
+        def sample_int(start, end):
+            self.minimum = start
+            self.maximum = end
+            return np.random.randint(start, end, size=500)
+
         # Get the function to approximate
         if func == 'sinx':
             self.X_train = sample_float(-1, 1, 0.001)
@@ -73,6 +78,10 @@ class ProblemFuncApprox(Problem):
         elif func == 'step':
             self.X_train = sample_float(-1, 1, 0.001)
             self.y_train = (np.array(self.X_train) > 0).astype(float)
+            self._approx_type = Problem.CLASSIFICATION
+        elif func == 'simple_step':
+            self.X_train = sample_int(0, 1)
+            self.y_train = self.X_train
             self._approx_type = Problem.CLASSIFICATION
         else:
             raise ValueError('Problem \'' + str(func) + '\' not recognised')
