@@ -54,7 +54,7 @@ class ProblemFuncApprox(Problem):
         def sample_int(start, end):
             self.minimum = start
             self.maximum = end
-            return np.random.randint(start, end, size=500)
+            return np.random.randint(start, end + 1, size=500)
 
         # Get the function to approximate
         if func == 'sinx':
