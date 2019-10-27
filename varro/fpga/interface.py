@@ -5,6 +5,7 @@ This module handles communication of data to the FPGA
 import os
 from os.path import join
 import pytrellis
+import numbers
 
 from varro.fpga.util import make_path, get_new_id, get_config_dir
 from varro.fpga.flash import flash_config_file
@@ -67,10 +68,14 @@ class FpgaConfig:
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
 
+        if isinstance(data[0], numbers.Real):
+            data *= 255.0 / data.max()
+            data = data.astype(int)
+
         results = []
         for datum in data:
             # Send the data and recieves a string back
-            retval = arduino.send_and_recieve(arduino_connection, data, 0.2)
+            retval = arduino.send_and_recieve(arduino_connection, datum, 0.2)
 
             # Parse the correct value from the string
             retval = retval.decode("utf-8").split("Read value: ", 1)[1][0]
