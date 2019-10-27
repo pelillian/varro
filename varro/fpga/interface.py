@@ -67,11 +67,15 @@ class FpgaConfig:
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
 
-        # Send the data and recieves a string back
-        retval = arduino.send_and_recieve(arduino_connection, data, 0.2)
+        results = []
+        for datum in data:
+            # Send the data and recieves a string back
+            retval = arduino.send_and_recieve(arduino_connection, data, 0.2)
 
-        # Parse the correct value from the string
-        retval = retval.decode("utf-8").split("Read value: ", 1)[1][0]
+            # Parse the correct value from the string
+            retval = retval.decode("utf-8").split("Read value: ", 1)[1][0]
 
-        return int(retval)
+            results.append(int(retval))
+
+        return results
 
