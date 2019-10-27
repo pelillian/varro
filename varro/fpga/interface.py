@@ -69,7 +69,7 @@ class FpgaConfig:
         """Evaluates given data on the FPGA."""
 
         if isinstance(data[0], numbers.Real):
-            data *= 255.0 / data.max()
+            data *= 255.0 / np.max(data)
             data = data.astype(int)
 
         results = []
