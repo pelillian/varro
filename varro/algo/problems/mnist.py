@@ -2,7 +2,6 @@
 This module contains a function that returns the training set for mnist
 """
 
-from keras.datasets import mnist
 import numpy as np
 
 from varro.algo.problems import Problem
@@ -10,6 +9,7 @@ from varro.algo.problems import Problem
 
 class ProblemMNIST(Problem):
     def __init__(self):
+        from keras.datasets import mnist
         (self.X_train, self.y_train), (self.X_test, self.y_test) = mnist.load_data()
 
         # Flatten the MNIST images into a 784 dimension vector
