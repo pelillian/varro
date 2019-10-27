@@ -51,9 +51,13 @@ class FpgaConfig:
                 print(".comment {}".format(meta), file=f)
             print("", file=f)
 
+            from varro.fpga.tiles import TILES
             for tile in self.chip.get_all_tiles():
                 config = tile.dump_config()
                 if len(config.strip()) > 0:
+                    if any(tilename in config for tilename in TILES):
+                        print("skipping tile")
+                        continue
                     print(".tile {}".format(tile.info.name), file=f)
                     print(config, file=f)
 
