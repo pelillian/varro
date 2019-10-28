@@ -188,10 +188,18 @@ def evolve(problem,
         pop[:] = offspring
 
         # Update population statistics
-        halloffame = pop[0]
+        try:
+            halloffame = last_halloffame
+        except:
+            halloffame = pop[0]
+
         for ind in pop:
             if ind.fitness.values[0] < halloffame.fitness.values[0]:
                 halloffame = ind # Fittest individual (Lowest score)
+        
+        # Save halloffamers across generations
+        last_halloffame = halloffame
+
         record = stats.compile(pop)
         logbook.record(gen=g, evals=len(invalid_ind), **record)
 
