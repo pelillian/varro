@@ -74,11 +74,14 @@ class FpgaConfig:
 
         results = []
         for datum in data:
+            print('Sending {}'.format(datum))
+
             # Send the data and recieves a string back
             retval = arduino.send_and_recieve(arduino_connection, datum, 0.2)
 
             # Parse the correct value from the string
             retval = retval.decode("utf-8").split("Read value: ", 1)[1][0]
+            print("receiving ", retval)
 
             results.append(int(retval))
 

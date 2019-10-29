@@ -17,8 +17,6 @@ def send_char(arduino, val):
 
     send_byte = int(val).to_bytes(1, byteorder="little") # Makes sure that the value can be represented as one byte
 
-    print('Sending {}'.format(send_byte))
-
     retval = arduino.write(send_byte)
     arduino.flush()
 
