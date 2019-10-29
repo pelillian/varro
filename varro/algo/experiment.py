@@ -70,7 +70,7 @@ def fit(model_type,
 
     # 3. Choose Strategy
     if strategy == 'ea':
-        pop, avg_fitness_scores = evolve(problem=problem_type,
+        pop, avg_fitness_scores = evolve(problem=problem,
                                          toolbox=toolbox,
                                          crossover_prob=cxpb,
                                          mutation_prob=mutpb,

@@ -13,6 +13,7 @@ from deap import tools
 
 from varro.misc.util import make_path
 from varro.misc.variables import ABSOLUTE_ALGO_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, FREQ
+from varro.algo.problems import Problem
 
 
 def evolve(problem,
@@ -26,7 +27,7 @@ def evolve(problem,
     """Evolves weights to train a model on a dataset.
 
     Args:
-        problem (str): A string specifying what type of problem we're trying to optimize
+        problem (object): A Problem object that includes the type of problem we're trying to optimize
         toolbox (deap.ToolBox): DEAP's configured toolbox
         crossover_prob (float): Crossover probability from 0-1
         mutation_prob (float): Mutation probability from 0-1
@@ -44,7 +45,7 @@ def evolve(problem,
     # 1. SET UP LOGGER, FOLDERS, AND FILES TO SAVE DATA TO #
     ########################################################
     # Set experiment name
-    experiment_name = 'experiment-{}-popsize{}-elitesize{}-ngen{}-cxpb{}-mutpb{}'.format(problem,
+    experiment_name = 'experiment-{}-popsize{}-elitesize{}-ngen{}-cxpb{}-mutpb{}'.format(problem.name,
                                                                                          pop_size,
                                                                                          elite_size,
                                                                                          num_generations,
@@ -196,7 +197,7 @@ def evolve(problem,
         for ind in pop:
             if ind.fitness.values[0] < halloffame.fitness.values[0]:
                 halloffame = ind # Fittest individual (Lowest score)
-        
+
         # Save halloffamers across generations
         last_halloffame = halloffame
 
@@ -220,6 +221,17 @@ def evolve(problem,
         logger.info('Generation {} Avg. Fitness Score: {} | Fittest Score: {}'.format(g,
                                                                                       avg_fitness_score,
                                                                                       halloffame.fitness.values[0]))
+
+        # Early Stopping if average fitness
+        # score is the minimum possible
+        if problem.approx_type == Problem.CLASSIFICATION:
+            if round(-halloffame.fitness.values[0], 2) > 0.9:
+                logger.info('Early Stopping activated.')
+                break;
+        else:
+            if round(-halloffame.fitness.values[0], 2) < 0.01:
+                logger.info('Early Stopping activated.')
+                break;
 
 
     return pop, avg_fitness_scores

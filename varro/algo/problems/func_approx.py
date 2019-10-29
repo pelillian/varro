@@ -42,7 +42,7 @@ class ProblemFuncApprox(Problem):
 
         # Choose classification or regression
         self._approx_type = Problem.REGRESSION
-
+        self.name = func
         self._input_dim = 1
         self._output_dim = 1
 
@@ -85,4 +85,3 @@ class ProblemFuncApprox(Problem):
             self._approx_type = Problem.CLASSIFICATION
         else:
             raise ValueError('Problem \'' + str(func) + '\' not recognised')
-

@@ -19,6 +19,6 @@ class ProblemMNIST(Problem):
         self._input_dim = np.prod(self.X_train[0].shape)
         self._output_dim = len(np.unique(self.y_train))
         self._approx_type = Problem.CLASSIFICATION
+        self.name = 'mnist'
         self.minimum = None
         self.maximum = None
-
