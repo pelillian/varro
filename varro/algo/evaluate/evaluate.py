@@ -43,8 +43,10 @@ def evaluate(population, model, problem):
             # categorical_accuracy = accuracy_score(y_true=y, y_pred=np.argmax(y_pred, axis=-1))
             fitness_scores.append([-categorical_accuracy])
         elif approx_type == Problem.REGRESSION:
-            mse = np.mean(np.square(y - y_pred))
-            fitness_scores.append([mse])
+            # mse = np.mean(np.square(y - y_pred))
+            # Normalized RMSE
+            norm_rmse = (np.mean(np.square(y - y_pred)) ** 0.5) /
+            fitness_scores.append([norm_rmse])
         else:
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
 

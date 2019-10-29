@@ -58,25 +58,25 @@ class ProblemFuncApprox(Problem):
 
         # Get the function to approximate
         if func == 'sinx':
-            self.X_train = sample_float(-1, 1, 0.001)
+            self.X_train = sample_float(-2*np.pi, 2*np.pi, 0.001)
             self.y_train = np.sin(self.X_train)
         elif func == 'cosx':
-            self.X_train = sample_float(-1, 1, 0.001)
+            self.X_train = sample_float(-2*np.pi, 2*np.pi, 0.001)
             self.y_train = np.cos(self.X_train)
         elif func == 'tanx':
-            self.X_train = sample_float(-1, 1, 0.001)
+            self.X_train = sample_float(-2*np.pi, 2*np.pi, 0.001)
             self.y_train = np.tan(self.X_train)
         elif func == 'x':
-            self.X_train = sample_float(-1, 1, 0.001)
+            self.X_train = sample_float(-10, 10, 0.001)
             self.y_train = self.X_train
         elif func == 'ras':
             self.X_train = sample_float(-5.12, 5.12, 0.01)
             self.y_train = rastrigin(self.X_train)
         elif func == 'rosen':
-            self.X_train = sample_float(-1, 1, 0.001)
+            self.X_train = sample_float(-10, 10, 0.001)
             self.y_train = rosenbrock(self.X_train)
         elif func == 'step':
-            self.X_train = sample_float(-1, 1, 0.001)
+            self.X_train = sample_float(-10, 10, 0.001)
             self.y_train = (np.array(self.X_train) > 0).astype(float)
             self._approx_type = Problem.CLASSIFICATION
         elif func == 'simple_step':

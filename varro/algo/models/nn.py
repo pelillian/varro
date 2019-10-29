@@ -2,6 +2,7 @@
 This module contains classes for defining each type of model.
 """
 
+import os
 import numpy as np
 
 from varro.algo.models import Model
@@ -18,6 +19,8 @@ class ModelNN(Model):
         """
         from keras.layers import Dense, BatchNormalization
         from keras.models import Sequential
+        # Suppress Tensorflow / Keras warnings
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
         self.model = Sequential()
         if problem.approx_type == Problem.CLASSIFICATION:
@@ -63,4 +66,3 @@ class ModelNN(Model):
     @property
     def weights_shape(self):
         return self.num_weights_alterable
-
