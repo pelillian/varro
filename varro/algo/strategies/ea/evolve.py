@@ -60,7 +60,7 @@ def evolve(problem,
 
     with open(experiment_hyperparams_file, 'w') as fp:
         json.dump({
-            'problem_type': problem,
+            'problem_type': problem.name,
             'cxpb': crossover_prob,
             'mutpb': mutation_prob,
             'popsize': pop_size,
