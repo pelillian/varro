@@ -60,6 +60,7 @@ class FpgaConfig:
                 if len(config.strip()) > 0:
                     print(".tile {}".format(tile.info.name), file=f)
                     print(config, file=f)
+                    print("", file=f)
 
     def load_fpga(self, config_data=None):
         """Loads a 2d array of configuration data onto to the FPGA"""
