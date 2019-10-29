@@ -56,6 +56,7 @@ class FpgaConfig:
                 if not tile.info.name in TILES:
                     continue
                 config = tile.dump_config()
+                config = os.linesep.join([line for line in config.splitlines() if line.contains("unknown"])
                 if len(config.strip()) > 0:
                     print(".tile {}".format(tile.info.name), file=f)
                     print(config, file=f)
