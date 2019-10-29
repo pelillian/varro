@@ -14,12 +14,12 @@ def flash_ecp5(file_base_name):
     if err:
         raise RuntimeError("Cannot flash ECP5")
 
-def write_config_file(file_base_name):
+def config_to_bitstream(file_base_name):
     err = os.system("ecppack --svf {0}.svf {0}.config {0}.bit".format(file_base_name))
     if err:
         raise RuntimeError("Cannot create bitstream")
 
 def flash_config_file(file_base_name):
-    write_config_file(file_base_name)
+    config_to_bitstream(file_base_name)
     flash_ecp5(file_base_name)
 
