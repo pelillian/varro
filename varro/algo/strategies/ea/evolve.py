@@ -3,6 +3,7 @@ This module contains the evolutionary algorithm logic
 """
 
 import os
+import json
 import pickle
 import random
 import logging
@@ -10,9 +11,10 @@ import numpy as np
 import functools
 from tqdm import tqdm
 from deap import tools
+from datetime import date
 
 from varro.misc.util import make_path
-from varro.misc.variables import ABSOLUTE_ALGO_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, FREQ
+from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, EXPERIMENT_CHECKPOINTS_PATH, FREQ
 from varro.algo.problems import Problem
 
 
@@ -50,26 +52,24 @@ def evolve(problem,
     ########################################################
     # 1. SET UP LOGGER, FOLDERS, AND FILES TO SAVE DATA TO #
     ########################################################
-    # Set experiment name
-    experiment_name = 'experiment-{}\
-                        -popsize{}\
-                        -elitesize{}\
-                        -ngen{}\
-                        -cxpb{}\
-                        -mutpb{}\
-                        -imutpb{}\
-                        -imutmu{}\
-                        -imutsigma'.format(problem.name,
-                                           pop_size,
-                                           elite_size,
-                                           num_generations,
-                                           crossover_prob,
-                                           mutation_prob,
-                                           imutpb,
-                                           imutmu,
-                                           imutsigma)
-    experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, experiment_name)
-    experiment_logs_file = os.path.join(ABSOLUTE_ALGO_LOGS_PATH, experiment_name + '.log')
+
+    # Set log files
+    experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, date.today().strftime("%b-%d-%Y"))
+    experiment_logs_file = os.path.join(ABS_ALGO_EXP_LOGS_PATH, date.today().strftime("%b-%d-%Y") + '.log')
+    experiment_hyperparams_file = os.path.join(ABS_ALGO_HYPERPARAMS_PATH, date.today().strftime("%b-%d-%Y") + '.json')
+
+    with open(experiment_hyperparams_file, 'w') as fp:
+        json.dump({
+            'problem_type': problem,
+            'cxpb': crossover_prob,
+            'mutpb': mutation_prob,
+            'popsize': pop_size,
+            'elitesize': elite_size,
+            'ngen': num_generations,
+            'imutpb': imutpb,
+            'imutmu': imutmu,
+            'imutsigma': imutsigma
+        }, fp)
 
     # Create experiment folder to store
     # snapshots of population
