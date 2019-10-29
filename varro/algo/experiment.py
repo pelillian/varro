@@ -11,7 +11,7 @@ import pickle
 import logging
 
 from varro.misc.util import make_path
-from varro.misc.variables import ABSOLUTE_ALGO_LOGS_PATH
+from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH
 from varro.algo.util import get_args
 from varro.algo.problems import Problem, ProblemFuncApprox, ProblemMNIST
 from varro.algo.strategies.ea.evolve import evolve
@@ -156,7 +156,8 @@ def predict(model_type,
 
 def main():
     # Create Logs folder if not created
-    make_path(ABSOLUTE_ALGO_LOGS_PATH)
+    make_path(ABS_ALGO_EXP_LOGS_PATH)
+    make_path(ABS_ALGO_HYPERPARAMS_PATH)
 
     # Get the Arguments parsed from file execution
     args = get_args()
