@@ -34,6 +34,8 @@ def get_args():
     # 0B. Checkpoint File to load population #
     ##########################################
     parser.add_argument('--ckpt',
+                        default=None,
+                        const=None,
                         nargs='?',
                         metavar='CHECKPOINT-FILE-TO-LOAD-POPULATION',
                         action='store',

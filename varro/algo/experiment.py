@@ -147,7 +147,7 @@ def predict(model_type,
     model.load_weights(halloffame)
 
     # Predict labels using np array in X
-    y_pred = p.array(model.predict(np.load(X)))
+    y_pred = np.array(model.predict(np.load(X)))
 
     # Save the y_pred into a file
     np.save(os.path.join(X[:-4] + '_y_pred.npy'), y_pred)
