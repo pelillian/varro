@@ -24,6 +24,9 @@ def fit(model_type,
         strategy,
         cxpb=None,
         mutpb=None,
+        imutpb=None,
+        imutmu=None,
+        imutsigma=None,
         popsize=None,
         elitesize=None,
         ngen=None,
@@ -37,6 +40,9 @@ def fit(model_type,
         strategy (str): A string specifying what type of optimization algorithm to use
         cxpb (float): Cross-over probability for evolutionary algorithm
         mutpb (float): Mutation probability for evolutionary algorithm
+        imutpb (float): Mutation probability for each individual's attribute
+        imutmu (float): Mean parameter for the Gaussian Distribution we're mutating an attribute from
+        imutsigma (float): Sigma parameter for the Gaussian Distribution we're mutating an attribute from
         popsize (int): Number of individuals to keep in each Population
         elitesize (float): Percentage of fittest individuals to pass on to next generation
         ngen (int): Number of generations to run an evolutionary algorithm
@@ -60,13 +66,18 @@ def fit(model_type,
         model = ModelFPGA()
 
     # Evaluate Population
-    evaluate_population = partial(evaluate, model=model, problem=problem)
+    evaluate_population = partial(evaluate,
+                                  model=model,
+                                  problem=problem)
 
     # Set the individual size to the number of weights
     # we can alter in the neural network architecture specified
     toolbox = ea_toolbox(i_shape=model.weights_shape,
-                            evaluate_population=evaluate_population,
-                            model_type=model_type)
+                         evaluate_population=evaluate_population,
+                         model_type=model_type,
+                         imutpb=imutpb,
+                         imutmu=imutmu,
+                         imutsigma=imutsigma)
 
     # 3. Choose Strategy
     if strategy == 'ea':
@@ -77,6 +88,9 @@ def fit(model_type,
                                          pop_size=popsize,
                                          elite_size=elitesize,
                                          num_generations=ngen,
+                                         imutpb=imutpb,
+                                         imutmu=imutmu,
+                                         imutsigma=imutsigma,
                                          checkpoint=ckpt)
     elif strategy == 'cma-es':
         raise NotImplementedError
@@ -156,6 +170,9 @@ def main():
             strategy=args.strategy,
             cxpb=args.cxpb,
             mutpb=args.mutpb,
+            imutpb=args.imutpb,
+            imutmu=args.imutmu,
+            imutsigma=args.imutsigma,
             popsize=args.popsize,
             elitesize=args.elitesize,
             ngen=args.ngen,

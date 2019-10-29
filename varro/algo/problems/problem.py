@@ -12,7 +12,7 @@ class Problem:
         self._input_dim = None
         self._output_dim = None
         self._approx_type = None
-        self.name = None
+        self._name = None
 
     def training_set(self):
         return None, None
@@ -20,7 +20,7 @@ class Problem:
     @property
     def name(self):
         """Name of Problem we're trying to optimize"""
-        return self.name
+        return self._name
 
     @property
     def approx_type(self):

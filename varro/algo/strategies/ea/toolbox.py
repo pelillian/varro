@@ -8,12 +8,21 @@ import numpy as np
 from deap import base, creator, tools
 
 
-def ea_toolbox(i_shape, evaluate_population, model_type, p=0.5):
+def ea_toolbox(i_shape,
+               evaluate_population,
+               model_type,
+               imutpb=None,
+               imutmu=None,
+               imutsigma=None,
+               p=0.5):
     """Initializes and configures the DEAP toolbox for evolving the weights of a model.
 
     Args:
         i_shape (int or tuple): Size or shape of an individual in the population
         evaluate_population (function): Function to evaluate an entire population
+        imutpb (float): Mutation probability for each individual's attribute
+        imutmu (float): Mean parameter for the Gaussian Distribution we're mutating an attribute from
+        imutsigma (float): Sigma parameter for the Gaussian Distribution we're mutating an attribute from
         p: Probability that random bit in each individual is 0 / 1
 
     Returns:
@@ -40,9 +49,9 @@ def ea_toolbox(i_shape, evaluate_population, model_type, p=0.5):
                          n=i_shape)
         toolbox.register("mutate",
                          tools.mutGaussian,
-                         mu=0,
-                         sigma=1, 
-                         indpb=0.1)
+                         mu=imutmu,
+                         sigma=imutsigma,
+                         indpb=imutpb)
     elif model_type == "fpga":
         toolbox.register("individual",
                          np.random.choice, a=[False, True], size=i_shape, p=[p, 1-p])

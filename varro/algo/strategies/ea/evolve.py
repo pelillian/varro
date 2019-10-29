@@ -23,6 +23,9 @@ def evolve(problem,
            pop_size,
            elite_size,
            num_generations,
+           imutpb,
+           imutmu,
+           imutsigma,
            checkpoint=None):
     """Evolves weights to train a model on a dataset.
 
@@ -34,6 +37,9 @@ def evolve(problem,
         pop_size (int): Number of individuals to keep in each Population
         elite_size (float): Percentage of fittest individuals to pass on to next generation
         num_generations (int): Number of generations to run algorithm
+        imutpb (float): Mutation probability for each individual's attribute
+        imutmu (float): Mean parameter for the Gaussian Distribution we're mutating an attribute from
+        imutsigma (float): Sigma parameter for the Gaussian Distribution we're mutating an attribute from
         checkpoint (str): String to specify the checkpoint file to load the population
 
     Returns:
@@ -45,12 +51,23 @@ def evolve(problem,
     # 1. SET UP LOGGER, FOLDERS, AND FILES TO SAVE DATA TO #
     ########################################################
     # Set experiment name
-    experiment_name = 'experiment-{}-popsize{}-elitesize{}-ngen{}-cxpb{}-mutpb{}'.format(problem.name,
-                                                                                         pop_size,
-                                                                                         elite_size,
-                                                                                         num_generations,
-                                                                                         crossover_prob,
-                                                                                         mutation_prob)
+    experiment_name = 'experiment-{}\
+                        -popsize{}\
+                        -elitesize{}\
+                        -ngen{}\
+                        -cxpb{}\
+                        -mutpb{}\
+                        -imutpb{}\
+                        -imutmu{}\
+                        -imutsigma'.format(problem.name,
+                                           pop_size,
+                                           elite_size,
+                                           num_generations,
+                                           crossover_prob,
+                                           mutation_prob,
+                                           imutpb,
+                                           imutmu,
+                                           imutsigma)
     experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, experiment_name)
     experiment_logs_file = os.path.join(ABSOLUTE_ALGO_LOGS_PATH, experiment_name + '.log')
 
@@ -209,10 +226,10 @@ def evolve(problem,
 
             # Fill the dictionary using the dict(key=value[, ...]) constructor
             cp = dict(population=pop,
-                        generation=g,
-                        halloffame=halloffame,
-                        logbook=logbook,
-                        rndstate=random.getstate())
+                      generation=g,
+                      halloffame=halloffame,
+                      logbook=logbook,
+                      rndstate=random.getstate())
 
             with open(os.path.join(experiment_checkpoints_dir, 'checkpoint_gen{}.pkl'.format(g)), "wb") as cp_file:
                 pickle.dump(cp, cp_file)

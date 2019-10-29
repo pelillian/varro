@@ -116,8 +116,44 @@ def get_args():
                         help='Set the Mutation probability',
                         type=float)
 
+    #############################################################
+    # 3c. What is the individual attribute mutation probability #
+    #############################################################
+    parser.add_argument('--imutpb',
+                        default=0.5,
+                        const=0.5,
+                        nargs='?',
+                        metavar='IND-MUTATION-PROBABILITY',
+                        action='store',
+                        help='Set the Mutation probability for each attribute in the individual',
+                        type=float)
+
+    ##############################################################################
+    # 3d. What mean for gaussian distribution to pull the mutant attribute from? #
+    ##############################################################################
+    parser.add_argument('--imutmu',
+                        default=0,
+                        const=0,
+                        nargs='?',
+                        metavar='IND-MUTATION-MU',
+                        action='store',
+                        help='Set the mean for mutation probability distribution',
+                        type=float)
+
+    ############################################################################################
+    # 3e. What standard deviation for gaussian distribution to pull the mutant attribute from? #
+    ############################################################################################
+    parser.add_argument('--imutsigma',
+                        default=1,
+                        const=1,
+                        nargs='?',
+                        metavar='IND-MUTATION-SIGMA',
+                        action='store',
+                        help='Set the standard deviation for mutation probability distribution',
+                        type=float)
+
     #########################################
-    # 3c. What population size do you want? #
+    # 3f. What population size do you want? #
     #########################################
     parser.add_argument('--popsize',
                         default=10,
@@ -129,7 +165,7 @@ def get_args():
                         type=int)
 
     ########################################################
-    # 3d. What elite size do you want? (Percentage of      #
+    # 3g. What elite size do you want? (Percentage of      #
     # best fitness individuals do you not want to change?) #
     ########################################################
     parser.add_argument('--elitesize',
@@ -142,7 +178,7 @@ def get_args():
                         type=float)
 
     ################################################################################
-    # 3e. What number of generations do you want to run the evolutionary algo for? #
+    # 3h. What number of generations do you want to run the evolutionary algo for? #
     ################################################################################
     parser.add_argument('--ngen',
                         default=100,
@@ -168,5 +204,10 @@ def get_args():
         parser.error("--X needs to be a .npy file.")
     if settings.y and settings.y[-3:] != 'npy':
         parser.error("--y needs to be a .npy file.")
+
+    # Check that sigma for the gaussian distribution were
+    # mutating attribute of individual from is positive
+    if settings.imutsigma < 0:
+        parser.error("--imutsigma needs to be positive.")
 
     return settings
