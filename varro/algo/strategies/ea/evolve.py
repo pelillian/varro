@@ -28,7 +28,9 @@ def evolve(problem,
            imutpb,
            imutmu,
            imutsigma,
-           checkpoint=None):
+           checkpoint=None,
+           logs_path=ABS_ALGO_EXP_LOGS_PATH,
+           ckpts_path=EXPERIMENT_CHECKPOINTS_PATH):
     """Evolves weights to train a model on a dataset.
 
     Args:
@@ -54,8 +56,8 @@ def evolve(problem,
     ########################################################
 
     # Set log files
-    experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, date.today().strftime("%b-%d-%Y"))
-    experiment_logs_file = os.path.join(ABS_ALGO_EXP_LOGS_PATH, date.today().strftime("%b-%d-%Y") + '.log')
+    experiment_checkpoints_dir = os.path.join(ckpts_path, date.today().strftime("%b-%d-%Y"))
+    experiment_logs_file = os.path.join(logs_path, date.today().strftime("%b-%d-%Y") + '.log')
     experiment_hyperparams_file = os.path.join(ABS_ALGO_HYPERPARAMS_PATH, date.today().strftime("%b-%d-%Y") + '.json')
 
     with open(experiment_hyperparams_file, 'w') as fp:
