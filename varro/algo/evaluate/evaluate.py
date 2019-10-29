@@ -45,7 +45,7 @@ def evaluate(population, model, problem):
         elif approx_type == Problem.REGRESSION:
             # mse = np.mean(np.square(y - y_pred))
             # Normalized RMSE
-            norm_rmse = (np.mean(np.square(y - y_pred)) ** 0.5) /
+            norm_rmse = (np.mean(np.square(y - y_pred)) ** 0.5) / np.std(y)
             fitness_scores.append([norm_rmse])
         else:
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
