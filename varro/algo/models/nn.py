@@ -39,7 +39,7 @@ class ModelNN(Model):
         else:
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
 
-        tensorboard = TensorBoard(log_dir="{}/{}".format(ABS_ALGO_TENSORBOARD_PATH, date.today().strftime("%b-%d-%Y-%H:%M:%S")))
+        self.tensorboard = TensorBoard(log_dir="{}/{}".format(ABS_ALGO_TENSORBOARD_PATH, date.today().strftime("%b-%d-%Y-%H:%M:%S")))
 
         self.num_weights_alterable = np.sum([np.prod(layer.shape) for layer in self.model.get_weights()])
 
@@ -66,7 +66,7 @@ class ModelNN(Model):
 
     def predict(self, X, problem=None):
         """Evaluates the model on given data."""
-        return self.model.predict(X)
+        return self.model.predict(X, callbacks=[self.tensorboard])
 
     @property
     def weights_shape(self):
