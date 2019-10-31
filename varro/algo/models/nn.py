@@ -39,8 +39,10 @@ class ModelNN(Model):
         else:
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
 
+        # Set up tensorboard to logs
         self.tensorboard = TensorBoard(log_dir="{}/{}".format(ABS_ALGO_TENSORBOARD_PATH, date.today().strftime("%b-%d-%Y-%H:%M:%S")))
 
+        # Set the number of weights we can change in the architecture
         self.num_weights_alterable = np.sum([np.prod(layer.shape) for layer in self.model.get_weights()])
 
     def load_weights(self, weights):

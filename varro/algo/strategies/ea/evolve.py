@@ -94,10 +94,14 @@ def evolve(problem,
     if checkpoint:
         # A file name has been given, then load the data from the file
         with open(checkpoint, "r") as cp_file:
+            from deap import base, creator, tools;
+            # Define objective, individuals, population, and evaluation
+            creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
+            creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
             cp = pickle.load(cp_file)
         random.seed(cp["rndstate"])
         pop = cp["population"]
-        start_gen = cp["generation"]
+        start_gen = int(cp["generation"])
         halloffame = cp["halloffame"]
         logbook = cp["logbook"]
 
