@@ -56,9 +56,9 @@ def evolve(problem,
     ########################################################
 
     # Set log files
-    experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, date.today().strftime("%b-%d-%Y%H:%M:%S"))
-    experiment_logs_file = os.path.join(ABS_ALGO_EXP_LOGS_PATH, date.today().strftime("%b-%d-%Y%H:%M:%S") + '.log')
-    experiment_hyperparams_file = os.path.join(ABS_ALGO_HYPERPARAMS_PATH, date.today().strftime("%b-%d-%Y%H:%M:%S") + '.json')
+    experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, date.today().strftime("%b-%d-%Y-%H:%M:%S"))
+    experiment_logs_file = os.path.join(ABS_ALGO_EXP_LOGS_PATH, date.today().strftime("%b-%d-%Y-%H:%M:%S") + '.log')
+    experiment_hyperparams_file = os.path.join(ABS_ALGO_HYPERPARAMS_PATH, date.today().strftime("%b-%d-%Y-%H:%M:%S") + '.json')
 
     with open(experiment_hyperparams_file, 'w') as fp:
         json.dump({

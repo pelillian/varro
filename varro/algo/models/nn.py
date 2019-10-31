@@ -7,6 +7,8 @@ import numpy as np
 
 from varro.algo.models import Model
 from varro.algo.problems import Problem
+from varro.misc.variables import ABS_ALGO_TENSORBOARD_PATH
+from keras.callbacks import TensorBoard
 
 
 class ModelNN(Model):
@@ -35,6 +37,8 @@ class ModelNN(Model):
             self.model.add(Dense(problem.output_dim, activation='sigmoid'))
         else:
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
+
+        tensorboard = TensorBoard(log_dir="{}/{}".format(ABS_ALGO_TENSORBOARD_PATH, time()))
 
         self.num_weights_alterable = np.sum([np.prod(layer.shape) for layer in self.model.get_weights()])
 
