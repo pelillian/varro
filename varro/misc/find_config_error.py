@@ -2,12 +2,15 @@ import sys
 import os
 
 def check_config(filename, line_num=None):
-    if line_num:
-        os.system("head -{0} {1} > find.config".format(int(line_num), filename))
-    else:
-        os.system("cp {0} find.config".format(filename))
+    try:
+        if line_num:
+            os.system("head -{0} {1} > /tmp/find.config".format(int(line_num), filename))
+        else:
+            os.system("cp {0} /tmp/find.config".format(filename))
 
-    err = os.system("ecppack --svf find.svf find.config find.bit >/dev/null 2>&1")
+        err = os.system("ecppack --svf /dev/null /tmp/find.config /dev/null >/dev/null 2>&1")
+    finally:
+        os.system("rm /tmp/find.config")
     if err:
         return False
     return True
