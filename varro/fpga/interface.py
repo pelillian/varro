@@ -51,9 +51,9 @@ class FpgaConfig:
                 print(".comment {}".format(meta), file=f)
             print("", file=f)
 
-            from varro.fpga.tiles import TILES
+            from varro.fpga.tiles import SIMPLE_STEP_TILES, SIMPLE_STEP_CFG
             for tile in self.chip.get_all_tiles():
-                if not tile.info.name in TILES:
+                if not tile.info.name in SIMPLE_STEP_TILES:
                     continue
                 config = tile.dump_config()
 #                config = os.linesep.join([line for line in config.splitlines() if "unknown" not in line])
@@ -61,6 +61,7 @@ class FpgaConfig:
                     print(".tile {}".format(tile.info.name), file=f)
                     print(config, file=f)
                     print("", file=f)
+            print(SIMPLE_STEP_CFG, file=f)
 
     def load_fpga(self, config_data=None):
         """Loads a 2d array of configuration data onto to the FPGA"""
