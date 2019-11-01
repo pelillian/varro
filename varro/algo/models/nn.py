@@ -4,9 +4,12 @@ This module contains classes for defining each type of model.
 
 import os
 import numpy as np
+from datetime import date
+from keras.callbacks import TensorBoard
 
 from varro.algo.models import Model
 from varro.algo.problems import Problem
+from varro.misc.variables import ABS_ALGO_TENSORBOARD_PATH
 
 
 class ModelNN(Model):
@@ -36,6 +39,10 @@ class ModelNN(Model):
         else:
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
 
+        # Set up tensorboard to logs
+        self.tensorboard = TensorBoard(log_dir="{}/{}".format(ABS_ALGO_TENSORBOARD_PATH, date.today().strftime("%b-%d-%Y-%H:%M:%S")))
+
+        # Set the number of weights we can change in the architecture
         self.num_weights_alterable = np.sum([np.prod(layer.shape) for layer in self.model.get_weights()])
 
     def load_weights(self, weights):
@@ -61,7 +68,7 @@ class ModelNN(Model):
 
     def predict(self, X, problem=None):
         """Evaluates the model on given data."""
-        return self.model.predict(X)
+        return self.model.predict(X, callbacks=[self.tensorboard])
 
     @property
     def weights_shape(self):

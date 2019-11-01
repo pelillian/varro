@@ -14,7 +14,7 @@ from deap import tools
 from datetime import date
 
 from varro.misc.util import make_path
-from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, EXPERIMENT_CHECKPOINTS_PATH, FREQ
+from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, FREQ
 from varro.algo.problems import Problem
 
 
@@ -56,22 +56,8 @@ def evolve(problem,
     ########################################################
 
     # Set log files
-    experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, date.today().strftime("%b-%d-%Y%H:%M:%S"))
-    experiment_logs_file = os.path.join(ABS_ALGO_EXP_LOGS_PATH, date.today().strftime("%b-%d-%Y%H:%M:%S") + '.log')
-    experiment_hyperparams_file = os.path.join(ABS_ALGO_HYPERPARAMS_PATH, date.today().strftime("%b-%d-%Y%H:%M:%S") + '.json')
-
-    with open(experiment_hyperparams_file, 'w') as fp:
-        json.dump({
-            'problem_type': problem.name,
-            'cxpb': crossover_prob,
-            'mutpb': mutation_prob,
-            'popsize': pop_size,
-            'elitesize': elite_size,
-            'ngen': num_generations,
-            'imutpb': imutpb,
-            'imutmu': imutmu,
-            'imutsigma': imutsigma
-        }, fp)
+    experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, date.today().strftime("%b-%d-%Y-%H:%M:%S"))
+    experiment_logs_file = os.path.join(ABS_ALGO_EXP_LOGS_PATH, date.today().strftime("%b-%d-%Y-%H:%M:%S") + '.log')
 
     # Create experiment folder to store
     # snapshots of population
@@ -86,7 +72,15 @@ def evolve(problem,
     # Get logger
     logger = logging.getLogger(__name__)
     logger.info('Start Evolution ...')
-
+    logger.info('problem_type: {}'.format(problem.name))
+    logger.info('cxpb: {}'.format(crossover_prob))
+    logger.info('mutpb: {}'.format(mutation_prob))
+    logger.info('popsize: {}'.format(pop_size))
+    logger.info('elitesize: {}'.format(elite_size))
+    logger.info('ngen: {}'.format(num_generations))
+    logger.info('imutpb: {}'.format(imutpb))
+    logger.info('imutmu: {}'.format(imutmu))
+    logger.info('imutsigma: {}'.format(imutsigma))
 
     ##################################
     # 2. LOAD CHECKPOINT IF PROVIDED #
@@ -94,10 +88,14 @@ def evolve(problem,
     if checkpoint:
         # A file name has been given, then load the data from the file
         with open(checkpoint, "r") as cp_file:
+            from deap import base, creator, tools;
+            # Define objective, individuals, population, and evaluation
+            creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
+            creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
             cp = pickle.load(cp_file)
         random.seed(cp["rndstate"])
         pop = cp["population"]
-        start_gen = cp["generation"]
+        start_gen = int(cp["generation"])
         halloffame = cp["halloffame"]
         logbook = cp["logbook"]
 
