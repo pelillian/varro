@@ -9,6 +9,7 @@ from functools import partial
 import numpy as np
 import pickle
 import logging
+from deap import base, creator
 
 from varro.misc.util import make_path
 from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH
@@ -136,7 +137,6 @@ def predict(model_type,
 
     # Load data from pickle file
     with open(ckpt, "rb") as cp_file:
-        from deap import base, creator, tools;
         # Define objective, individuals, population, and evaluation
         creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
