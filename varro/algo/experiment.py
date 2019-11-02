@@ -192,6 +192,7 @@ def main():
             # individual from each generation
             # in ckptfolder
             save_dir = make_path(join(ABS_ALGO_PREDICTIONS_PATH, args.ckptfolder.split('/')[-1]))
+            print(save_dir)
             ckpt_files = [join(args.ckptfolder, f) for f in listdir(args.ckptfolder) if isfile(join(args.ckptfolder, f))]
             for ckpt in tqdm(ckpt_files):
                 predict(model_type=args.model_type,
@@ -202,6 +203,7 @@ def main():
         else:
             # Make a single prediction
             save_dir = make_path(join(ABS_ALGO_PREDICTIONS_PATH, args.ckptfolder.split('/')[-2]))
+            print(save_dir)
             predict(model_type=args.model_type,
                     problem_type=args.problem_type,
                     X=args.X,
