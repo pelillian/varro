@@ -41,8 +41,19 @@ def get_args():
                         action='store',
                         help='The checkpoint file to be used for prediction')
 
+    ####################################################################################
+    # 0C. Checkpoint Folder to predict y_pred using best individual of each generation #
+    ####################################################################################
+    parser.add_argument('--ckptfolder',
+                        default=None,
+                        const=None,
+                        nargs='?',
+                        metavar='CHECKPOINT-FOLDER-TO-PREDICT',
+                        action='store',
+                        help='The checkpoint folder that contains the population of each generation')
+
     ########################################################
-    # 0C. .npy file to specify X (features for prediction) #
+    # 0D. .npy file to specify X (features for prediction) #
     ########################################################
     parser.add_argument('--X',
                         nargs='?',
@@ -51,7 +62,7 @@ def get_args():
                         help='The features to be used for predict')
 
     #######################################
-    # 0D. .npy file to specify y (labels) #
+    # 0E. .npy file to specify y (labels) #
     #######################################
     parser.add_argument('--y',
                         nargs='?',
@@ -194,12 +205,14 @@ def get_args():
     settings = parser.parse_args()
 
     # If we are predicting, we need to specify a
-    # checkpoint file, else we can fit the NN or
-    # FPGA from scratch / evolve from the checpoint
+    # checkpoint file or a checkpoint folder, else
+    # we can fit the NN or FPGA from scratch / evolve
+    # from the checpoint
     if settings.purpose == 'predict' \
         and settings.ckpt is None \
+        and settings.ckptfolder is None \
         and settings.X is None:
-        parser.error("--purpose == 'predict' requires --ckpt and --X to be specified.")
+        parser.error("--purpose == 'predict' requires --ckpt or --ckptfolder and --X to be specified.")
 
     # Check that X and y are .npy files
     if settings.X and settings.X[-3:] != 'npy':

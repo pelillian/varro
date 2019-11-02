@@ -4,15 +4,17 @@ experiment to solve the problem using a specified
 evolutionary algorithm
 """
 
-import os
+from os import listdir
+from os.path import isfile, join
 from functools import partial
+from tqdm import tqdm
 import numpy as np
 import pickle
 import logging
 from deap import base, creator
 
 from varro.misc.util import make_path
-from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH
+from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, ABS_ALGO_PREDICTIONS_PATH
 from varro.algo.util import get_args
 from varro.algo.problems import Problem, ProblemFuncApprox, ProblemMNIST
 from varro.algo.strategies.ea.evolve import evolve
@@ -104,7 +106,8 @@ def fit(model_type,
 def predict(model_type,
             problem_type,
             X,
-            ckpt):
+            ckpt,
+            save_dir):
     """Predicts the output from loading the model saved in checkpoint
     and saves y_pred into same path as X but with a _y_pred in the name
 
@@ -114,6 +117,7 @@ def predict(model_type,
         problem_type (str): A string specifying what type of problem we're trying to optimize
         X (str): Path to the .npy that stores the np.ndarray to use as Input data for model
         ckpt (str): Location of checkpoint to load the population
+        save_dir (str): Location of where to store the predictions
 
     """
     # Get logger
@@ -150,14 +154,16 @@ def predict(model_type,
     y_pred = np.array(model.predict(np.load(X)))
 
     # Save the y_pred into a file
-    np.save(os.path.join(X[:-4] + '_y_pred.npy'), y_pred)
-    logger.info('Predictions saved in {}!'.format(os.path.join(X[:-4] + '_y_pred.npy')))
+    y_pred_path = join(save_dir, ckpt.split('_')[-1][:-4] + '_' + X[:-4] + '_y_pred.npy')
+    np.save(y_pred_path, y_pred)
+    logger.info('Predictions saved in {}!'.format(y_pred_path))
 
 
 def main():
     # Create Logs folder if not created
     make_path(ABS_ALGO_EXP_LOGS_PATH)
     make_path(ABS_ALGO_HYPERPARAMS_PATH)
+    make_path(ABS_ALGO_PREDICTIONS_PATH)
 
     # Get the Arguments parsed from file execution
     args = get_args()
@@ -181,11 +187,26 @@ def main():
 
     else:
 
-        # Make prediction
-        predict(model_type=args.model_type,
-                problem_type=args.problem_type,
-                X=args.X,
-                ckpt=args.ckpt)
+        if args.ckptfolder:
+            # Make predictions using the best
+            # individual from each generation
+            # in ckptfolder
+            save_dir = make_path(join(ABS_ALGO_PREDICTIONS_PATH, args.ckptfolder.split('/')[-1]))
+            ckpt_files = [f for f in listdir(args.ckptfolder) if isfile(join(args.ckptfolder, f))]
+            for ckpt in tqdm(ckpt_files):
+                predict(model_type=args.model_type,
+                        problem_type=args.problem_type,
+                        X=args.X,
+                        ckpt=args.ckpt,
+                        save_dir=save_dir)
+        else:
+            # Make a single prediction
+            save_dir = make_path(join(ABS_ALGO_PREDICTIONS_PATH, args.ckptfolder.split('/')[-2]))
+            predict(model_type=args.model_type,
+                    problem_type=args.problem_type,
+                    X=args.X,
+                    ckpt=args.ckpt,
+                    save_dir=save_dir)
 
 if __name__ == "__main__":
     main()
