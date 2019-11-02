@@ -154,7 +154,7 @@ def predict(model_type,
     y_pred = np.array(model.predict(np.load(X)))
 
     # Save the y_pred into a file
-    y_pred_path = join(save_dir, ckpt.split('_')[-1][:-4] + '_' + X[:-4] + '_y_pred.npy')
+    y_pred_path = join(save_dir, ckpt.split('_')[-1][:-4] + '_' + X[:-4].split('/')[-1] + '_y_pred.npy')
     np.save(y_pred_path, y_pred)
     logger.info('Predictions saved in {}!'.format(y_pred_path))
 
