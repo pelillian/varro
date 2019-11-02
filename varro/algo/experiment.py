@@ -197,7 +197,7 @@ def main():
                 predict(model_type=args.model_type,
                         problem_type=args.problem_type,
                         X=args.X,
-                        ckpt=args.ckpt,
+                        ckpt=ckpt,
                         save_dir=save_dir)
         else:
             # Make a single prediction
