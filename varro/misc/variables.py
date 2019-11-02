@@ -17,6 +17,9 @@ ABS_ALGO_HYPERPARAMS_PATH = os.path.join(ROOT_DIR, 'logs/varro/algo/hyperparams'
 # This is the path to y_preds folder in varro/algo
 ABS_ALGO_PREDICTIONS_PATH = os.path.join(ROOT_DIR, 'logs/varro/algo/predictions')
 
+# This is the path to tensorboard logs folder in varro/algo
+ABS_ALGO_TENSORBOARD_PATH = os.path.join(ROOT_DIR, 'logs/varro/algo/tensorboard')
+
 # This is the path to experiments folder in varro/algo
 ABS_ALGO_EXP_LOGS_PATH = os.path.join(ROOT_DIR, 'logs/varro/algo/experiments')
 
