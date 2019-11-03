@@ -43,7 +43,7 @@ class ModelNN(Model):
         self.tensorboard = TensorBoard(log_dir="{}/{}".format(ABS_ALGO_TENSORBOARD_PATH, date.today().strftime("%b-%d-%Y-%H:%M:%S")))
 
         # Set the number of parameters we can change in the architecture
-        self.num_parameters_alterable = np.sum([np.prod(layer.shape) for layer in self.model.get_parameters()])
+        self.num_parameters_alterable = np.sum([np.prod(layer.shape) for layer in self.model.get_weights()])
 
     def load_parameters(self, parameters):
         """Loads an array of parameters into this model.
@@ -57,14 +57,14 @@ class ModelNN(Model):
         # load them as the shape from the model's parameters
         ind_idx = 0
         new_parameters = []
-        for idx, layer in enumerate(self.model.get_parameters()):
+        for idx, layer in enumerate(self.model.get_weights()):
             # Number of parameters we'll take from the individual for this layer
             num_parameters_taken = np.prod(layer.shape)
             new_parameters.append(parameters[ind_idx:ind_idx+num_parameters_taken].reshape(layer.shape))
             ind_idx += num_parameters_taken
 
         # Set Weights using individual
-        self.model.set_parameters(new_parameters)
+        self.model.set_weights(new_parameters)
 
     def predict(self, X, problem=None):
         """Evaluates the model on given data."""
