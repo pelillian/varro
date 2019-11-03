@@ -146,7 +146,6 @@ def predict(model_type,
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
         cp = pickle.load(cp_file)
     halloffame = cp["halloffame"] # Load the best individual in the population
-    print(halloffame)
 
     # Load Weights into model using individual
     model.load_parameters(halloffame)

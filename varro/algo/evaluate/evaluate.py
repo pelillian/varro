@@ -39,6 +39,8 @@ def evaluate(population, model, problem):
         y_pred = np.array(model.predict(X, problem=problem))
 
         if approx_type == Problem.CLASSIFICATION:
+            print('y: ', y)
+            print('y_pred: ', (np.array(y_pred) > 0.5).astype(float))
             categorical_accuracy = accuracy_score(y_true=y, y_pred=(np.array(y_pred) > 0.5).astype(float))
             # categorical_accuracy = accuracy_score(y_true=y, y_pred=np.argmax(y_pred, axis=-1))
             fitness_scores.append([-categorical_accuracy])
