@@ -89,7 +89,7 @@ def evolve(problem,
         # A file name has been given, then load the data from the file
         with open(checkpoint, "r") as cp_file:
             # Define objective, individuals, population, and evaluation
-            creator.create("FitnessMin", base.Fitness, parameters=(-1.0,))
+            creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
             creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
             cp = pickle.load(cp_file)
         random.seed(cp["rndstate"])
@@ -234,9 +234,10 @@ def evolve(problem,
                 pickle.dump(cp, cp_file)
 
         # Log Average score of population
-        logger.info('Generation {} Avg. Fitness Score: {} | Fittest Score: {}'.format(g,
-                                                                                      avg_fitness_score,
-                                                                                      halloffame.fitness.values[0]))
+        logger.info('Generation {} Avg. Fitness Score: {} | Best Individual Fittest Score: {}'\
+                        .format(g,
+                                avg_fitness_score,
+                                halloffame.fitness.values[0]))
 
         # Early Stopping if average fitness
         # score is close to the minimum possible,
