@@ -46,15 +46,15 @@ class ProblemFuncApprox(Problem):
         self._input_dim = 1
         self._output_dim = 1
 
-        def sample_float(start, end, step):
+        def sample_float(start, end, step, size=500):
             self.minimum = start
             self.maximum = end
-            return random.sample(list(np.arange(start, end, step)), k=500)
+            return random.sample(list(np.arange(start, end, step)), k=size)
 
-        def sample_int(start, end):
+        def sample_int(start, end, size=500):
             self.minimum = start
             self.maximum = end
-            return np.random.randint(start, end + 1, size=500)
+            return np.random.randint(start, end + 1, size=size)
 
         # Get the function to approximate
         if func == 'sinx':
@@ -80,7 +80,7 @@ class ProblemFuncApprox(Problem):
             self.y_train = (np.array(self.X_train) > 0).astype(float)
             self._approx_type = Problem.CLASSIFICATION
         elif func == 'simple_step':
-            self.X_train = sample_int(0, 1)
+            self.X_train = sample_int(0, 1, size=20)
             self.y_train = self.X_train
             self._approx_type = Problem.CLASSIFICATION
         else:
