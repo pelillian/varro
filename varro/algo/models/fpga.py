@@ -27,8 +27,8 @@ class ModelFPGA(Model):
 
         """
         from varro.fpga.interface import FpgaConfig
-        self.config = FpgaConfig(parameters)
-        self.config.load_fpga(parameters)
+        self.config = FpgaConfig(parameters.reshape(FPGA_BITSTREAM_SHAPE))
+        self.config.load_fpga(parameters.reshape(FPGA_BITSTREAM_SHAPE))
 
     def predict(self, X, problem=None):
         """Evaluates the model on given data."""
@@ -47,4 +47,3 @@ class ModelFPGA(Model):
     @property
     def parameters_shape(self):
         return ModelFPGA.FPGA_BITSTREAM_SHAPE
-
