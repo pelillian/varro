@@ -142,7 +142,7 @@ def predict(model_type,
     # Load data from pickle file
     with open(ckpt, "rb") as cp_file:
         # Define objective, individuals, population, and evaluation
-        creator.create("FitnessMin", base.Fitness, parameters=(-1.0,))
+        creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
         cp = pickle.load(cp_file)
     halloffame = cp["halloffame"] # Load the best individual in the population

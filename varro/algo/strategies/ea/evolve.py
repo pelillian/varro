@@ -11,7 +11,7 @@ import numpy as np
 import functools
 from tqdm import tqdm
 from deap import base, creator, tools
-from datetime import date
+from datetime import datetime
 
 from varro.misc.util import make_path
 from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, FREQ
@@ -56,8 +56,8 @@ def evolve(problem,
     ########################################################
 
     # Set log files
-    experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, date.today().strftime("%b-%d-%Y-%H:%M:%S"))
-    experiment_logs_file = os.path.join(ABS_ALGO_EXP_LOGS_PATH, date.today().strftime("%b-%d-%Y-%H:%M:%S") + '.log')
+    experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, problem.name + '_' + datetime.now().strftime("%b-%d-%Y-%H:%M:%S"))
+    experiment_logs_file = os.path.join(ABS_ALGO_EXP_LOGS_PATH, problem.name + '_' + datetime.now().strftime("%b-%d-%Y-%H:%M:%S") + '.log')
 
     # Create experiment folder to store
     # snapshots of population
