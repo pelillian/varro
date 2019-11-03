@@ -4,7 +4,7 @@ This module contains classes for defining each type of model.
 
 import os
 import numpy as np
-from datetime import date
+from datetime import datetime
 from keras.callbacks import TensorBoard
 
 from varro.algo.models import Model
@@ -40,7 +40,7 @@ class ModelNN(Model):
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
 
         # Set up tensorboard to logs
-        self.tensorboard = TensorBoard(log_dir="{}/{}".format(ABS_ALGO_TENSORBOARD_PATH, date.today().strftime("%b-%d-%Y-%H:%M:%S")))
+        self.tensorboard = TensorBoard(log_dir="{}/{}".format(ABS_ALGO_TENSORBOARD_PATH, datetime.now().strftime("%b-%d-%Y-%H:%M:%S")))
 
         # Set the number of parameters we can change in the architecture
         self.num_parameters_alterable = np.sum([np.prod(layer.shape) for layer in self.model.get_weights()])
