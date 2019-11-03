@@ -63,7 +63,7 @@ class FpgaConfig:
                     print("", file=f)
             print(SIMPLE_STEP_CFG, file=f)
 
-    def load_fpga(self, config_data=None):
+    def load_fpga(self, config_data):
         """Loads a 2d array of configuration data onto to the FPGA"""
 
         self.load_cram(config_data)
