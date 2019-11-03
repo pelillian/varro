@@ -17,7 +17,7 @@ arduino_connection = arduino.initialize_connection()
 class FpgaConfig:
     def __init__(self, config_data=None):
         """This class handles flashing and evaluating the FGPA bitstream"""
-        self.chip = pytrellis.Chip("LFE5U-85F")
+        self.chip = pytrellis.Chip("LFE5UM5G-85F")
         self.id = get_new_id()
         if config_data is not None:
             self.load_cram(config_data)
