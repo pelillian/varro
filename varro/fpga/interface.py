@@ -9,10 +9,10 @@ import pytrellis
 from varro.misc.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
 from varro.fpga.util import make_path, get_new_id, get_config_dir
 from varro.fpga.flash import flash_config_file
-import varro.fpga.arduino as arduino
+from varro.algo.arduino import initialize_connection, send_and_recieve
 
 pytrellis.load_database(PRJTRELLIS_DATABASE)
-arduino_connection = arduino.initialize_connection()
+arduino_connection = initialize_connection()
 
 
 class FpgaConfig:
@@ -81,7 +81,7 @@ class FpgaConfig:
             print('Sending {}'.format(datum))
 
             # Send the data and recieves a string back
-            retval = arduino.send_and_recieve(arduino_connection, datum, 0.2)
+            retval = send_and_recieve(arduino_connection, datum, 0.01)
 
             # Parse the correct value from the string
             retval = retval.decode("utf-8").split("Read value: ", 1)[1][0]
