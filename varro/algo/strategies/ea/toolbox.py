@@ -53,7 +53,11 @@ def ea_toolbox(i_shape,
                          indpb=imutpb)
     elif model_type == "fpga":
         toolbox.register("attribute", np.random.choice, [False, True])
-        toolbox.register("individual", np.random.choice, [False, True], np.prod(i_shape))
+        def init_individual(ind_class):
+            return ind_class(np.random.choice([False, True], size=np.prod(i_shape)))
+        toolbox.register("individual",
+                         init_individual,
+                         creator.Individual)
         toolbox.register("mutate",
                          tools.mutFlipBit,
                          indpb=0.1)
