@@ -202,7 +202,7 @@ def main():
                         save_dir=save_dir)
         else:
             # Make a single prediction
-            save_dir = join(ABS_ALGO_PREDICTIONS_PATH, args.ckptfolder.split('/')[-2])
+            save_dir = join(ABS_ALGO_PREDICTIONS_PATH, args.ckpt.split('/')[-2])
             make_path(save_dir)
             predict(model_type=args.model_type,
                     problem_type=args.problem_type,
