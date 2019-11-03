@@ -6,7 +6,7 @@ const int INPUT_PIN = 2;
 void setup()
 {
 
-  Serial.begin(250000);  // initialize serial communications at 9600 bps
+  Serial.begin(9600);  // initialize serial communications at 9600 bps
   pinMode(OUTPUT_PIN, OUTPUT);
   pinMode(INPUT_PIN, INPUT);
 

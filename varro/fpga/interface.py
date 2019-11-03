@@ -9,7 +9,7 @@ import pytrellis
 from varro.misc.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
 from varro.fpga.util import make_path, get_new_id, get_config_dir
 from varro.fpga.flash import flash_config_file
-from varro.algo.arduino import initialize_connection, send_and_recieve
+from varro.fpga.arduino import initialize_connection, send_and_recieve
 
 pytrellis.load_database(PRJTRELLIS_DATABASE)
 arduino_connection = initialize_connection()
@@ -70,6 +70,7 @@ class FpgaConfig:
 
         self.load_cram(config_data)
         self.write_config_file()
+        print('Flashing config file ', self.base_file_name)
         flash_config_file(self.base_file_name)
 
     def evaluate(self, data):
@@ -78,16 +79,13 @@ class FpgaConfig:
         print('Evaluating individual')
         results = []
         for datum in data:
-            print('Sending {}'.format(datum))
-
             # Send the data and recieves a string back
-            retval = send_and_recieve(arduino_connection, datum, 0.01)
+            return_value = send_and_recieve(arduino_connection, datum, 0.2)
 
             # Parse the correct value from the string
-            retval = retval.decode("utf-8").split("Read value: ", 1)[1][0]
-            print('receiving ', retval)
+            return_value = return_value.decode("utf-8").split("Read value: ", 1)[1][0]
 
-            results.append(int(retval))
+            results.append(int(return_value))
 
         return results
 

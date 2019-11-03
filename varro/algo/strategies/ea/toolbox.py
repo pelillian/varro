@@ -13,8 +13,7 @@ def ea_toolbox(i_shape,
                model_type,
                imutpb=None,
                imutmu=None,
-               imutsigma=None,
-               p=0.5):
+               imutsigma=None):
     """Initializes and configures the DEAP toolbox for evolving the parameters of a model.
 
     Args:
@@ -53,12 +52,12 @@ def ea_toolbox(i_shape,
                          sigma=imutsigma,
                          indpb=imutpb)
     elif model_type == "fpga":
-        toolbox.register("attribute", np.random.choice, a=[False, True], p=[p, 1-p])
+        toolbox.register("attribute", np.random.choice, [False, True])
+        def init_individual(ind_class):
+            return ind_class(np.random.choice([False, True], size=np.prod(i_shape)))
         toolbox.register("individual",
-                         tools.initRepeat,
-                         creator.Individual,
-                         toolbox.attribute,
-                         n=np.prod(i_shape))
+                         init_individual,
+                         creator.Individual)
         toolbox.register("mutate",
                          tools.mutFlipBit,
                          indpb=0.1)

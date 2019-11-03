@@ -6,7 +6,6 @@ SERIAL_PORT = '/dev/ttyACM0'
 
 
 def initialize_connection():
-
     ard = serial.Serial(SERIAL_PORT,9600,timeout=5)
     time.sleep(2) # wait for the Arduino to initialize
     ard.flush()
@@ -14,7 +13,6 @@ def initialize_connection():
     return ard
 
 def send_char(arduino, val):
-
     send_byte = int(val).to_bytes(1, byteorder="little") # Makes sure that the value can be represented as one byte
 
     retval = arduino.write(send_byte)
@@ -23,7 +21,6 @@ def send_char(arduino, val):
     return retval
 
 def send_and_recieve(arduino, val, wait_time):
-
     send_char(arduino, val)
 
     time.sleep(wait_time)
@@ -34,14 +31,11 @@ def send_and_recieve(arduino, val, wait_time):
 
 
 if __name__=="__main__":
-
     arduino = initialize_connection()
-
     val = 1
 
     while True:
         # Serial write section
-
         arduino.flush()
 
         # Serial read section
