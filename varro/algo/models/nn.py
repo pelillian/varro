@@ -42,34 +42,34 @@ class ModelNN(Model):
         # Set up tensorboard to logs
         self.tensorboard = TensorBoard(log_dir="{}/{}".format(ABS_ALGO_TENSORBOARD_PATH, date.today().strftime("%b-%d-%Y-%H:%M:%S")))
 
-        # Set the number of weights we can change in the architecture
-        self.num_weights_alterable = np.sum([np.prod(layer.shape) for layer in self.model.get_weights()])
+        # Set the number of parameters we can change in the architecture
+        self.num_parameters_alterable = np.sum([np.prod(layer.shape) for layer in self.model.get_parameters()])
 
-    def load_weights(self, weights):
-        """Loads an array of weights into this model.
+    def load_parameters(self, parameters):
+        """Loads an array of parameters into this model.
 
         Args:
-            weights (np.ndarray of floats): The new values for the weights
+            parameters (np.ndarray of floats): The new values for the parameters
                 - e.g. [0.93, 0.85, 0.24, ..., 0.19]
 
         """
         # Pull out the numbers from the individual and
-        # load them as the shape from the model's weights
+        # load them as the shape from the model's parameters
         ind_idx = 0
-        new_weights = []
-        for idx, layer in enumerate(self.model.get_weights()):
-            # Number of weights we'll take from the individual for this layer
-            num_weights_taken = np.prod(layer.shape)
-            new_weights.append(weights[ind_idx:ind_idx+num_weights_taken].reshape(layer.shape))
-            ind_idx += num_weights_taken
+        new_parameters = []
+        for idx, layer in enumerate(self.model.get_parameters()):
+            # Number of parameters we'll take from the individual for this layer
+            num_parameters_taken = np.prod(layer.shape)
+            new_parameters.append(parameters[ind_idx:ind_idx+num_parameters_taken].reshape(layer.shape))
+            ind_idx += num_parameters_taken
 
         # Set Weights using individual
-        self.model.set_weights(new_weights)
+        self.model.set_parameters(new_parameters)
 
     def predict(self, X, problem=None):
         """Evaluates the model on given data."""
         return self.model.predict(X, callbacks=[self.tensorboard])
 
     @property
-    def weights_shape(self):
-        return self.num_weights_alterable
+    def parameters_shape(self):
+        return self.num_parameters_alterable
