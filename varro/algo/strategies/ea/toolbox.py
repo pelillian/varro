@@ -36,7 +36,7 @@ def ea_toolbox(i_shape,
     toolbox = base.Toolbox()
 
     # Define objective, individuals, population, and evaluation
-    creator.create("FitnessMin", base.Fitness, parameters=(-1.0,))
+    creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
     creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
 
     # Defines Individual
@@ -58,7 +58,7 @@ def ea_toolbox(i_shape,
                          tools.initRepeat,
                          creator.Individual,
                          toolbox.attribute,
-                         n=i_shape)
+                         n=np.prod(i_shape))
         toolbox.register("mutate",
                          tools.mutFlipBit,
                          indpb=0.1)
