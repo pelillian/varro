@@ -80,7 +80,7 @@ class ProblemFuncApprox(Problem):
             self.y_train = (np.array(self.X_train) > 0).astype(float)
             self._approx_type = Problem.CLASSIFICATION
         elif func == 'simple_step':
-            self.X_train = sample_int(0, 1, size=20)
+            self.X_train = sample_int(0, 1, size=10)
             self.y_train = self.X_train
             self._approx_type = Problem.CLASSIFICATION
         else:

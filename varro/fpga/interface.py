@@ -75,6 +75,7 @@ class FpgaConfig:
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
 
+        print('Evaluating individual')
         results = []
         for datum in data:
             print('Sending {}'.format(datum))
@@ -84,7 +85,7 @@ class FpgaConfig:
 
             # Parse the correct value from the string
             retval = retval.decode("utf-8").split("Read value: ", 1)[1][0]
-            print("receiving ", retval)
+            print('receiving ', retval)
 
             results.append(int(retval))
 
