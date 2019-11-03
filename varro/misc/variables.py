@@ -27,7 +27,7 @@ ABS_ALGO_EXP_LOGS_PATH = os.path.join(ROOT_DIR, 'logs/varro/algo/experiments')
 # of population in each generation of experiment
 EXPERIMENT_CHECKPOINTS_PATH = os.path.join(ROOT_DIR, 'checkpoints/varro/algo')
 
-# Grid Search:
+# Grid Search
 
 # This is the folder that houses logs
 # for grid search
@@ -40,3 +40,9 @@ GRID_SEARCH_CHECKPOINTS_PATH = os.path.join(ROOT_DIR, 'checkpoints/varro/grid_se
 # Whole population will be written in a pickled
 # dictionary every FREQ generations
 FREQ = 1
+
+# Interface
+PRJTRELLIS_DATABASE = "../prjtrellis-db"
+CHIP_NAME = "LFE5UM5G-85F"
+CHIP_COMMENT = ".comment Part: LFE5UM5G-85F-8CABGA381"
+

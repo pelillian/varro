@@ -6,18 +6,19 @@ import os
 from os.path import join
 import pytrellis
 
+from varro.misc.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
 from varro.fpga.util import make_path, get_new_id, get_config_dir
 from varro.fpga.flash import flash_config_file
 import varro.fpga.arduino as arduino
 
-pytrellis.load_database("../prjtrellis-db")
+pytrellis.load_database(PRJTRELLIS_DATABASE)
 arduino_connection = arduino.initialize_connection()
 
 
 class FpgaConfig:
     def __init__(self, config_data=None):
         """This class handles flashing and evaluating the FGPA bitstream"""
-        self.chip = pytrellis.Chip("LFE5UM5G-85F")
+        self.chip = pytrellis.Chip(CHIP_NAME)
         self.id = get_new_id()
         if config_data is not None:
             self.load_cram(config_data)
@@ -47,8 +48,9 @@ class FpgaConfig:
         with open(self.config_file, "w") as f:
             print(".device {}".format(self.chip.info.name), file=f)
             print("", file=f)
-            for meta in self.chip.metadata:
-                print(".comment {}".format(meta), file=f)
+#            for meta in self.chip.metadata:
+#                print(".comment {}".format(meta), file=f)
+            print(CHIP_COMMENT, file=f)
             print("", file=f)
 
             from varro.fpga.tiles import SIMPLE_STEP_TILES, SIMPLE_STEP_CFG
