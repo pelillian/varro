@@ -33,7 +33,7 @@ def evaluate(population, model, problem):
     for individual in population:
 
         # Load Weights into model using individual
-        model.load_weights(individual)
+        model.load_parameters(individual)
 
         # Predict labels
         y_pred = np.array(model.predict(X, problem=problem))

@@ -31,7 +31,7 @@ def evolve(problem,
            checkpoint=None,
            logs_path=ABS_ALGO_EXP_LOGS_PATH,
            ckpts_path=EXPERIMENT_CHECKPOINTS_PATH):
-    """Evolves weights to train a model on a dataset.
+    """Evolves parameters to train a model on a dataset.
 
     Args:
         problem (object): A Problem object that includes the type of problem we're trying to optimize
@@ -89,7 +89,7 @@ def evolve(problem,
         # A file name has been given, then load the data from the file
         with open(checkpoint, "r") as cp_file:
             # Define objective, individuals, population, and evaluation
-            creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
+            creator.create("FitnessMin", base.Fitness, parameters=(-1.0,))
             creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
             cp = pickle.load(cp_file)
         random.seed(cp["rndstate"])

@@ -15,11 +15,11 @@ class ModelFPGA(Model):
         """FPGA architecture wrapper class"""
         pass
 
-    def load_weights(self, weights):
-        """Loads an array of weights into this model.
+    def load_parameters(self, parameters):
+        """Loads an array of parameters into this model.
 
         Args:
-            weights (np.ndarray of floats): The new values for the weights
+            parameters (np.ndarray of floats): The new values for the parameters
                 - e.g. [[0, 1, 0, 1, ..., 0],
                         [1, 0, 1, 1, ..., 1],
                         ...
@@ -27,8 +27,8 @@ class ModelFPGA(Model):
 
         """
         from varro.fpga.interface import FpgaConfig
-        self.config = FpgaConfig(weights)
-        self.config.load_fpga(weights)
+        self.config = FpgaConfig(parameters)
+        self.config.load_fpga(parameters)
 
     def predict(self, X, problem=None):
         """Evaluates the model on given data."""
@@ -45,6 +45,6 @@ class ModelFPGA(Model):
 
 
     @property
-    def weights_shape(self):
+    def parameters_shape(self):
         return ModelFPGA.FPGA_BITSTREAM_SHAPE
 

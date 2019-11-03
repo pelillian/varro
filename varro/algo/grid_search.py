@@ -59,7 +59,7 @@ def grid_search(problem_type,
     params['popsize'] = [10, 100, 1000]
     params['elitesize'] = [0.05, 0.1, 0.3]
     params['ngen'] = [100]
-    fittest = {'fitness': 42069, 'args': {}, 'weights': None}
+    fittest = {'fitness': 42069, 'args': {}, 'parameters': None}
     all_runs = []
 
     # fit() for each argument permutation
@@ -109,7 +109,7 @@ def grid_search(problem_type,
         if fitness < fittest['fitness']:
             fittest['args'] = args
             fittest['fitness'] = fitness
-            fittest['weights'] = halloffame
+            fittest['parameters'] = halloffame
 
         args['fitness'] = fitness
         all_runs.append(args)
