@@ -39,7 +39,7 @@ class ModelFPGA(Model):
             X = X.astype(int)
 
         y = self.config.evaluate(X)
-        #TODO: scale y
+        #TODO: scale y if necessary
         #if isinstance(X[0], numbers.Real) and not isinstance(X[0], numbers.Integral):
         return y
 
