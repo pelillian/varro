@@ -15,7 +15,7 @@ def ea_toolbox(i_shape,
                imutmu=None,
                imutsigma=None,
                p=0.5):
-    """Initializes and configures the DEAP toolbox for evolving the weights of a model.
+    """Initializes and configures the DEAP toolbox for evolving the parameters of a model.
 
     Args:
         i_shape (int or tuple): Size or shape of an individual in the population
@@ -36,7 +36,7 @@ def ea_toolbox(i_shape,
     toolbox = base.Toolbox()
 
     # Define objective, individuals, population, and evaluation
-    creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
+    creator.create("FitnessMin", base.Fitness, parameters=(-1.0,))
     creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
 
     # Defines Individual
@@ -53,8 +53,12 @@ def ea_toolbox(i_shape,
                          sigma=imutsigma,
                          indpb=imutpb)
     elif model_type == "fpga":
+        toolbox.register("attribute", np.random.choice, a=[False, True], p=[p, 1-p])
         toolbox.register("individual",
-                         np.random.choice, a=[False, True], size=i_shape, p=[p, 1-p])
+                         tools.initRepeat,
+                         creator.Individual,
+                         toolbox.attribute,
+                         n=i_shape)
         toolbox.register("mutate",
                          tools.mutFlipBit,
                          indpb=0.1)

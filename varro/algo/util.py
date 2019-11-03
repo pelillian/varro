@@ -15,7 +15,7 @@ def get_args():
     """
     parser = argparse.ArgumentParser(
         description='Runs an evolutionary algorithm to optimize \
-            the weights of a neural network or circuit configuration of an FPGA'
+            the parameters of a neural network or circuit configuration of an FPGA'
     )
 
     ######################

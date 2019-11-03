@@ -8,7 +8,7 @@ class Model:
         """Wrapper class for different types of models."""
         pass
 
-    def load_weights(self, weights):
+    def load_parameters(self, parameters):
         """Loads an array of parameters into this model.
 
         Args:
@@ -23,6 +23,6 @@ class Model:
         pass
 
     @property
-    def weights_shape(self):
+    def parameters_shape(self):
         pass
 

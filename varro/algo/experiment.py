@@ -73,9 +73,9 @@ def fit(model_type,
                                   model=model,
                                   problem=problem)
 
-    # Set the individual size to the number of weights
+    # Set the individual size to the number of parameters
     # we can alter in the neural network architecture specified
-    toolbox = ea_toolbox(i_shape=model.weights_shape,
+    toolbox = ea_toolbox(i_shape=model.parameters_shape,
                          evaluate_population=evaluate_population,
                          model_type=model_type,
                          imutpb=imutpb,
@@ -142,13 +142,13 @@ def predict(model_type,
     # Load data from pickle file
     with open(ckpt, "rb") as cp_file:
         # Define objective, individuals, population, and evaluation
-        creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
+        creator.create("FitnessMin", base.Fitness, parameters=(-1.0,))
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
         cp = pickle.load(cp_file)
     halloffame = cp["halloffame"] # Load the best individual in the population
 
     # Load Weights into model using individual
-    model.load_weights(halloffame)
+    model.load_parameters(halloffame)
 
     # Predict labels using np array in X
     y_pred = np.array(model.predict(np.load(X)))
