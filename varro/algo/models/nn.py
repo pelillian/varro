@@ -5,6 +5,7 @@ This module contains classes for defining each type of model.
 import os
 import numpy as np
 from datetime import datetime
+from keras.callbacks import TensorBoard
 
 from varro.algo.models import Model
 from varro.algo.problems import Problem
@@ -21,7 +22,6 @@ class ModelNN(Model):
         """
         from keras.layers import Dense, BatchNormalization
         from keras.models import Sequential
-        from keras.callbacks import TensorBoard
         # Suppress Tensorflow / Keras warnings
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -29,13 +29,19 @@ class ModelNN(Model):
         if problem.approx_type == Problem.CLASSIFICATION:
             self.model.add(Dense(3, input_dim=problem.input_dim, activation='sigmoid'))
             self.model.add(Dense(2, activation='sigmoid'))
-            # self.model.add(Dense(problem.output_dim, activation='softmax'))
+
+            # LAST LAYER:
+            # Problem-specific - if y is [0, 1], use sigmoid
             self.model.add(Dense(problem.output_dim, activation='sigmoid'))
+
         elif problem.approx_type == Problem.REGRESSION:
             self.model.add(Dense(3, input_dim=problem.input_dim, activation='sigmoid'))
             self.model.add(Dense(3, activation='sigmoid'))
             self.model.add(Dense(2, activation='sigmoid'))
-            self.model.add(Dense(problem.output_dim, activation='sigmoid'))
+
+            # LAST LAYER:
+            # Problem-specific - if y is [-1, 1], use tanh
+            self.model.add(Dense(problem.output_dim, activation='tanh'))
         else:
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
 
