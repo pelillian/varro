@@ -37,7 +37,7 @@ def rosenbrock(x):
 
 class ProblemFuncApprox(Problem):
 
-    def sample_float(start, end, step, size=500):
+    def sample_float(self, start, end, step, size=500):
         """Gets a random list of floats from a range of floats
 
         Args:
@@ -53,7 +53,7 @@ class ProblemFuncApprox(Problem):
         self.maximum = end
         return random.sample(list(np.arange(start, end, step)), k=size)
 
-    def sample_int(start, end, size=500):
+    def sample_int(self, start, end, size=500):
         """Gets a random list of ints from a range of ints
 
         Args:
@@ -69,7 +69,7 @@ class ProblemFuncApprox(Problem):
         self.maximum = end
         return np.random.randint(start, end + 1, size=size)
 
-    def set_train_set(func):
+    def set_train_set(self, func):
         """Sets the ground truth training input X_train and output y_train
         for the function specified to approximate
 
