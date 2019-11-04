@@ -5,7 +5,6 @@ This module contains classes for defining each type of model.
 import os
 import numpy as np
 from datetime import datetime
-from keras.callbacks import TensorBoard
 
 from varro.algo.models import Model
 from varro.algo.problems import Problem
@@ -22,6 +21,7 @@ class ModelNN(Model):
         """
         from keras.layers import Dense, BatchNormalization
         from keras.models import Sequential
+        from keras.callbacks import TensorBoard
         # Suppress Tensorflow / Keras warnings
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 

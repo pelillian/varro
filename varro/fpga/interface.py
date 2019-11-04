@@ -9,7 +9,7 @@ import pytrellis
 from varro.misc.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
 from varro.fpga.util import make_path, get_new_id, get_config_dir
 from varro.fpga.flash import flash_config_file
-from varro.fpga.arduino import initialize_connection, send_and_recieve
+from varro.arduino.communication import initialize_connection, send_and_recieve
 
 pytrellis.load_database(PRJTRELLIS_DATABASE)
 arduino_connection = initialize_connection()
@@ -70,13 +70,11 @@ class FpgaConfig:
 
         self.load_cram(config_data)
         self.write_config_file()
-        print('Flashing config file ', self.base_file_name)
         flash_config_file(self.base_file_name)
 
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
 
-        print('Evaluating individual')
         results = []
         for datum in data:
             # Send the data and recieves a string back
