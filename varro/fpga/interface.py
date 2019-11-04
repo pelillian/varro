@@ -70,13 +70,11 @@ class FpgaConfig:
 
         self.load_cram(config_data)
         self.write_config_file()
-        print('Flashing config file ', self.base_file_name)
         flash_config_file(self.base_file_name)
 
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
 
-        print('Evaluating individual')
         results = []
         for datum in data:
             # Send the data and recieves a string back
