@@ -4,6 +4,8 @@ This module contains the class for Evaluate, with one constructor for FPGA and o
 
 import numpy as np
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import mean_squared_error
+from math import sqrt
 
 from varro.algo.problems import Problem
 
@@ -43,10 +45,8 @@ def evaluate(population, model, problem):
             # categorical_accuracy = accuracy_score(y_true=y, y_pred=np.argmax(y_pred, axis=-1))
             fitness_scores.append([-categorical_accuracy])
         elif approx_type == Problem.REGRESSION:
-            # mse = np.mean(np.square(y - y_pred))
-            # Normalized RMSE
-            norm_rmse = (np.mean(np.square(y - y_pred)) ** 0.5) / np.std(y)
-            fitness_scores.append([norm_rmse])
+            rmse = sqrt(mean_squared_error(y_actual, y_predicted))
+            fitness_scores.append([rmse])
         else:
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
 
