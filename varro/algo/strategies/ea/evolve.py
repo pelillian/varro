@@ -87,7 +87,7 @@ def evolve(problem,
     ##################################
     if checkpoint:
         # A file name has been given, then load the data from the file
-        with open(checkpoint, "r") as cp_file:
+        with open(checkpoint, "rb") as cp_file:
             # Define objective, individuals, population, and evaluation
             creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
             creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
