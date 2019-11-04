@@ -27,20 +27,21 @@ class ModelNN(Model):
 
         self.model = Sequential()
         if problem.approx_type == Problem.CLASSIFICATION:
-            self.model.add(Dense(128, input_dim=problem.input_dim, activation='relu'))
-            self.model.add(Dense(64, activation='relu'))
+            self.model.add(Dense(3, input_dim=problem.input_dim, activation='sigmoid'))
+            self.model.add(Dense(2, activation='sigmoid'))
             # self.model.add(Dense(problem.output_dim, activation='softmax'))
             self.model.add(Dense(problem.output_dim, activation='sigmoid'))
         elif problem.approx_type == Problem.REGRESSION:
-            self.model.add(Dense(1, input_dim=problem.input_dim, activation='relu'))
-            self.model.add(Dense(12, activation='sigmoid'))
-            self.model.add(Dense(12, activation='sigmoid'))
+            self.model.add(Dense(3, input_dim=problem.input_dim, activation='sigmoid'))
+            self.model.add(Dense(3, activation='sigmoid'))
+            self.model.add(Dense(2, activation='sigmoid'))
             self.model.add(Dense(problem.output_dim, activation='sigmoid'))
         else:
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
 
         # Set up tensorboard to logs
-        self.tensorboard = TensorBoard(log_dir="{}/{}".format(ABS_ALGO_TENSORBOARD_PATH, datetime.now().strftime("%b-%d-%Y-%H:%M:%S")))
+        self.tensorboard = TensorBoard(log_dir="{}/{}".format(ABS_ALGO_TENSORBOARD_PATH,
+                                                              datetime.now().strftime("%b-%d-%Y-%H:%M:%S")))
 
         # Set the number of parameters we can change in the architecture
         self.num_parameters_alterable = np.sum([np.prod(layer.shape) for layer in self.model.get_weights()])

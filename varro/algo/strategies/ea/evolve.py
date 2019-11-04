@@ -244,12 +244,18 @@ def evolve(problem,
         # or if stuck at local optima (average fitness score
         # hasnt changed for past 10 rounds)
         if problem.approx_type == Problem.CLASSIFICATION:
-            if round(-halloffame.fitness.values[0], 4) > 0.9 or len(set(avg_fitness_scores[-10:])) == 1:
-                logger.info('Early Stopping activated.')
+            if round(-halloffame.fitness.values[0], 4) > 0.95:
+                logger.info('Early Stopping activated because Accuracy > 95%.')
+                break;
+            if len(set(avg_fitness_scores[-10:])) == 1:
+                logger.info('Early Stopping activated because fitness scores have converged.')
                 break;
         else:
-            if round(halloffame.fitness.values[0], 4) < 0.01 or len(set(avg_fitness_scores[-10:])) == 1:
-                logger.info('Early Stopping activated.')
+            if round(halloffame.fitness.values[0], 4) < 0.01:
+                logger.info('Early Stopping activated because MSE < 0.01.')
+                break;
+            if len(set(avg_fitness_scores[-10:])) == 1:
+                logger.info('Early Stopping activated because fitness scores have converged.')
                 break;
 
 
