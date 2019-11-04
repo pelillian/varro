@@ -150,8 +150,9 @@ def evolve(problem,
 
         # Keep the elite individuals for next generation
         # without mutation
-        elite = offspring[:int(elite_size*pop_size)]
-        non_elite = offspring[int(elite_size*pop_size):]
+        elite_num = int(elite_size*pop_size) + 1
+        elite = offspring[:elite_num]
+        non_elite = offspring[elite_num:]
 
         # Apply crossover on the non-elite offspring by
         # choosing alternate offsprings
@@ -247,14 +248,14 @@ def evolve(problem,
             if round(-halloffame.fitness.values[0], 4) > 0.95:
                 logger.info('Early Stopping activated because Accuracy > 95%.')
                 break;
-            if len(set(avg_fitness_scores[-10:])) == 1:
+            if len(avg_fitness_scores) > 10 and len(set(avg_fitness_scores[-10:])) == 1:
                 logger.info('Early Stopping activated because fitness scores have converged.')
                 break;
         else:
             if round(halloffame.fitness.values[0], 4) < 0.01:
                 logger.info('Early Stopping activated because MSE < 0.01.')
                 break;
-            if len(set(avg_fitness_scores[-10:])) == 1:
+            if len(avg_fitness_scores) > 10 and len(set(avg_fitness_scores[-10:])) == 1:
                 logger.info('Early Stopping activated because fitness scores have converged.')
                 break;
 
