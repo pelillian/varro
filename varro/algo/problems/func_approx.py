@@ -36,6 +36,75 @@ def rosenbrock(x):
     return (np.sum( (1 - x0) **2 ) + 100 * np.sum( (x1 - x0**2) **2 ))
 
 class ProblemFuncApprox(Problem):
+
+    def sample_float(start, end, step, size=500):
+        """Gets a random list of floats from a range of floats
+
+        Args:
+            start (float): The lower bound of our range
+            end (float): The upper bound of our range
+            step (float): The precision of our floats to be sampled
+            size (int): Number of floats to sample from list
+
+        Returns:
+            A random sample of floats from the list
+        """
+        self.minimum = start
+        self.maximum = end
+        return random.sample(list(np.arange(start, end, step)), k=size)
+
+    def sample_int(start, end, size=500):
+        """Gets a random list of ints from a range of ints
+
+        Args:
+            start (int): The lower bound of our range
+            end (int): The upper bound of our range
+            step (int): The precision of our ints to be sampled
+            size (int): Number of ints to sample from list
+
+        Returns:
+            A random sample of ints from the list
+        """
+        self.minimum = start
+        self.maximum = end
+        return np.random.randint(start, end + 1, size=size)
+
+    def set_train_set(func):
+        """Sets the ground truth training input X_train and output y_train
+        for the function specified to approximate
+
+        Args:
+            func (str): A string specifying what function we're trying to approximate
+        """
+        if func == 'sinx':
+            self.X_train = self.sample_float(-2*np.pi, 2*np.pi, 0.001)
+            self.y_train = np.sin(self.X_train)
+        elif func == 'cosx':
+            self.X_train = self.sample_float(-2*np.pi, 2*np.pi, 0.001)
+            self.y_train = np.cos(self.X_train)
+        elif func == 'tanx':
+            self.X_train = self.sample_float(-2*np.pi, 2*np.pi, 0.001)
+            self.y_train = np.tan(self.X_train)
+        elif func == 'x':
+            self.X_train = self.sample_float(-10, 10, 0.001)
+            self.y_train = self.X_train
+        elif func == 'ras':
+            self.X_train = self.sample_float(-5.12, 5.12, 0.01)
+            self.y_train = rastrigin(self.X_train)
+        elif func == 'rosen':
+            self.X_train = self.sample_float(-10, 10, 0.001)
+            self.y_train = rosenbrock(self.X_train)
+        elif func == 'step':
+            self.X_train = self.sample_float(-10, 10, 0.001)
+            self.y_train = (np.array(self.X_train) > 0).astype(float)
+            self._approx_type = Problem.CLASSIFICATION
+        elif func == 'simple_step':
+            self.X_train = self.sample_int(0, 1, size=10)
+            self.y_train = self.X_train
+            self._approx_type = Problem.CLASSIFICATION
+        else:
+            raise ValueError('Problem \'' + str(func) + '\' not recognised')
+
     def __init__(self, func):
         # Set seed
         random.seed(100)
@@ -46,42 +115,5 @@ class ProblemFuncApprox(Problem):
         self._input_dim = 1
         self._output_dim = 1
 
-        def sample_float(start, end, step, size=500):
-            self.minimum = start
-            self.maximum = end
-            return random.sample(list(np.arange(start, end, step)), k=size)
-
-        def sample_int(start, end, size=500):
-            self.minimum = start
-            self.maximum = end
-            return np.random.randint(start, end + 1, size=size)
-
-        # Get the function to approximate
-        if func == 'sinx':
-            self.X_train = sample_float(-2*np.pi, 2*np.pi, 0.001)
-            self.y_train = np.sin(self.X_train)
-        elif func == 'cosx':
-            self.X_train = sample_float(-2*np.pi, 2*np.pi, 0.001)
-            self.y_train = np.cos(self.X_train)
-        elif func == 'tanx':
-            self.X_train = sample_float(-2*np.pi, 2*np.pi, 0.001)
-            self.y_train = np.tan(self.X_train)
-        elif func == 'x':
-            self.X_train = sample_float(-10, 10, 0.001)
-            self.y_train = self.X_train
-        elif func == 'ras':
-            self.X_train = sample_float(-5.12, 5.12, 0.01)
-            self.y_train = rastrigin(self.X_train)
-        elif func == 'rosen':
-            self.X_train = sample_float(-10, 10, 0.001)
-            self.y_train = rosenbrock(self.X_train)
-        elif func == 'step':
-            self.X_train = sample_float(-10, 10, 0.001)
-            self.y_train = (np.array(self.X_train) > 0).astype(float)
-            self._approx_type = Problem.CLASSIFICATION
-        elif func == 'simple_step':
-            self.X_train = sample_int(0, 1, size=10)
-            self.y_train = self.X_train
-            self._approx_type = Problem.CLASSIFICATION
-        else:
-            raise ValueError('Problem \'' + str(func) + '\' not recognised')
+        # Set the X_train and y_train for function to approximate
+        self.set_train_set(func)
