@@ -35,9 +35,9 @@ class ModelNN(Model):
             self.model.add(Dense(problem.output_dim, activation='sigmoid'))
 
         elif problem.approx_type == Problem.REGRESSION:
-            self.model.add(Dense(3, input_dim=problem.input_dim, activation='sigmoid'))
-            self.model.add(Dense(3, activation='sigmoid'))
-            self.model.add(Dense(2, activation='sigmoid'))
+            self.model.add(Dense(12, input_dim=problem.input_dim, activation='sigmoid'))
+            self.model.add(Dense(6, activation='sigmoid'))
+            self.model.add(Dense(4, activation='sigmoid'))
 
             # LAST LAYER:
             # Problem-specific - if y is [-1, 1], use tanh
