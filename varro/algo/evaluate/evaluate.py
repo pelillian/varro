@@ -25,9 +25,8 @@ def evaluate(population, model, problem):
         (np.ndarray): the fitness scores (list) of the individuals
 
     """
-    # Resets the training set for the problem everytime
-    # to prevent overfitting
-    problem.set_train_set(problem.name)
+    # Re-generates the training set for the problem (if possible) to prevent overfitting
+    problem.reset_train_set()
 
     # loads training set
     X = problem.X_train

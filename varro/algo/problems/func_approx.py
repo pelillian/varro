@@ -69,13 +69,12 @@ class ProblemFuncApprox(Problem):
         self.maximum = end
         return np.random.randint(start, end + 1, size=size)
 
-    def set_train_set(self, func):
+    def reset_train_set(self):
         """Sets the ground truth training input X_train and output y_train
         for the function specified to approximate
 
-        Args:
-            func (str): A string specifying what function we're trying to approximate
         """
+        func = self._name
         if func == 'sinx':
             self.X_train = self.sample_float(-2*np.pi, 2*np.pi, 0.001)
             self.y_train = np.sin(self.X_train)
@@ -99,7 +98,7 @@ class ProblemFuncApprox(Problem):
             self.y_train = (np.array(self.X_train) > 0).astype(float)
             self._approx_type = Problem.CLASSIFICATION
         elif func == 'simple_step':
-            self.X_train = self.sample_int(0, 1, size=10)
+            self.X_train = self.sample_int(0, 1)
             self.y_train = self.X_train
             self._approx_type = Problem.CLASSIFICATION
         else:
@@ -116,4 +115,4 @@ class ProblemFuncApprox(Problem):
         self._output_dim = 1
 
         # Set the X_train and y_train for function to approximate
-        self.set_train_set(func)
+        self.reset_train_set()
