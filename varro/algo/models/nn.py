@@ -27,12 +27,21 @@ class ModelNN(Model):
 
         self.model = Sequential()
         if problem.approx_type == Problem.CLASSIFICATION:
-            self.model.add(Dense(3, input_dim=problem.input_dim, activation='sigmoid'))
-            self.model.add(Dense(2, activation='sigmoid'))
+            if problem.name == 'mnist':
+                self.model.add(Dense(128, input_dim=problem.input_dim, activation='sigmoid'))
+                self.model.add(Dense(64, activation='sigmoid'))
+                self.model.add(Dense(16, activation='sigmoid'))
 
-            # LAST LAYER:
-            # Problem-specific - if y is [0, 1], use sigmoid
-            self.model.add(Dense(problem.output_dim, activation='sigmoid'))
+                # LAST LAYER:
+                # Problem-specific - if y is [0, 1], use sigmoid
+                self.model.add(Dense(problem.output_dim, activation='softmax'))
+            else:
+                self.model.add(Dense(12, input_dim=problem.input_dim, activation='sigmoid'))
+                self.model.add(Dense(4, activation='sigmoid'))
+
+                # LAST LAYER:
+                # Problem-specific - if y is [0, 1], use sigmoid
+                self.model.add(Dense(problem.output_dim, activation='sigmoid'))
 
         elif problem.approx_type == Problem.REGRESSION:
             self.model.add(Dense(6, input_dim=problem.input_dim, activation='tanh'))

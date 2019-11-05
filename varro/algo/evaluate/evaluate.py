@@ -33,7 +33,7 @@ def evaluate(population, model, problem):
     X = problem.X_train
     y = problem.y_train
     approx_type = problem.approx_type
-    
+
     # Initialize list to keep the fitness scores
     fitness_scores = []
 
@@ -47,8 +47,10 @@ def evaluate(population, model, problem):
         y_pred = np.array(model.predict(X, problem=problem))
 
         if approx_type == Problem.CLASSIFICATION:
-            categorical_accuracy = accuracy_score(y_true=y, y_pred=(np.array(y_pred) > 0.5).astype(float))
-            # categorical_accuracy = accuracy_score(y_true=y, y_pred=np.argmax(y_pred, axis=-1))
+            if problem.name == 'mnist'
+                categorical_accuracy = accuracy_score(y_true=y, y_pred=np.argmax(y_pred, axis=-1))
+            else:
+                categorical_accuracy = accuracy_score(y_true=y, y_pred=(np.array(y_pred) > 0.5).astype(float))
             fitness_scores.append([-categorical_accuracy])
         elif approx_type == Problem.REGRESSION:
             rmse = sqrt(mean_squared_error(y, y_pred))
