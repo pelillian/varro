@@ -13,12 +13,10 @@ TRAIN_SIZE = 0.2
 
 class ProblemMNIST(Problem):
 
-    def reset_train_set(self, func):
+    def reset_train_set(self):
         """Sets the ground truth training input X_train and output y_train
         for the function specified to approximate
 
-        Args:
-            func (str): A string specifying what function we're trying to approximate
         """
         # Get a random set of training
         # set indices from mnist training data
@@ -44,7 +42,7 @@ class ProblemMNIST(Problem):
         # Flatten the MNIST images into a 784 dimension vector
         self.full_X_train = np.array([x.flatten() for x in self.full_X_train])
         self.X_test = np.array([x.flatten() for x in self.X_test])
-        self.reset_train_set('mnist')
+        self.reset_train_set()
 
         # Set the input output dimensions for NN
         self._input_dim = np.prod(self.X_train[0].shape)
