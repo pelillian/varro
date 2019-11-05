@@ -19,7 +19,7 @@ class Problem(ABC):
         return None, None
 
     @abstractmethod
-    def reset_train_set(self)
+    def reset_train_set(self):
         pass
 
     @property
