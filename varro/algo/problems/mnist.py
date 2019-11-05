@@ -30,8 +30,6 @@ class ProblemMNIST(Problem):
         # Set seed
         random.seed(100)
 
-        self._input_dim = np.prod(self.X_train[0].shape)
-        self._output_dim = len(np.unique(self.y_train))
         self._approx_type = Problem.CLASSIFICATION
         self._name = 'mnist'
         self.minimum = None
@@ -46,4 +44,8 @@ class ProblemMNIST(Problem):
         # Flatten the MNIST images into a 784 dimension vector
         self.full_X_train = np.array([x.flatten() for x in self.full_X_train])
         self.X_test = np.array([x.flatten() for x in self.X_test])
-        self.set_train_set('mnist')
+        self.reset_train_set('mnist')
+
+        # Set the input output dimensions for NN
+        self._input_dim = np.prod(self.X_train[0].shape)
+        self._output_dim = len(np.unique(self.y_train))
