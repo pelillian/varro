@@ -2,8 +2,9 @@
 This module contains a function that returns the training set for a given problem
 """
 
+from abc import ABC, abstractmethod
 
-class Problem:
+class Problem(ABC):
     CLASSIFICATION = 0
     REGRESSION = 1
 
@@ -16,6 +17,10 @@ class Problem:
 
     def training_set(self):
         return None, None
+
+    @abstractmethod
+    def reset_train_set(self)
+        pass
 
     @property
     def name(self):

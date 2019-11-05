@@ -13,7 +13,7 @@ TRAIN_SIZE = 0.2
 
 class ProblemMNIST(Problem):
 
-    def set_train_set(self, func):
+    def reset_train_set(self, func):
         """Sets the ground truth training input X_train and output y_train
         for the function specified to approximate
 
