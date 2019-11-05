@@ -22,7 +22,7 @@ class ProblemMNIST(Problem):
         """
         # Get a random set of training
         # set indices from mnist training data
-        train_idxs = np.random.choice(np.arange(len(self.X_train)), size=int(len(self.X_train)*TRAIN_SIZE))
+        train_idxs = np.random.choice(np.arange(len(self.full_X_train)), size=int(len(self.full_X_train)*TRAIN_SIZE))
 
         self.X_train, self.y_train = self.full_X_train[train_idxs], self.full_y_train[train_idxs]
 
