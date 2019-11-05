@@ -28,9 +28,13 @@ class ModelNN(Model):
         self.model = Sequential()
         if problem.approx_type == Problem.CLASSIFICATION:
             if problem.name == 'mnist':
-                self.model.add(Dense(128, input_dim=problem.input_dim, activation='sigmoid'))
-                self.model.add(Dense(64, activation='sigmoid'))
-                self.model.add(Dense(16, activation='sigmoid'))
+                # Old architecture
+                # self.model.add(Dense(128, input_dim=problem.input_dim, activation='sigmoid'))
+                # self.model.add(Dense(64, activation='sigmoid'))
+                # self.model.add(Dense(16, activation='sigmoid'))
+
+                # Smaller Architecture
+                self.model.add(Dense(32, input_dim=problem.input_dim, activation='sigmoid'))
 
                 # LAST LAYER:
                 # Problem-specific - if y is [0, 1], use sigmoid
