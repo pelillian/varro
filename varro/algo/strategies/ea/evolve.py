@@ -101,7 +101,7 @@ def evolve(problem,
     else:
         # Start a new evolution
         random.seed(100) # Set seed
-        pop = toolbox.population(n=int(pop_size))
+        pop = toolbox.population(n=100)
         start_gen = 0
         # Truth value of the list of fitness scores is ambiguous
         # halloffame = tools.HallOfFame(maxsize=1)
