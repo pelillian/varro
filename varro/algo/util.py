@@ -176,7 +176,7 @@ def get_args():
                         action='store',
                         help='Set number of individuals in population',
                         type=int,
-                        choices=range(2, 1000))
+                        choices=range(2, 10000))
 
     ########################################################
     # 3g. What elite size do you want? (Percentage of      #
