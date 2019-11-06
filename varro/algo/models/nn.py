@@ -30,7 +30,7 @@ class ModelNN(Model):
             if problem.name == 'mnist':
                 # Old architecture
                 # self.model.add(Dense(128, input_dim=problem.input_dim, activation='sigmoid'))
-                self.model.add(Dense(64, activation='sigmoid'))
+                self.model.add(Dense(64, input_dim=problem.input_dim, activation='sigmoid'))
                 self.model.add(Dense(32, activation='sigmoid'))
 
                 # Smaller Architecture
