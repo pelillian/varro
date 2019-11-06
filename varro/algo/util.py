@@ -168,11 +168,6 @@ def get_args():
     #########################################
     # 3f. What population size do you want? #
     #########################################
-    def popsize_type(x):
-        x = int(x)
-        if x < 2:
-            raise argparse.ArgumentTypeError("Minimum popsize is 2")
-        return x
     parser.add_argument('--popsize',
                         default=10,
                         const=10,
@@ -180,7 +175,8 @@ def get_args():
                         metavar='POPULATION-SIZE',
                         action='store',
                         help='Set number of individuals in population',
-                        type=popsize_type)
+                        type=int,
+                        choices=range(2, 1000))
 
     ########################################################
     # 3g. What elite size do you want? (Percentage of      #
