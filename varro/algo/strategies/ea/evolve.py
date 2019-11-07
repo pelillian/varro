@@ -14,7 +14,7 @@ from deap import base, creator, tools
 from datetime import datetime
 
 from varro.misc.util import make_path
-from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, FREQ
+from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH, FREQ
 from varro.algo.problems import Problem
 
 
@@ -30,7 +30,8 @@ def evolve(problem,
            imutsigma,
            checkpoint=None,
            logs_path=ABS_ALGO_EXP_LOGS_PATH,
-           ckpts_path=EXPERIMENT_CHECKPOINTS_PATH):
+           ckpts_path=EXPERIMENT_CHECKPOINTS_PATH,
+           grid_search=False):
     """Evolves parameters to train a model on a dataset.
 
     Args:
@@ -55,12 +56,16 @@ def evolve(problem,
     # 1. SET UP LOGGER, FOLDERS, AND FILES TO SAVE DATA TO #
     ########################################################
 
-    # Set log files
-    experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, problem.name + '_' + datetime.now().strftime("%b-%d-%Y-%H:%M:%S"))
+    # Set log and checkpoint dirs
+    if grid_search:
+        experiment_checkpoints_dir = os.path.join(GRID_SEARCH_CHECKPOINTS_PATH, 'tmp')
+    else:
+        experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, problem.name + '_' + datetime.now().strftime("%b-%d-%Y-%H:%M:%S"))
     experiment_logs_file = os.path.join(ABS_ALGO_EXP_LOGS_PATH, problem.name + '_' + datetime.now().strftime("%b-%d-%Y-%H:%M:%S") + '.log')
 
     # Create experiment folder to store
     # snapshots of population
+    make_path(ABS_ALGO_EXP_LOGS_PATH)
     make_path(experiment_checkpoints_dir)
 
     # Set Logging configuration

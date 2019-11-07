@@ -33,7 +33,8 @@ def fit(model_type,
         popsize=None,
         elitesize=None,
         ngen=None,
-        ckpt=None):
+        ckpt=None,
+        grid_search=False):
     """Control center to call other modules to execute the optimization
 
     Args:
@@ -63,7 +64,10 @@ def fit(model_type,
     # Neural Network
     if model_type == 'nn':
         from varro.algo.models import ModelNN  # Import here so we don't load tensorflow if not needed
-        model = ModelNN(problem)
+        if grid_search:
+            model = ModelNN(problem, tensorboard_logs=False)
+        else:
+            model = ModelNN(problem)
     elif model_type == 'fpga':
         from varro.algo.models import ModelFPGA
         model = ModelFPGA()
@@ -94,7 +98,8 @@ def fit(model_type,
                                          imutpb=imutpb,
                                          imutmu=imutmu,
                                          imutsigma=imutsigma,
-                                         checkpoint=ckpt)
+                                         checkpoint=ckpt,
+                                         grid_search=grid_search)
     elif strategy == 'cma-es':
         raise NotImplementedError
     elif strategy == 'ns':

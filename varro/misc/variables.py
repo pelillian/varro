@@ -26,13 +26,12 @@ EXPERIMENT_CHECKPOINTS_PATH = os.path.join(ROOT_DIR, 'checkpoints/varro/algo')
 
 # Grid Search
 
-# This is the folder that houses logs
-# for grid search
-GRID_SEARCH_LOGS_PATH = os.path.join(ROOT_DIR, 'logs/varro/grid_search')
-
 # This is the folder that houses checkpoints
 # for grid search
-GRID_SEARCH_CHECKPOINTS_PATH = os.path.join(ROOT_DIR, 'checkpoints/varro/grid_search')
+GRID_SEARCH_CHECKPOINTS_PATH = os.path.join(ROOT_DIR, 'checkpoints/varro/algo/grid_search')
+
+# This is the folder that houses the config for grid search
+GRID_SEARCH_CONFIG_PATH = os.path.join(ROOT_DIR, 'tests/varro/algo/grid_search')
 
 # Whole population will be written in a pickled
 # dictionary every FREQ generations

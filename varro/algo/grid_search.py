@@ -1,8 +1,4 @@
-'''
-
-*** UNTESTED ON SERVER, WORK IN PROGRESS :) ***
-
-This module contains the utility functions to run grid search for experiment.py
+'''This module contains the utility functions to run grid search for experiment.py
 
 # TODO: 
 - Create directory structure for logs, pkls
@@ -33,72 +29,55 @@ import numpy as np
 import os
 import pickle
 from shutil import rmtree
-from varro.misc.variables import GRID_SEARCH_LOGS_PATH, GRID_SEARCH_CHECKPOINTS_PATH
+from tests.varro.algo.grid_search.config import HYPERPARAM_DICT
+from varro.misc.variables import GRID_SEARCH_CHECKPOINTS_PATH
 from varro.algo.experiment import fit
 from varro.misc.util import make_path
 
 # Create Logs folder if not created
-make_path(GRID_SEARCH_LOGS_PATH)
 make_path(GRID_SEARCH_CHECKPOINTS_PATH)
 
-def grid_search(problem_type, 
-                strategy):
-    """ Pickles the best permutation of lists of hyperparameters
-
-    Args:
-        problem_type(list): 
-        strategy(list): 
+def grid_search():
+    """ Pickles the best permutation for given ranges of hyperparameters
 
     """
 
-    params = {}
-    params['problem_type'] = problem_type if isinstance(problem_type, list) else [problem_type]
-    params['strategy'] = strategy if isinstance(strategy, list) else [strategy]
-    params['cxpb'] = [0.1, 0.3, 0.6]
-    params['mutpb'] = [0.1, 0.4]
-    params['popsize'] = [10, 100, 1000]
-    params['elitesize'] = [0.05, 0.1, 0.3]
-    params['ngen'] = [100]
-    fittest = {'fitness': 42069, 'args': {}, 'parameters': None}
+    params = HYPERPARAM_DICT
+
+    fittest = {'fitness': 42069, 'args': {}, 'weights': None}
     all_runs = []
 
-    # fit() for each argument permutation
+    # fit for each argument permutation
+    # IF HYPERPARAMETERS ARE ADDED:
+    #    note that aperm indexes hyperparams alphabetically
     for aperm in product(*[*params.values()]):
-        args = {'problem_type': aperm[0],
-                'strategy': aperm[1],
-                'cxpb': aperm[2],
-                'mutpb': aperm[3],
-                'popsize': aperm[4],
-                'elitesize': aperm[5],
-                'ngen': aperm[6]}
+        args = {'cxpb': aperm[0],
+                'elitesize': aperm[1],
+                'imutpb': aperm[2],
+                'imutsigma': aperm[3],
+                'mutpb': aperm[4],
+                'ngen': aperm[5],
+                'popsize': aperm[6],
+                'problem_type': aperm[7],
+                'strategy': aperm[8]}
 
         fit(model_type='nn',
             problem_type=args['problem_type'],
             strategy=args['strategy'],
             cxpb=args['cxpb'],
             mutpb=args['mutpb'],
+            imutpb=args['imutpb'],
+            imutmu=0,
+            imutsigma=args['imutsigma'],
             popsize=args['popsize'],
             elitesize=args['elitesize'],
-            ngen=args['ngen'])
+            ngen=args['ngen'],
+            grid_search=True)
 
         # Create temp folder to house checkpoints
-        experiment_name = '{}-'\
-                            'ps{}-'\
-                            'es{}-'\
-                            'ng{}-'\
-                            'cx{}-'\
-                            'mp{}'.format(args['problem_type'],\
-                                            args['popsize'],\
-                                            args['elitesize'],\
-                                            args['ngen'],\
-                                            args['cxpb'],\
-                                            args['mutpb'])
-
-        experiment_path = os.path.join(GRID_SEARCH_CHECKPOINTS_PATH, experiment_name)
-        if not os.path.exists(experment_path):
-            mkdir(experiment_path)
-
-        pkl_path = os.path.join(experiment_path, 'checkpoint_gen{}.pkl'.format(args['ngen']-1))
+        experiment_path = os.path.join(GRID_SEARCH_CHECKPOINTS_PATH, 'tmp')
+        last_gen = max([int(f.split('_')[-1].split('.')[0][3:]) for f in os.listdir(experiment_path)])
+        pkl_path = os.path.join(experiment_path, 'checkpoint_gen{}.pkl'.format(last_gen))
 
         with open(pkl_path, 'rb') as cp_file:
             cp = pickle.load(cp_file)
@@ -122,27 +101,4 @@ def grid_search(problem_type,
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser(
-        description='Pickles the best permutation of lists of hyperparameters')
-
-    parser.add_argument('--problem_type', 
-                        default='x',
-                        const='x',
-                        nargs='?',
-                        metavar='PROBLEM-TO-TACKLE', 
-                        action='store', 
-                        choices=['x', 'sinx', 'cosx', 'tanx', 'ras', 'rosen', 'step', 'mnist'], 
-                        help='The problem to solve / optimize using an evolutionary strategy')
-
-    parser.add_argument('--strategy', 
-                        default='ea',
-                        const='ea',
-                        nargs='?',
-                        metavar='OPTIMIZATION-STRATEGY', 
-                        action='store', 
-                        choices=['ea', 'cma-es', 'ns'], 
-                        help='The optimization strategy chosen to solve the problem specified')
-
-    args = parser.parse_args()
-
-    grid_search(args.problem_type, args.strategy)
+    grid_search()
