@@ -2,8 +2,10 @@
 This module contains the utility functions to run the experiment.py
 """
 
+import pickle
 import os
 import argparse
+from deap import base, creator, tools
 
 
 def get_args():
@@ -102,7 +104,7 @@ def get_args():
                         nargs='?',
                         metavar='OPTIMIZATION-STRATEGY',
                         action='store',
-                        choices=['sga', 'cma-es', 'ns'],
+                        choices=['sga', 'ns-es', 'nsr-es', 'cma-es'],
                         help='The optimization strategy chosen to solve the problem specified')
 
     ##########################################################################
@@ -227,3 +229,72 @@ def get_args():
         parser.error("--imutsigma needs to be positive.")
 
     return settings
+
+
+def init_ind_fitness(strategy):
+    """Creates the fitness and individual templates required for DEAP
+    evolutionary strategies
+
+    Args:
+        strategy (str): The evolutionary strategy to be used
+    """
+    # Create fitness and individuals based on the strategy
+    # chosen
+    if strategy == 'sga':
+        creator.create("FitnessMin", base.Fitness, weights=(-1.0,)) # Just Fitness
+        creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
+    elif strategy == 'ns-es':
+        creator.create("FitnessMax", base.Fitness, weights=(1.0)) # Just Novelty
+        creator.create("Individual", np.ndarray, fitness=creator.FitnessMax)
+    elif strategy == 'nsr-es':
+        creator.create("FitnessMulti", base.Fitness, weights=(-1.0, 1.0)) # Both Fitness and Novelty
+        creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)
+    elif strategy == 'cma-es':
+        raise NotImplementedError
+    else:
+        raise NotImplementedError
+
+
+def load_ckpt(strategy, ckpt):
+    """Loads the checkpoint given after creating the fitness and individual
+    templates for DEAP evolution
+
+    Args:
+        strategy (str): The evolutionary strategy to be used
+        ckpt (str): The checkpoint file path that stores the population and other information of a generation
+
+    Returns:
+        A dictionary containing key features of the generation
+    """
+    with open(ckpt, "rb") as cp_file:
+        init_ind_fitness(strategy)
+        cp = pickle.load(cp_file)
+
+    return cp
+
+def save_ckpt(population,
+              generation,
+              halloffame,
+              logbook,
+              rndstate,
+              exp_ckpt_dir):
+    """Saves the checkpoint of the current generation of Population
+    and some other information
+
+    Args:
+        population 
+        generation
+        halloffame
+        logbook
+        rndstate
+        exp_ckpt_dir
+    """
+    # Fill the dictionary using the dict(key=value[, ...]) constructor
+    cp = dict(population=population,
+              generation=generation,
+              halloffame=halloffame,
+              logbook=logbook,
+              rndstate=rndstate)
+
+    with open(os.path.join(exp_ckpt_dir, 'checkpoint_gen{}.pkl'.format(g)), "wb") as cp_file:
+        pickle.dump(cp, cp_file)

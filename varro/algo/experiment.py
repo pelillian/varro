@@ -9,17 +9,16 @@ from os.path import isfile, join
 from functools import partial
 from tqdm import tqdm
 import numpy as np
-import pickle
 import logging
 from deap import base, creator
 
 from varro.misc.util import make_path
 from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, ABS_ALGO_PREDICTIONS_PATH
-from varro.algo.util import get_args
+from varro.algo.util import get_args, load_ckpt
 from varro.algo.problems import Problem, ProblemFuncApprox, ProblemMNIST
-from varro.algo.strategies.ea.evolve import evolve
-from varro.algo.strategies.ea.toolbox import ea_toolbox
-from varro.algo.evaluate import evaluate_sga, evaluate_ns, evaluate_cmaes
+from varro.algo.strategies.es.evolve import evolve
+from varro.algo.strategies.es.toolbox import es_toolbox
+from varro.algo.evaluate import evaluate
 
 
 def fit(model_type,
@@ -81,7 +80,7 @@ def fit(model_type,
     # Set the individual size to the number of parameters
     # we can alter in the neural network architecture specified,
     # and initialize the fitness metrics needed to evaluate an individual
-    toolbox = ea_toolbox(strategy=strategy,
+    toolbox = es_toolbox(strategy=strategy,
                          i_shape=model.parameters_shape,
                          evaluate_population=evaluate_population,
                          model_type=model_type,
@@ -142,12 +141,15 @@ def predict(model_type,
         model = ModelFPGA()
 
     # Load data from pickle file
-    with open(ckpt, "rb") as cp_file:
-        # Define objective, individuals, population, and evaluation
-        creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
-        creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
-        cp = pickle.load(cp_file)
-    halloffame = cp["halloffame"] # Load the best individual in the population
+    cp = load_ckpt(strategy, ckpt)
+
+    # The hall of fame contains the best individual
+    # that ever lived in the population during the
+    # evolution. It is lexicographically sorted at all
+    # time so that the first element of the hall of fame
+    # is the individual that has the best first fitness value
+    # ever seen, according to the weights provided to the fitness at creation time.
+    halloffame = cp["halloffame"][0]
 
     # Load Weights into model using individual
     model.load_parameters(halloffame)

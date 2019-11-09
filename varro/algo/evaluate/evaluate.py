@@ -5,6 +5,7 @@ This module contains the class for Evaluate, with one constructor for FPGA and o
 import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_squared_error
+from sklearn.neighbors import BallTree
 from math import sqrt
 from deap import tools
 
@@ -49,8 +50,23 @@ def compute_novelty(population,
     """Calculates the novelty scores for each individual in the
     population using a nearest neighbors approach according to
     http://eplex.cs.ucf.edu/noveltysearch/userspage/#howtoimplement
-    """
 
+    Args:
+        population (list): An iterable of np.ndarrays that represent the individuals
+        https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.DistanceMetric.html#sklearn.neighbors.DistanceMetric
+    """
+    tree = BallTree(population, metric=similarity_metric)
+
+    for ind in population:
+
+        # Get the k-nearest neighbors of
+        # the individual
+        dist, ind_idxs = tree.query(ind, k=k)
+
+        # Ignore first value as it'll be 0 since
+        # there's an instance of the same vector in
+        # population
+        ind.fitness.values.novelty_score = np.mean(dist[1:])
 
 
 def compute_fitness(population,
@@ -73,34 +89,47 @@ def compute_fitness(population,
     """
     if strategy == 'sga':
         Fitness = namedtuple('Fitness', ['fitness_score'])
-    elif strategy == 'ns':
+    elif strategy == 'ns-es':
+        Fitness = namedtuple('Fitness', ['novelty_score'])
+    elif strategy == 'nsr-es':
         Fitness = namedtuple('Fitness', ['fitness_score', 'novelty_score'])
     elif strategy == 'cma-es':
         raise NotImplementedError
     else:
         raise NotImplementedError
 
-    # Evaluate the individuals with an invalid fitness
-    # (These are the individuals that have not been evaluated before -
-    # individuals at the start of the evolutionary algorithm - or those
-    # that have been mutated / the offspring after crossover with fitness deleted)
-    invalid_inds = [ind for ind in population if not ind.fitness.valid]
+    # Get fitness scores if either Simple
+    # genetic or Novelty Search Reward
+    if strategy == 'sga' or strategy == 'nsr-es':
 
-    # Get fitness score for each individual with
-    # invalid fitness score in population
-    for ind in invalid_inds:
+        # Evaluate the individuals with an invalid fitness
+        # (These are the individuals that have not been evaluated before -
+        # individuals at the start of the evolutionary algorithm - or those
+        # that have been mutated / the offspring after crossover with fitness deleted)
+        invalid_inds = [ind for ind in population if not ind.fitness.valid]
 
-        # Load Weights into model using individual
-        model.load_parameters(ind)
+        # Get fitness score for each individual with
+        # invalid fitness score in population
+        for ind in invalid_inds:
 
-        # Calculate the Fitness score of the individual
-        ind.fitness.values = Fitness(fitness_score=fitness_score(model, problem))
+            # Load Weights into model using individual
+            model.load_parameters(ind)
 
-    # Novelty Search scores
-    if strategy == 'ns':
+            # Calculate the Fitness score of the individual
+            ind.fitness.values = Fitness(fitness_score=fitness_score(model, problem))
 
+    # Get fitness scores if either Simple
+    # genetic or Novelty Search Reward
+    if strategy == 'ns-es' or strategy == 'nsr-es':
         # Calculate the Novelty scores for all individuals
         compute_novelty(population, similarity_metric)
+
+        tools.sortNondominated(individuals, k, first_front_only=False)
+
+    # In-place sorting of the Population
+    # with all its fitness scores computed
+    # TODO: Sort by fitness score,
+    # Create archive for the individuals that are novel / paretofront
 
     return np.mean([ind.fitness.values.fitness_score for ind in population]), len(invalid_inds)
 

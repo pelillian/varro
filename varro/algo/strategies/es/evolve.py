@@ -14,6 +14,7 @@ from deap import base, creator, tools
 from datetime import datetime
 
 from varro.misc.util import make_path
+from varro.algo.util import load_ckpt, save_ckpt
 from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH, FREQ
 from varro.algo.problems import Problem
 
@@ -79,6 +80,7 @@ def evolve(strategy,
     # Get logger
     logger = logging.getLogger(__name__)
     logger.info('Start Evolution ...')
+    logger.info('strategy: {}'.format(strategy))
     logger.info('problem_type: {}'.format(problem.name))
     logger.info('cxpb: {}'.format(crossover_prob))
     logger.info('mutpb: {}'.format(mutation_prob))
@@ -94,11 +96,8 @@ def evolve(strategy,
     ##################################
     if checkpoint:
         # A file name has been given, then load the data from the file
-        with open(checkpoint, "rb") as cp_file:
-            # Define objective, individuals, population, and evaluation
-            creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
-            creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
-            cp = pickle.load(cp_file)
+        # Load data from pickle file
+        cp = load_ckpt(strategy, checkpoint)
         random.seed(cp["rndstate"])
         pop = cp["population"]
         start_gen = int(cp["generation"])
@@ -110,7 +109,7 @@ def evolve(strategy,
         random.seed(100) # Set seed
         pop = toolbox.population(n=pop_size)
         start_gen = 0
-        halloffame = tools.HallOfFame(maxsize=1)
+        halloffame = tools.HallOfFame(maxsize=5)
         logbook = tools.Logbook()
 
 
@@ -195,35 +194,38 @@ def evolve(strategy,
         # Save snapshot of population (offspring)
         if g % FREQ == 0:
 
-            # Fill the dictionary using the dict(key=value[, ...]) constructor
-            cp = dict(population=pop,
+            # Save the checkpoint
+            save_ckpt(population=pop,
                       generation=g,
                       halloffame=halloffame,
                       logbook=logbook,
-                      rndstate=random.getstate())
+                      rndstate=random.getstate(),
+                      exp_ckpt_dir=experiment_checkpoints_dir)
 
-            with open(os.path.join(experiment_checkpoints_dir, 'checkpoint_gen{}.pkl'.format(g)), "wb") as cp_file:
-                pickle.dump(cp, cp_file)
+        # Best individual's fitness / novelty score,
+        # whichever is the first element of the fitness
+        # values tuple
+        fittest_ind_score = halloffame.fitness.values[0]
 
         # Log Average score of population
         logger.info('Generation {} Avg. Fitness Score: {} | Fittest Individual Score: {}'\
                         .format(g,
                                 avg_fitness_score,
-                                halloffame.fitness.values.fitness_score))
+                                fittest_ind_score))
 
         # Early Stopping if average fitness
         # score is close to the minimum possible,
         # or if stuck at local optima (average fitness score
         # hasnt changed for past 10 rounds)
         if problem.approx_type == Problem.CLASSIFICATION:
-            if round(-halloffame.fitness.values.fitness_score, 4) > 0.95:
+            if round(-fittest_ind_score, 4) > 0.95:
                 logger.info('Early Stopping activated because Accuracy > 95%.')
                 break;
             if len(avg_fitness_scores) > 10 and len(set(avg_fitness_scores[-10:])) == 1:
                 logger.info('Early Stopping activated because fitness scores have converged.')
                 break;
         else:
-            if round(halloffame.fitness.values.fitness_score, 4) < 0.01:
+            if round(fittest_ind_score, 4) < 0.01:
                 logger.info('Early Stopping activated because MSE < 0.01.')
                 break;
             if len(avg_fitness_scores) > 10 and len(set(avg_fitness_scores[-10:])) == 1:

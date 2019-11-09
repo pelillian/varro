@@ -7,8 +7,10 @@ import random
 import numpy as np
 from deap import base, creator, tools
 
+from varro.algo.util import init_ind_fitness
 
-def ea_toolbox(strategy,
+
+def es_toolbox(strategy,
                i_shape,
                evaluate_population,
                model_type,
@@ -18,7 +20,7 @@ def ea_toolbox(strategy,
     """Initializes and configures the DEAP toolbox for evolving the parameters of a model.
 
     Args:
-        strategy (str): The strategy to be used for evolving, Simple Genetic Algorithm (sga) / Novelty Search (ns) / Covariance-Matrix Adaptation (cma-es)
+        strategy (str): The strategy to be used for evolving, Simple Genetic Algorithm (sga) / Novelty Search (ns-es) / Covariance-Matrix Adaptation (cma-es), ...
         i_shape (int or tuple): Size or shape of an individual in the population
         evaluate_population (function): Function to evaluate an entire population
         imutpb (float): Mutation probability for each individual's attribute
@@ -36,17 +38,9 @@ def ea_toolbox(strategy,
     # Initialzie Toolbox
     toolbox = base.Toolbox()
 
-    # Define objective, individuals, population, and evaluation
-    if strategy == 'sga':
-        creator.create("FitnessMin", base.Fitness, weights=(-1.0,)) # Just Fitness
-        creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
-    elif strategy == 'ns':
-        creator.create("FitnessMulti", base.Fitness, weights=(-1.0, 1.0)) # Fitness and Novelty
-        creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)
-    elif strategy == 'cma-es':
-        raise NotImplementedError
-    else:
-        raise NotImplementedError
+    # Create fitness and individuals based on the strategy
+    # chosen
+    init_ind_fitness(strategy)
 
     # Defines Individual
     if model_type == "nn":
