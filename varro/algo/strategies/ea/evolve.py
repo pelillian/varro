@@ -18,7 +18,8 @@ from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_
 from varro.algo.problems import Problem
 
 
-def evolve(problem,
+def evolve(strategy,
+           problem,
            toolbox,
            crossover_prob,
            mutation_prob,
@@ -35,6 +36,7 @@ def evolve(problem,
     """Evolves parameters to train a model on a dataset.
 
     Args:
+        strategy (str): The strategy to be used for evolving, Simple Genetic Algorithm (sga) / Novelty Search (ns) / Covariance-Matrix Adaptation (cma-es)
         problem (object): A Problem object that includes the type of problem we're trying to optimize
         toolbox (deap.ToolBox): DEAP's configured toolbox
         crossover_prob (float): Crossover probability from 0-1
@@ -108,9 +110,7 @@ def evolve(problem,
         random.seed(100) # Set seed
         pop = toolbox.population(n=pop_size)
         start_gen = 0
-        # Truth value of the list of fitness scores is ambiguous
-        # halloffame = tools.HallOfFame(maxsize=1)
-        halloffame = None
+        halloffame = tools.HallOfFame(maxsize=1)
         logbook = tools.Logbook()
 
 
@@ -121,25 +121,13 @@ def evolve(problem,
     avg_fitness_scores = []
 
     # Evaluate the entire population
-    fitness_scores_population = toolbox.evaluate_population(pop)
-
-    # WARNING: BE CAREFUL HERE WHEN WE HAVE MUTLIPLE DISTINCT
-    # FITNESS SCORES IN THE FUTURE
-    avg_fitness_scores.append(np.mean([fitness_score \
-                                       for fitness_scores_ind in fitness_scores_population \
-                                       for fitness_score in fitness_scores_ind]))
-    for ind, fitness_scores_ind in zip(pop, fitness_scores_population):
-
-        # fitness_scores_ind is a list of fitness scores for each
-        # individual because there might be different
-        # fitness scores for each individual
-        ind.fitness.values = fitness_scores_ind
+    avg_fitness_score, num_ind_evaluated = toolbox.evaluate_population(population=pop)
+    avg_fitness_scores.append(avg_fitness_score)
 
     # Save statistics about our current population loaded
     stats = tools.Statistics(lambda ind: ind.fitness.values)
     stats.register("avg", np.mean)
     stats.register("max", np.max)
-
 
     #################################
     # 4. EVOLVE THROUGH GENERATIONS #
@@ -148,7 +136,7 @@ def evolve(problem,
     for g in tqdm(range(start_gen, num_generations)):
 
         # Select the next generation individuals
-        offspring = toolbox.select(pop, len(pop))
+        offspring = toolbox.select(pop, k=len(pop))
 
         # Clone the selected individuals
         offspring = list(map(toolbox.clone, offspring))
@@ -189,42 +177,20 @@ def evolve(problem,
                 del mutant.fitness.values
 
         # Recombine Elites with non-elites
-        final_pop = elite + non_elite
+        offspring = elite + non_elite
 
-        # Evaluate the individuals with an invalid fitness
-        # (These are the individuals that have been mutated
-        # or the offspring after crossover with fitness deleted)
-        invalid_ind = [ind for ind in final_pop if not ind.fitness.valid]
-        fitness_scores_invalid_population = toolbox.evaluate_population(invalid_ind)
-        for ind, fitness_scores_ind in zip(invalid_ind, fitness_scores_invalid_population):
-            ind.fitness.values = fitness_scores_ind
-
-        # Compute Average fitness score of generation
-        valid_ind = [ind for ind in final_pop if ind.fitness.valid]
-        fitness_scores_valid_population = toolbox.evaluate_population(valid_ind)
-        avg_fitness_score = np.mean([fitness_score \
-                                        for fitness_scores_ind in list(fitness_scores_population) + list(fitness_scores_valid_population) \
-                                        for fitness_score in fitness_scores_ind])
+        # Evaluate the entire population
+        avg_fitness_score, num_ind_evaluated = toolbox.evaluate_population(population=offspring)
         avg_fitness_scores.append(avg_fitness_score)
 
-        # The population is entirely replaced by the offspring
+        # The population is entirely replaced by the
+        # evaluated offspring
         pop[:] = offspring
 
         # Update population statistics
-        try:
-            halloffame = last_halloffame
-        except:
-            halloffame = pop[0]
-
-        for ind in pop:
-            if ind.fitness.values[0] < halloffame.fitness.values[0]:
-                halloffame = ind # Fittest individual (Lowest score)
-
-        # Save halloffamers across generations
-        last_halloffame = halloffame
-
+        halloffame.update(pop)
         record = stats.compile(pop)
-        logbook.record(gen=g, evals=len(invalid_ind), **record)
+        logbook.record(gen=g, evals=len(num_ind_evaluated), **record)
 
         # Save snapshot of population (offspring)
         if g % FREQ == 0:
@@ -240,24 +206,24 @@ def evolve(problem,
                 pickle.dump(cp, cp_file)
 
         # Log Average score of population
-        logger.info('Generation {} Avg. Fitness Score: {} | Best Individual Fittest Score: {}'\
+        logger.info('Generation {} Avg. Fitness Score: {} | Fittest Individual Score: {}'\
                         .format(g,
                                 avg_fitness_score,
-                                halloffame.fitness.values[0]))
+                                halloffame.fitness.values.fitness_score))
 
         # Early Stopping if average fitness
         # score is close to the minimum possible,
         # or if stuck at local optima (average fitness score
         # hasnt changed for past 10 rounds)
         if problem.approx_type == Problem.CLASSIFICATION:
-            if round(-halloffame.fitness.values[0], 4) > 0.95:
+            if round(-halloffame.fitness.values.fitness_score, 4) > 0.95:
                 logger.info('Early Stopping activated because Accuracy > 95%.')
                 break;
             if len(avg_fitness_scores) > 10 and len(set(avg_fitness_scores[-10:])) == 1:
                 logger.info('Early Stopping activated because fitness scores have converged.')
                 break;
         else:
-            if round(halloffame.fitness.values[0], 4) < 0.01:
+            if round(halloffame.fitness.values.fitness_score, 4) < 0.01:
                 logger.info('Early Stopping activated because MSE < 0.01.')
                 break;
             if len(avg_fitness_scores) > 10 and len(set(avg_fitness_scores[-10:])) == 1:

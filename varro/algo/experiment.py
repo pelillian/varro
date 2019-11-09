@@ -19,7 +19,7 @@ from varro.algo.util import get_args
 from varro.algo.problems import Problem, ProblemFuncApprox, ProblemMNIST
 from varro.algo.strategies.ea.evolve import evolve
 from varro.algo.strategies.ea.toolbox import ea_toolbox
-from varro.algo.evaluate import evaluate
+from varro.algo.evaluate import evaluate_sga, evaluate_ns, evaluate_cmaes
 
 
 def fit(model_type,
@@ -72,40 +72,37 @@ def fit(model_type,
         from varro.algo.models import ModelFPGA
         model = ModelFPGA()
 
-    # Evaluate Population
+    # 3. Choose Strategy through the evaluation function
     evaluate_population = partial(evaluate,
                                   model=model,
-                                  problem=problem)
+                                  problem=problem,
+                                  strategy=strategy)
 
     # Set the individual size to the number of parameters
-    # we can alter in the neural network architecture specified
-    toolbox = ea_toolbox(i_shape=model.parameters_shape,
+    # we can alter in the neural network architecture specified,
+    # and initialize the fitness metrics needed to evaluate an individual
+    toolbox = ea_toolbox(strategy=strategy,
+                         i_shape=model.parameters_shape,
                          evaluate_population=evaluate_population,
                          model_type=model_type,
                          imutpb=imutpb,
                          imutmu=imutmu,
                          imutsigma=imutsigma)
 
-    # 3. Choose Strategy
-    if strategy == 'ea':
-        pop, avg_fitness_scores = evolve(problem=problem,
-                                         toolbox=toolbox,
-                                         crossover_prob=cxpb,
-                                         mutation_prob=mutpb,
-                                         pop_size=popsize,
-                                         elite_size=elitesize,
-                                         num_generations=ngen,
-                                         imutpb=imutpb,
-                                         imutmu=imutmu,
-                                         imutsigma=imutsigma,
-                                         checkpoint=ckpt,
-                                         grid_search=grid_search)
-    elif strategy == 'cma-es':
-        raise NotImplementedError
-    elif strategy == 'ns':
-        raise NotImplementedError
-    else:
-        raise NotImplementedError
+    # Evolve
+    pop, avg_fitness_scores = evolve(strategy=strategy,
+                                     problem=problem,
+                                     toolbox=toolbox,
+                                     crossover_prob=cxpb,
+                                     mutation_prob=mutpb,
+                                     pop_size=popsize,
+                                     elite_size=elitesize,
+                                     num_generations=ngen,
+                                     imutpb=imutpb,
+                                     imutmu=imutmu,
+                                     imutsigma=imutsigma,
+                                     checkpoint=ckpt,
+                                     grid_search=grid_search)
 
 
 def predict(model_type,

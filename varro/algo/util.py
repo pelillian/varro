@@ -97,12 +97,12 @@ def get_args():
     # 3. Which strategy should we use to solve this problem? #
     ##########################################################
     parser.add_argument('--strategy',
-                        default='ea',
-                        const='ea',
+                        default='sga',
+                        const='sga',
                         nargs='?',
                         metavar='OPTIMIZATION-STRATEGY',
                         action='store',
-                        choices=['ea', 'cma-es', 'ns'],
+                        choices=['sga', 'cma-es', 'ns'],
                         help='The optimization strategy chosen to solve the problem specified')
 
     ##########################################################################
