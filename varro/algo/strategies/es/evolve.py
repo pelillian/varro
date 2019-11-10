@@ -14,7 +14,7 @@ from deap import base, creator, tools
 from datetime import datetime
 
 from varro.misc.util import make_path
-from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH, FREQ
+from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH, FREQ, DATE_NAME_FORMAT
 from varro.algo.problems import Problem
 
 
@@ -92,8 +92,8 @@ def evolve(strategy,
     if grid_search:
         experiment_checkpoints_dir = os.path.join(GRID_SEARCH_CHECKPOINTS_PATH, 'tmp')
     else:
-        experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, strategy.problem.name + '_' + datetime.now().strftime("%b-%d-%Y-%H:%M:%S"))
-    experiment_logs_file = os.path.join(ABS_ALGO_EXP_LOGS_PATH, strategy.problem.name + '_' + datetime.now().strftime("%b-%d-%Y-%H:%M:%S") + '.log')
+        experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, strategy.problem.name + '_' + datetime.now().strftime(DATE_NAME_FORMAT))
+    experiment_logs_file = os.path.join(ABS_ALGO_EXP_LOGS_PATH, strategy.problem.name + '_' + datetime.now().strftime(DATE_NAME_FORMAT) + '.log')
 
     # Create experiment folder to store
     # snapshots of population

@@ -26,9 +26,9 @@ class StrategyNSES(StrategySGA):
     #############
     def init_fitness_and_inds(self):
         """Initializes the fitness and definition of individuals"""
-
-        creator.create("FitnessMax", base.Fitness, weights=(1.0)) # Just Novelty
-        creator.create("Individual", np.ndarray, fitness=creator.FitnessMax)
+        Novelty = type('Novelty', (base.Fitness,), dict(values=namedtuple('Scores', field_names=('novelty_score',))))
+        creator.create("NoveltyMax", Novelty, weights=(1.0)) # Just Novelty
+        creator.create("Individual", np.ndarray, fitness=creator.NoveltyMax)
 
 
     def init_toolbox(self):
@@ -58,14 +58,14 @@ class StrategyNSES(StrategySGA):
         super().save_ckpt()
 
 
-    def compute_novelty(self, pop, Fitness, k=5):
+    def compute_novelty(self, pop, k=5):
         """Calculates the novelty scores for each individual in the
         population using average distance between k nearest neighbors approach according to
         http://eplex.cs.ucf.edu/noveltysearch/userspage/#howtoimplement
 
         Args:
             pop (list): An iterable of Individual(np.ndarrays) that represent the individuals
-            Fitness (collections.namedtuple): A namedtuple that initializes what type of scores are in Fitness
+            k: The nearest k neighbors will be used for novelty calculation
         """
         # Init BallTree to find k-Nearest Neighbors
         tree = BallTree(population, metric=self.novelty_metric)
@@ -79,7 +79,7 @@ class StrategyNSES(StrategySGA):
             # Ignore first value as it'll be 0 since
             # there's an instance of the same vector in
             # population
-            ind.fitness.values = Fitness(novelty_score=np.mean(dist[1:]))
+            ind.fitness.values.novelty_score = np.mean(dist[1:])
 
 
     def evaluate(self, pop):
@@ -97,11 +97,8 @@ class StrategyNSES(StrategySGA):
         # Re-generates the training set for the problem (if possible) to prevent overfitting
         self.problem.reset_train_set()
 
-        # Define fitness
-        Fitness = namedtuple('Fitness', ['novelty_score'])
-
         # Calculate the Novelty scores for population
-        self.compute_novelty(pop, Fitness)
+        self.compute_novelty(pop)
 
         # The population is entirely replaced by the
         # evaluated offspring
@@ -109,8 +106,8 @@ class StrategyNSES(StrategySGA):
 
         # Update population statistics
         self.halloffame.update(self.pop)
-        record = self.stats.compile(self.pop)
-        self.logbook.record(gen=self.curr_gen, evals=len(self.pop), **record)
+        # record = self.stats.compile(self.pop)
+        # self.logbook.record(gen=self.curr_gen, evals=len(self.pop), **record)
 
         return np.mean([ind.fitness.values.novelty_score for ind in pop])
 

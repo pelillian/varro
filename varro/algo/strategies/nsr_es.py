@@ -26,8 +26,8 @@ class StrategyNSRES(StrategyNSES):
     #############
     def init_fitness_and_inds(self):
         """Initializes the fitness and definition of individuals"""
-
-        creator.create("FitnessMulti", base.Fitness, weights=(-1.0, 1.0)) # Both Fitness and Novelty
+        Fitness = type('Fitness', (base.Fitness,), dict(values=namedtuple('Scores', field_names=('fitness_score', 'novelty_score',))))
+        creator.create("FitnessMulti", Fitness, weights=(-1.0, 1.0)) # Both Fitness and Novelty
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)
 
 
@@ -86,14 +86,11 @@ class StrategyNSRES(StrategyNSES):
         # Re-generates the training set for the problem (if possible) to prevent overfitting
         self.problem.reset_train_set()
 
-        # Define fitness
-        Fitness = namedtuple('Fitness', ['fitness_score', 'novelty_score'])
-
         # Compute all fitness for population
-        num_invalid_inds = super(StrategyNSES, self).compute_fitness(pop, Fitness)
+        num_invalid_inds = super(StrategyNSES, self).compute_fitness(pop)
 
         # Calculate the Novelty scores for population
-        super().compute_novelty(pop, Fitness)
+        super().compute_novelty(pop)
 
         # The population is entirely replaced by the
         # evaluated offspring
@@ -102,8 +99,8 @@ class StrategyNSRES(StrategyNSES):
         # Update population statistics
         self.halloffame.update(self.pop)
         self.paretofront.update(self.pop)
-        record = self.stats.compile(self.pop)
-        self.logbook.record(gen=self.curr_gen, evals=num_invalid_inds, **record)
+        # record = self.stats.compile(self.pop)
+        # self.logbook.record(gen=self.curr_gen, evals=num_invalid_inds, **record)
 
         return np.mean([ind.fitness.values.fitness_score for ind in pop])
 

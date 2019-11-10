@@ -18,8 +18,8 @@ class StrategySGA(Strategy):
     #############
     def init_fitness_and_inds(self):
         """Initializes the fitness and definition of individuals"""
-
-        creator.create("FitnessMin", base.Fitness, weights=(-1.0,)) # Just Fitness
+        Fitness = type('Fitness', (base.Fitness,), dict(values=namedtuple('Scores', field_names=('fitness_score',))))
+        creator.create("FitnessMin", Fitness, weights=(-1.0,)) # Just Fitness
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
 
 
@@ -77,12 +77,11 @@ class StrategySGA(Strategy):
             pickle.dump(cp, cp_file)
 
 
-    def compute_fitness(self, pop, Fitness):
+    def compute_fitness(self, pop):
         """Calculates the fitness scores for the entire Population
 
         Args:
             pop (list): An iterable of Individual(np.ndarrays) that represent the individuals
-            Fitness (collections.namedtuple): A namedtuple that initializes what type of scores are in Fitness
 
         Returns:
             Number of individuals with invalid fitness scores we updated
@@ -102,7 +101,7 @@ class StrategySGA(Strategy):
             self.model.load_parameters(ind)
 
             # Calculate the Fitness score of the individual
-            ind.fitness.values = Fitness(fitness_score=super().fitness_score())
+            ind.fitness.values.fitness_score = super().fitness_score()
 
         return len(invalid_inds)
 
@@ -134,8 +133,8 @@ class StrategySGA(Strategy):
 
         # Update population statistics
         self.halloffame.update(self.pop)
-        record = self.stats.compile(self.pop)
-        self.logbook.record(gen=self.curr_gen, evals=num_invalid_inds, **record)
+        # record = self.stats.compile(self.pop)
+        # self.logbook.record(gen=self.curr_gen, evals=num_invalid_inds, **record)
 
         return np.mean([ind.fitness.values.fitness_score for ind in pop])
 
