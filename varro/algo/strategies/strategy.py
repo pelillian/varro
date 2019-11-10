@@ -11,7 +11,6 @@ from math import sqrt
 from deap import base, creator, tools
 
 from varro.algo.problems import Problem
-from varro.algo.util import load_ckpt, save_ckpt
 from varro.algo.strategies.es.toolbox import es_toolbox
 
 
