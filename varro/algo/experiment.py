@@ -20,7 +20,6 @@ from varro.algo.strategies.es.evolve import evolve
 from varro.algo.strategies.sga import StrategySGA
 from varro.algo.strategies.ns_es import StrategyNSES
 from varro.algo.strategies.nsr_es import StrategyNSRES
-from varro.algo.evaluate import evaluate
 
 
 def fit(model_type,
