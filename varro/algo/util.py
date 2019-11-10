@@ -2,7 +2,6 @@
 This module contains the utility functions to run the experiment.py
 """
 
-import pickle
 import os
 import argparse
 

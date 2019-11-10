@@ -2,8 +2,10 @@
 This module contains the class for Simple Genetic Algorithm strategy
 """
 
+import pickle
 import numpy as np
 import random
+from deap import base, creator, tools
 
 from varro.algo.strategies.strategy import Strategy
 
@@ -64,6 +66,7 @@ class StrategySGA(Strategy):
         """
         # Fill the dictionary using the dict(key=value[, ...]) constructor
         cp = dict(pop=self.pop,
+                  strategy=self.name,
                   curr_gen=self.curr_gen,
                   halloffame=self.halloffame,
                   logbook=self.logbook,
