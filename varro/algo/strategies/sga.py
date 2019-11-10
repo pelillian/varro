@@ -54,7 +54,7 @@ class StrategySGA(Strategy):
             self.rndstate = random.seed(100) # Set seed
             self.pop = self.toolbox.population(n=self.popsize)
             self.curr_gen = 0
-            self.halloffame = tools.HallOfFame(maxsize=int(self.halloffamesize*self.popsize))
+            self.halloffame = tools.HallOfFame(maxsize=int(self.halloffamesize*self.popsize), similar=np.array_equal)
             self.logbook = tools.Logbook()
 
 
