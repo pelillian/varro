@@ -176,6 +176,51 @@ class Strategy(ABC):
             raise ValueError('Unknown approximation type ' + str(self.problem.approx_type))
 
 
+    def mate(self, pop):
+        """Mates individuals in the population using the scheme
+        defined in toolbox in-place
+
+        Args:
+            pop (list: Individual): List of individuals to be mated
+        """
+        # Apply crossover on the population by
+        # choosing alternate individuals
+        # e.g. if pop = [ind1, ind2, ind3, ind4],
+        # we are doing 2-point crossover between
+        # ind1, ind3 and ind2, ind4
+        for child1, child2 in zip(pop[::2], pop[1::2]):
+            if random.random() < self.cxpb:
+
+                # In-place Crossover
+                self.toolbox.mate(child1, child2)
+
+                # Delete fitness values after crossover
+                # because the individuals are changed
+                # and will have different fitness values
+                child1.fitness.valid = False
+                child2.fitness.valid = False
+
+
+    def mutate(self, pop):
+        """Mutates individuals in the population using the scheme
+        defined in toolbox in-place
+
+        Args:
+            pop (list: Individual): List of individuals to be mutated
+        """
+        # Apply mutation
+        for mutant in pop:
+            if random.random() < self.mutpb:
+
+                # In-place Mutation
+                self.toolbox.mutate(mutant)
+
+                # Delete fitness values after crossover
+                # because the individuals are changed
+                # and will have different fitness values
+                mutant.fitness.valid = False
+
+
     ########
     # INIT #
     ########

@@ -18,55 +18,6 @@ from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_
 from varro.algo.problems import Problem
 
 
-def mate(pop, cxpb, toolbox):
-    """Mates individuals in the population using the scheme
-    defined in toolbox in-place
-
-    Args:
-        pop (list: Individual): List of individuals to be mated
-        cxpb (float): Crossover probability from 0-1
-        toolbox (deap.ToolBox): DEAP's configured toolbox
-    """
-    # Apply crossover on the population by
-    # choosing alternate individuals
-    # e.g. if pop = [ind1, ind2, ind3, ind4],
-    # we are doing 2-point crossover between
-    # ind1, ind3 and ind2, ind4
-    for child1, child2 in zip(pop[::2], pop[1::2]):
-        if random.random() < cxpb:
-
-            # In-place Crossover
-            toolbox.mate(child1, child2)
-
-            # Delete fitness values after crossover
-            # because the individuals are changed
-            # and will have different fitness values
-            del child1.fitness.values
-            del child2.fitness.values
-
-
-def mutate(pop, mutpb, toolbox):
-    """Mutates individuals in the population using the scheme
-    defined in toolbox in-place
-
-    Args:
-        pop (list: Individual): List of individuals to be mutated
-        mutpb (float): Mutation probability from 0-1
-        toolbox (deap.ToolBox): DEAP's configured toolbox
-    """
-    # Apply mutation
-    for mutant in pop:
-        if random.random() < mutpb:
-
-            # In-place Mutation
-            toolbox.mutate(mutant)
-
-            # Delete fitness values after crossover
-            # because the individuals are changed
-            # and will have different fitness values
-            del mutant.fitness.values
-
-
 def evolve(strategy,
            logs_path=ABS_ALGO_EXP_LOGS_PATH,
            ckpts_path=EXPERIMENT_CHECKPOINTS_PATH,
@@ -147,10 +98,10 @@ def evolve(strategy,
         non_alterable, alterable = strategy.generate_offspring()
 
         # Mate offspring
-        mate(alterable, strategy.cxpb, strategy.toolbox)
+        strategy.mate(alterable)
 
         # Mutate offspring
-        mutate(alterable, strategy.mutpb, strategy.toolbox)
+        strategy.mutate(alterable)
 
         # Recombine Non-alterable offspring with the
         # ones that have been mutated / cross-overed
