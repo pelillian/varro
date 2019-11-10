@@ -8,6 +8,7 @@ import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_squared_error
 from math import sqrt
+from deap import base, creator, tools
 
 from varro.algo.problems import Problem
 from varro.algo.util import load_ckpt, save_ckpt

@@ -14,7 +14,7 @@ from deap import base, creator
 
 from varro.misc.util import make_path
 from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, ABS_ALGO_PREDICTIONS_PATH
-from varro.algo.util import get_args, load_ckpt
+from varro.algo.util import get_args
 from varro.algo.problems import Problem, ProblemFuncApprox, ProblemMNIST
 from varro.algo.strategies.es.evolve import evolve
 from varro.algo.strategies import Strategy
@@ -165,18 +165,17 @@ def predict(model_type,
         model = ModelFPGA()
 
     # Load data from pickle file
-    cp = load_ckpt(strategy, ckpt)
-
     # The hall of fame contains the best individual
     # that ever lived in the population during the
     # evolution. It is lexicographically sorted at all
     # time so that the first element of the hall of fame
     # is the individual that has the best first fitness value
     # ever seen, according to the weights provided to the fitness at creation time.
-    halloffame = cp["halloffame"][0]
+    with open(self.ckpt, "rb") as cp_file:
+        best_ind = pickle.load(cp_file)["halloffame"][0]
 
     # Load Weights into model using individual
-    model.load_parameters(halloffame)
+    model.load_parameters(best_ind)
 
     # Predict labels using np array in X
     y_pred = np.array(model.predict(np.load(X)))
