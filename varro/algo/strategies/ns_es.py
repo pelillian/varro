@@ -6,6 +6,7 @@ import numpy as np
 import random
 from sklearn.neighbors import BallTree
 from deap import base, creator, tools
+from collections import namedtuple
 
 from varro.algo.strategies.sga import StrategySGA
 
@@ -108,7 +109,7 @@ class StrategyNSES(StrategySGA):
 
         # Update population statistics
         self.halloffame.update(self.pop)
-        self.record = stats.compile(self.pop)
+        record = self.stats.compile(self.pop)
         self.logbook.record(gen=self.curr_gen, evals=len(self.pop), **record)
 
         return np.mean([ind.fitness.values.novelty_score for ind in pop])

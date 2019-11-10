@@ -11,7 +11,6 @@ from math import sqrt
 from deap import base, creator, tools
 
 from varro.algo.problems import Problem
-from varro.algo.util import load_ckpt, save_ckpt
 from varro.algo.strategies.es.toolbox import es_toolbox
 
 
@@ -216,3 +215,8 @@ class Strategy(ABC):
 
         # Load evolutionary strategy variables
         self.load_es_vars()
+
+        # Initialize stats we care about for population
+        self.stats = tools.Statistics(lambda ind: ind.fitness.values)
+        self.stats.register("avg", np.mean)
+        self.stats.register("max", np.max)
