@@ -125,7 +125,7 @@ class StrategySGA(Strategy):
         Fitness = namedtuple('Fitness', ['fitness_score'])
 
         # Compute all fitness for population
-        num_invalid_inds = self.compute_fitness(pop, Fitness)
+        num_invalid_inds = self.compute_fitness(pop)
 
         # The population is entirely replaced by the
         # evaluated offspring
