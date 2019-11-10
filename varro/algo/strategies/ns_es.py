@@ -6,6 +6,7 @@ import numpy as np
 import random
 from sklearn.neighbors import BallTree
 from deap import base, creator, tools
+from collections import namedtuple
 
 from varro.algo.strategies.sga import StrategySGA
 

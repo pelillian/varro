@@ -5,6 +5,7 @@ This module contains the class for Simple Genetic Algorithm strategy
 import numpy as np
 import random
 from deap import base, creator, tools
+from collections import namedtuple
 
 from varro.algo.strategies.strategy import Strategy
 from varro.algo.strategies.ns_es import StrategyNSES

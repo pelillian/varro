@@ -6,6 +6,7 @@ import pickle
 import numpy as np
 import random
 from deap import base, creator, tools
+from collections import namedtuple
 
 from varro.algo.strategies.strategy import Strategy
 
