@@ -6,7 +6,6 @@ import numpy as np
 import random
 
 from varro.algo.strategies.strategy import Strategy
-from deap import base, creator, tools
 
 
 class StrategySGA(Strategy):
@@ -14,11 +13,17 @@ class StrategySGA(Strategy):
     #############
     # FUNCTIONS #
     #############
+    def init_fitness_and_inds(self):
+        """Initializes the fitness and definition of individuals"""
+
+        creator.create("FitnessMin", base.Fitness, weights=(-1.0,)) # Just Fitness
+        creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
+
+
     def init_toolbox(self):
         """Initializes the toolbox according to strategy"""
         # Define specific Fitness and Individual for SGA
-        creator.create("FitnessMin", base.Fitness, weights=(-1.0,)) # Just Fitness
-        creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
+        self.init_fitness_and_inds()
 
         # Configure the rest of the toolbox that is independent
         # of which evolutionary strategy
@@ -74,6 +79,9 @@ class StrategySGA(Strategy):
         Args:
             pop (list): An iterable of Individual(np.ndarrays) that represent the individuals
             Fitness (collections.namedtuple): A namedtuple that initializes what type of scores are in Fitness
+
+        Returns:
+            Number of individuals with invalid fitness scores we updated
         """
         # Evaluate the individuals with an invalid fitness
         # (These are the individuals that have not been evaluated before -
@@ -91,6 +99,8 @@ class StrategySGA(Strategy):
             # Calculate the Fitness score of the individual
             ind.fitness.values = Fitness(fitness_score=super().fitness_score())
 
+        return len(invalid_inds)
+
 
     def evaluate(self, pop):
         """Evaluates an entire population on a dataset on the neural net / fpga
@@ -101,8 +111,7 @@ class StrategySGA(Strategy):
             pop (list): An iterable of np.ndarrays that represent the individuals
 
         Returns:
-            Tuple of (Average fitness score of population, \
-                Number of individuals with invalid fitness scores that have been evaluated)
+            Average fitness score of population
 
         """
         # Re-generates the training set for the problem (if possible) to prevent overfitting
@@ -112,14 +121,42 @@ class StrategySGA(Strategy):
         Fitness = namedtuple('Fitness', ['fitness_score'])
 
         # Compute all fitness for population
-        self.compute_fitness(pop, Fitness)
+        num_invalid_inds = self.compute_fitness(pop, Fitness)
+
+        # The population is entirely replaced by the
+        # evaluated offspring
+        self.pop[:] = pop
 
         # Update population statistics
-        halloffame.update(pop)
-        record = stats.compile(pop)
-        logbook.record(gen=g, evals=len(num_ind_evaluated), **record)
+        self.halloffame.update(self.pop)
+        self.record = stats.compile(self.pop)
+        self.logbook.record(gen=self.curr_gen, evals=num_invalid_inds, **record)
 
-        return np.mean([ind.fitness.values.fitness_score for ind in pop]), len(invalid_inds)
+        return np.mean([ind.fitness.values.fitness_score for ind in pop])
+
+
+    def generate_offspring(self):
+        """Generates new offspring using a combination of the selection methods
+        specified to choose fittest individuals and custom preference
+
+        Returns:
+            A Tuple of (Non-alterable offspring, Alterable offspring)
+
+        """
+        # Keep the elite individuals for next generation
+        # without mutation or cross over
+        elite_num = int(self.elitesize*self.popsize) + 1
+        elite = self.toolbox.select_elite(self.pop, k=elite_num)
+
+        # Clone the selected individuals
+        non_alterable_elite_offspring = list(map(self.toolbox.clone, elite))
+
+        # Choose the rest of the individuals
+        # to be altered
+        random_inds = self.toolbox.select(self.pop, k=self.popsize-elite_num)
+        alterable_offspring = list(map(self.toolbox.clone, random_inds))
+
+        return non_alterable_elite_offspring, alterable_offspring
 
 
     ########

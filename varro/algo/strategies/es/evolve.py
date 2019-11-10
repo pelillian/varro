@@ -18,13 +18,13 @@ from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_
 from varro.algo.problems import Problem
 
 
-def mate(pop, crossover_prob, toolbox):
+def mate(pop, cxpb, toolbox):
     """Mates individuals in the population using the scheme
     defined in toolbox in-place
 
     Args:
         pop (list: Individual): List of individuals to be mated
-        crossover_prob (float): Crossover probability from 0-1
+        cxpb (float): Crossover probability from 0-1
         toolbox (deap.ToolBox): DEAP's configured toolbox
     """
     # Apply crossover on the population by
@@ -33,7 +33,7 @@ def mate(pop, crossover_prob, toolbox):
     # we are doing 2-point crossover between
     # ind1, ind3 and ind2, ind4
     for child1, child2 in zip(pop[::2], pop[1::2]):
-        if random.random() < crossover_prob:
+        if random.random() < cxpb:
 
             # In-place Crossover
             toolbox.mate(child1, child2)
@@ -45,18 +45,18 @@ def mate(pop, crossover_prob, toolbox):
             del child2.fitness.values
 
 
-def mutate(pop, mutation_prob, toolbox):
+def mutate(pop, mutpb, toolbox):
     """Mutates individuals in the population using the scheme
     defined in toolbox in-place
 
     Args:
         pop (list: Individual): List of individuals to be mutated
-        mutation_prob (float): Mutation probability from 0-1
+        mutpb (float): Mutation probability from 0-1
         toolbox (deap.ToolBox): DEAP's configured toolbox
     """
     # Apply mutation
     for mutant in pop:
-        if random.random() < mutation_prob:
+        if random.random() < mutpb:
 
             # In-place Mutation
             toolbox.mutate(mutant)
@@ -68,7 +68,6 @@ def mutate(pop, mutation_prob, toolbox):
 
 
 def evolve(strategy,
-           problem,
            logs_path=ABS_ALGO_EXP_LOGS_PATH,
            ckpts_path=EXPERIMENT_CHECKPOINTS_PATH,
            grid_search=False):
@@ -134,7 +133,7 @@ def evolve(strategy,
     avg_fitness_scores = []
 
     # Evaluate the entire population
-    avg_fitness_score, num_ind_evaluated = strategy.toolbox.evaluate_population(pop=pop)
+    avg_fitness_score = strategy.toolbox.evaluate(pop=pop)
     avg_fitness_scores.append(avg_fitness_score)
 
     # Save statistics about our current population loaded
@@ -150,34 +149,22 @@ def evolve(strategy,
     for g in tqdm(range(start_gen, strategy.ngen)):
 
         # Select the next generation individuals
-        offspring = strategy.toolbox.select(pop, k=len(pop))
-
-        # Clone the selected individuals
-        offspring = list(map(strategy.toolbox.clone, offspring))
-
-        # Keep the elite individuals for next generation
-        # without mutation
-        elite_num = int(elite_size*pop_size) + 1
-        elite = offspring[:elite_num]
-        non_elite = offspring[elite_num:]
+        non_alterable, alterable = strategy.generate_offspring()
 
         # Mate offspring
-        mate(non_elite, strategy.cxpb, strategy.toolbox)
+        mate(alterable, strategy.cxpb, strategy.toolbox)
 
         # Mutate offspring
-        mutate(non_elite, strategy.mutpb, strategy.toolbox)
+        mutate(alterable, strategy.mutpb, strategy.toolbox)
 
-        # Recombine Elites with non-elites
-        offspring = elite + non_elite
+        # Recombine Non-alterable offspring with the
+        # ones that have been mutated / cross-overed
+        offspring = non_alterable + alterable
 
         # Evaluate the entire population
         strategy.curr_gen = g # Set the current generation
-        avg_fitness_score, num_ind_evaluated = strategy.toolbox.evaluate_population(pop=offspring)
+        avg_fitness_score = strategy.toolbox.evaluate(pop=offspring)
         avg_fitness_scores.append(avg_fitness_score)
-
-        # The population is entirely replaced by the
-        # evaluated offspring
-        pop[:] = offspring
 
         # Save snapshot of population (offspring)
         if g % FREQ == 0:
@@ -194,7 +181,12 @@ def evolve(strategy,
         # time so that the first element of the hall of fame
         # is the individual that has the best first fitness value
         # ever seen, according to the weights provided to the fitness at creation time.
-        fittest_ind_score = halloffame[0].fitness.values[0]
+        if strategy.name == 'sga' or strategy.name == 'nsr_es':
+            fittest_ind_score = self.halloffame[0].fitness.values.fitness_score
+        elif strategy.name == 'ns-es':
+            fittest_ind_score = self.halloffame[0].fitness.values.novelty_score
+        else:
+            raise NotImplementedError
 
         # Log Average score of population
         logger.info('Generation {} Avg. Fitness Score: {} | Fittest Individual Score: {}'\
@@ -207,7 +199,7 @@ def evolve(strategy,
         # or if stuck at local optima (average fitness score
         # hasnt changed for past 10 rounds)
         if strategy.name == 'sga' or strategy.name == 'nsr-es':
-            if problem.approx_type == Problem.CLASSIFICATION:
+            if strategy.problem.approx_type == Problem.CLASSIFICATION:
                 if round(-fittest_ind_score, 4) > 0.95:
                     logger.info('Early Stopping activated because Accuracy > 95%.')
                     break;

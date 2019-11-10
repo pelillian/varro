@@ -5,13 +5,11 @@ for neural net / fpga
 
 import random
 import numpy as np
-from deap import base, creator, tools
-
-from varro.algo.util import init_ind_fitness
 
 
-def es_toolbox(i_shape,
-               evaluate_population,
+def es_toolbox(strategy_name,
+               i_shape,
+               evaluate,
                model_type,
                imutpb=None,
                imutmu=None,
@@ -19,14 +17,14 @@ def es_toolbox(i_shape,
     """Initializes and configures the DEAP toolbox for evolving the parameters of a model.
 
     Args:
+        strategy_name (str): The strategy that is being used for evolution
         i_shape (int or tuple): Size or shape of an individual in the population
-        evaluate_population (function): Function to evaluate an entire population
+        evaluate (function): Function to evaluate an entire population
         model_type (str): A string specifying whether we're optimizing on a neural network
             or field programmable gate array
         imutpb (float): Mutation probability for each individual's attribute
         imutmu (float): Mean parameter for the Gaussian Distribution we're mutating an attribute from
         imutsigma (float): Sigma parameter for the Gaussian Distribution we're mutating an attribute from
-        p: Probability that random bit in each individual is 0 / 1
 
     Returns:
         toolbox (deap.base.Toolbox): Configured DEAP Toolbox for the algorithm.
@@ -73,10 +71,20 @@ def es_toolbox(i_shape,
                      getattr(toolbox, 'individual'))
     toolbox.register("mate",
                      getattr(tools, 'cxTwoPoint'))
-    toolbox.register("select",
-                     getattr(tools, 'selTournament'),
-                     tournsize=3)
-    toolbox.register("evaluate_population",
-                     evaluate_population)
+
+    if strategy_name == 'nsr-es':
+        toolbox.register("select_elite",
+                         getattr(tools, 'selSPEA2')) # Use Multi-objective selection method
+        toolbox.register("select",
+                         getattr(tools, 'selRandom'))
+    else:
+        toolbox.register("select_elite",
+                         getattr(tools, 'selTournament'),
+                         tournsize=3)
+        toolbox.register("select",
+                         getattr(tools, 'selRandom'))
+
+    toolbox.register("evaluate",
+                     evaluate)
 
     return toolbox

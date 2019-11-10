@@ -4,6 +4,7 @@ This module contains the class for Simple Genetic Algorithm strategy
 
 import numpy as np
 import random
+from sklearn.neighbors import BallTree
 
 from varro.algo.strategies.sga import StrategySGA
 
@@ -21,15 +22,38 @@ class StrategyNSES(StrategySGA):
     #############
     # FUNCTIONS #
     #############
+    def init_fitness_and_inds(self):
+        """Initializes the fitness and definition of individuals"""
+
+        creator.create("FitnessMax", base.Fitness, weights=(1.0)) # Just Novelty
+        creator.create("Individual", np.ndarray, fitness=creator.FitnessMax)
+
+
     def init_toolbox(self):
         """Initializes the toolbox according to strategy"""
         # Define specific Fitness and Individual for Novelty Search
-        creator.create("FitnessMax", base.Fitness, weights=(1.0)) # Just Novelty
-        creator.create("Individual", np.ndarray, fitness=creator.FitnessMax)
+        self.init_fitness_and_inds()
 
         # Configure the rest of the toolbox that is independent
         # of which evolutionary strategy
         super().config_toolbox()
+
+
+    def load_es_vars(self):
+        """Loads the evolutionary strategy variables from checkpoint given after
+        creating the fitness and individual templates for DEAP evolution or initializes them
+        """
+        super().load_es_vars()
+
+
+    def save_ckpt(self, exp_ckpt_dir):
+        """Saves the checkpoint of the current generation of Population
+        and some other information
+
+        Args:
+            exp_ckpt_dir (str): The experiment's checkpointing directory
+        """
+        super().save_ckpt()
 
 
     def compute_novelty(self, pop, Fitness, k=5):
@@ -65,8 +89,7 @@ class StrategyNSES(StrategySGA):
             pop (list): An iterable of np.ndarrays that represent the individuals
 
         Returns:
-            Tuple of (Average novelty score of population, \
-                Number of individuals with invalid fitness scores that have been evaluated)
+            Average novelty score of population
 
         """
         # Re-generates the training set for the problem (if possible) to prevent overfitting
@@ -78,7 +101,27 @@ class StrategyNSES(StrategySGA):
         # Calculate the Novelty scores for population
         self.compute_novelty(pop, Fitness)
 
-        return np.mean([ind.fitness.values.novelty_score for ind in pop]), len(pop)
+        # The population is entirely replaced by the
+        # evaluated offspring
+        self.pop[:] = pop
+
+        # Update population statistics
+        self.halloffame.update(self.pop)
+        self.record = stats.compile(self.pop)
+        self.logbook.record(gen=self.curr_gen, evals=len(self.pop), **record)
+
+        return np.mean([ind.fitness.values.novelty_score for ind in pop])
+
+
+    def generate_offspring(self):
+        """Generates new offspring using a combination of the selection methods
+        specified to choose fittest individuals and custom preference
+
+        Returns:
+            A Tuple of (Non-alterable offspring, Alterable offspring)
+
+        """
+        return super().generate_offspring()
 
 
     ########

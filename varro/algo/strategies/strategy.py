@@ -4,11 +4,9 @@ This module contains an abstract class for Strategy
 
 import random
 from abc import ABC, abstractmethod
-from deap import base, creator, tools
 import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_squared_error
-from sklearn.neighbors import BallTree
 from math import sqrt
 
 from varro.algo.problems import Problem
@@ -80,6 +78,11 @@ class Strategy(ABC):
     # FUNCTIONS #
     #############
     @abstractmethod
+    def init_fitness_and_inds(self):
+        """Initializes the fitness and definition of individuals"""
+        pass
+
+    @abstractmethod
     def init_toolbox(self):
         """Initializes the toolbox according to strategy"""
         pass
@@ -114,8 +117,19 @@ class Strategy(ABC):
             pop (list): An iterable of np.ndarrays that represent the individuals
 
         Returns:
-            Tuple of (Average fitness score of population, \
-                Number of individuals with invalid fitness scores that have been evaluated)
+            Average fitness score of population
+
+        """
+        pass
+
+
+    @abstractmethod
+    def generate_offspring(self):
+        """Generates new offspring using a combination of the selection methods
+        specified to choose fittest individuals and custom preference
+
+        Returns:
+            A Tuple of (Non-alterable offspring, Alterable offspring)
 
         """
         pass
@@ -126,12 +140,10 @@ class Strategy(ABC):
         # Set the individual size to the number of parameters
         # we can alter in the neural network architecture specified,
         # and initialize the fitness metrics needed to evaluate an individual
-        self.toolbox = es_toolbox(i_shape=self.model.parameters_shape,
-                                  evaluate_population=partial(evaluate,
-                                                              model=self.model,
-                                                              roblem=self.problem,
-                                                              strategy_name=self.name),
-                                  model_type='nn' if type(self.model) == 'ModelNN' else 'fpga',
+        self.toolbox = es_toolbox(strategy_name=self.name,
+                                  i_shape=self.model.parameters_shape,
+                                  evaluate=self.evaluate,
+                                  model_type='nn' if type(self.model).__name__ == 'ModelNN' else 'fpga',
                                   imutpb=self.imutpb,
                                   imutmu=self.imutmu,
                                   imutsigma=self.imutsigma)
