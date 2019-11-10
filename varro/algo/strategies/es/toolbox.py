@@ -5,6 +5,7 @@ for neural net / fpga
 
 import random
 import numpy as np
+from deap import base, creator, tools
 
 
 def es_toolbox(strategy_name,
@@ -45,7 +46,7 @@ def es_toolbox(strategy_name,
                          getattr(toolbox, 'attribute'),
                          n=i_shape)
         toolbox.register("mutate",
-                         getattr(tools, mutGaussian),
+                         getattr(tools, 'mutGaussian'),
                          mu=imutmu,
                          sigma=imutsigma,
                          indpb=imutpb)

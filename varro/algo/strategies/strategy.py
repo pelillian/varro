@@ -215,3 +215,8 @@ class Strategy(ABC):
 
         # Load evolutionary strategy variables
         self.load_es_vars()
+
+        # Initialize stats we care about for population
+        self.stats = tools.Statistics(lambda ind: ind.fitness.values)
+        self.stats.register("avg", np.mean)
+        self.stats.register("max", np.max)

@@ -101,7 +101,7 @@ class StrategyNSRES(StrategyNSES):
         # Update population statistics
         self.halloffame.update(self.pop)
         self.paretofront.update(self.pop)
-        self.record = stats.compile(self.pop)
+        self.record = self.stats.compile(self.pop)
         self.logbook.record(gen=self.curr_gen, evals=num_invalid_inds, **record)
 
         return np.mean([ind.fitness.values.fitness_score for ind in pop])

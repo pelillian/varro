@@ -108,7 +108,7 @@ class StrategyNSES(StrategySGA):
 
         # Update population statistics
         self.halloffame.update(self.pop)
-        self.record = stats.compile(self.pop)
+        self.record = self.stats.compile(self.pop)
         self.logbook.record(gen=self.curr_gen, evals=len(self.pop), **record)
 
         return np.mean([ind.fitness.values.novelty_score for ind in pop])
