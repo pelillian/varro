@@ -133,7 +133,7 @@ def evolve(strategy,
     avg_fitness_scores = []
 
     # Evaluate the entire population
-    avg_fitness_score = strategy.toolbox.evaluate(pop=pop)
+    avg_fitness_score = strategy.toolbox.evaluate(pop=strategy.pop)
     avg_fitness_scores.append(avg_fitness_score)
 
     #################################
