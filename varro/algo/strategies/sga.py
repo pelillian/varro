@@ -87,11 +87,12 @@ class StrategySGA(Strategy):
         Returns:
             Number of individuals with invalid fitness scores we updated
         """
-        # Evaluate the individuals with an invalid fitness
+        # Evaluate the individuals with an invalid fitness or if we are at the start
+        # of the evolutionary algo, AKA curr_gen == 0
         # (These are the individuals that have not been evaluated before -
         # individuals at the start of the evolutionary algorithm - or those
         # that have been mutated / the offspring after crossover with fitness deleted)
-        invalid_inds = [ind for ind in pop if not ind.fitness.valid]
+        invalid_inds = [ind for ind in pop if not ind.fitness.valid or self.curr_gen == 0]
 
         # Get fitness score for each individual with
         # invalid fitness score in population
