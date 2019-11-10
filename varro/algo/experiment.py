@@ -17,7 +17,9 @@ from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PA
 from varro.algo.util import get_args
 from varro.algo.problems import Problem, ProblemFuncApprox, ProblemMNIST
 from varro.algo.strategies.es.evolve import evolve
-from varro.algo.strategies import Strategy
+from varro.algo.strategies.sga import StrategySGA
+from varro.algo.strategies.ns_es import StrategyNSES
+from varro.algo.strategies.nsr_es import StrategyNSRES
 from varro.algo.evaluate import evaluate
 
 
