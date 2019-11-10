@@ -1,5 +1,5 @@
 """
-This module contains a function that returns the training set for a given problem
+This module contains an abstract class for Problem
 """
 
 from abc import ABC, abstractmethod

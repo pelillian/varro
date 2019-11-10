@@ -5,7 +5,6 @@ This module contains the utility functions to run the experiment.py
 import pickle
 import os
 import argparse
-from deap import base, creator, tools
 
 
 def get_args():
@@ -20,9 +19,9 @@ def get_args():
             the parameters of a neural network or circuit configuration of an FPGA'
     )
 
-    ######################
-    # 0A. Fit or Predict #
-    ######################
+    #####################
+    # 1. Fit or Predict #
+    #####################
     parser.add_argument('--purpose',
                         default='fit',
                         const='fit',
@@ -32,9 +31,9 @@ def get_args():
                         choices=['fit', 'predict'],
                         help='The purpose of running experiment')
 
-    ##########################################
-    # 0B. Checkpoint File to load population #
-    ##########################################
+    #########################################
+    # 2. Checkpoint File to load population #
+    #########################################
     parser.add_argument('--ckpt',
                         default=None,
                         const=None,
@@ -43,9 +42,9 @@ def get_args():
                         action='store',
                         help='The checkpoint file to be used for prediction')
 
-    ####################################################################################
-    # 0C. Checkpoint Folder to predict y_pred using best individual of each generation #
-    ####################################################################################
+    ###################################################################################
+    # 3. Checkpoint Folder to predict y_pred using best individual of each generation #
+    ###################################################################################
     parser.add_argument('--ckptfolder',
                         default=None,
                         const=None,
@@ -54,18 +53,18 @@ def get_args():
                         action='store',
                         help='The checkpoint folder that contains the population of each generation')
 
-    ########################################################
-    # 0D. .npy file to specify X (features for prediction) #
-    ########################################################
+    #######################################################
+    # 4. .npy file to specify X (features for prediction) #
+    #######################################################
     parser.add_argument('--X',
                         nargs='?',
                         metavar='FEATURES',
                         action='store',
                         help='The features to be used for predict')
 
-    #######################################
-    # 0E. .npy file to specify y (labels) #
-    #######################################
+    ######################################
+    # 5. .npy file to specify y (labels) #
+    ######################################
     parser.add_argument('--y',
                         nargs='?',
                         metavar='LABELS',
@@ -73,7 +72,7 @@ def get_args():
                         help='The labels to be used for predict')
 
     ##########################
-    # 1. FPGA or Neural Net? #
+    # 6. FPGA or Neural Net? #
     ##########################
     parser.add_argument('--model_type',
                         default='nn',
@@ -85,7 +84,7 @@ def get_args():
                         help='The target platform that the parameters are evaluated on')
 
     ######################################################
-    # 2. What problem are we trying to solve / optimize? #
+    # 7. What problem are we trying to solve / optimize? #
     ######################################################
     parser.add_argument('--problem_type',
                         default='sinx',
@@ -96,7 +95,7 @@ def get_args():
                         help='The problem to solve / optimize using an evolutionary strategy')
 
     ##########################################################
-    # 3. Which strategy should we use to solve this problem? #
+    # 8. Which strategy should we use to solve this problem? #
     ##########################################################
     parser.add_argument('--strategy',
                         default='sga',
@@ -107,9 +106,9 @@ def get_args():
                         choices=['sga', 'ns-es', 'nsr-es', 'cma-es'],
                         help='The optimization strategy chosen to solve the problem specified')
 
-    ##########################################################################
-    # 3a. What cross-over probability do you want for the evolutionary algo? #
-    ##########################################################################
+    #########################################################################
+    # 9. What cross-over probability do you want for the evolutionary algo? #
+    #########################################################################
     parser.add_argument('--cxpb',
                         default=0.5,
                         const=0.5,
@@ -120,7 +119,7 @@ def get_args():
                         type=float)
 
     ########################################################################
-    # 3b. What mutation probability do you want for the evolutionary algo? #
+    # 10. What mutation probability do you want for the evolutionary algo? #
     ########################################################################
     parser.add_argument('--mutpb',
                         default=0.01,
@@ -132,7 +131,7 @@ def get_args():
                         type=float)
 
     #############################################################
-    # 3c. What is the individual attribute mutation probability #
+    # 11. What is the individual attribute mutation probability #
     #############################################################
     parser.add_argument('--imutpb',
                         default=0.5,
@@ -144,7 +143,7 @@ def get_args():
                         type=float)
 
     ##############################################################################
-    # 3d. What mean for gaussian distribution to pull the mutant attribute from? #
+    # 12. What mean for gaussian distribution to pull the mutant attribute from? #
     ##############################################################################
     parser.add_argument('--imutmu',
                         default=0,
@@ -156,7 +155,7 @@ def get_args():
                         type=float)
 
     ############################################################################################
-    # 3e. What standard deviation for gaussian distribution to pull the mutant attribute from? #
+    # 13. What standard deviation for gaussian distribution to pull the mutant attribute from? #
     ############################################################################################
     parser.add_argument('--imutsigma',
                         default=1,
@@ -168,7 +167,7 @@ def get_args():
                         type=float)
 
     #########################################
-    # 3f. What population size do you want? #
+    # 14. What population size do you want? #
     #########################################
     parser.add_argument('--popsize',
                         default=10,
@@ -181,7 +180,7 @@ def get_args():
                         choices=range(2, 10000))
 
     ########################################################
-    # 3g. What elite size do you want? (Percentage of      #
+    # 15. What elite size do you want? (Percentage of      #
     # best fitness individuals do you not want to change?) #
     ########################################################
     parser.add_argument('--elitesize',
@@ -194,7 +193,7 @@ def get_args():
                         type=float)
 
     ################################################################################
-    # 3h. What number of generations do you want to run the evolutionary algo for? #
+    # 16. What number of generations do you want to run the evolutionary algo for? #
     ################################################################################
     parser.add_argument('--ngen',
                         default=100,
@@ -204,6 +203,32 @@ def get_args():
                         action='store',
                         help='Set the number of generations to evolve',
                         type=int)
+
+    ###############################################################################
+    # 17. What Distance metric will we use for measuring an individual's novelty? #
+    ###############################################################################
+    parser.add_argument('--novelty_metric',
+                        default='euclidean',
+                        const='euclidean',
+                        nargs='?',
+                        metavar='NOVELTY-METRIC',
+                        action='store',
+                        help='Set the distance metric to be used for measuring Novelty from this list: \
+                            https://scikit-learn.org/stable/modules/generated/\
+                                sklearn.neighbors.DistanceMetric.html#sklearn.neighbors.DistanceMetric',
+                        type=str)
+
+    ######################################################################################
+    # 18. The size of HallOfFame which will store the best (fittest / novel) individuals #
+    ######################################################################################
+    parser.add_argument('--halloffamesize',
+                        default=0.05,
+                        const=0.05,
+                        nargs='?',
+                        metavar='HALLOFFAME-SIZE',
+                        action='store',
+                        help='Set the size of HallOfFame which will store the best (fittest / novel) individuals',
+                        type=float)
 
     settings = parser.parse_args()
 
@@ -228,73 +253,8 @@ def get_args():
     if settings.imutsigma < 0:
         parser.error("--imutsigma needs to be positive.")
 
+    # Check that halloffame size is smaller than elitesize
+    if settings.halloffamesize > settings.elitesize:
+        parser.error("--halloffamesize must be smaller than --elitesize")
+
     return settings
-
-
-def init_ind_fitness(strategy):
-    """Creates the fitness and individual templates required for DEAP
-    evolutionary strategies
-
-    Args:
-        strategy (str): The evolutionary strategy to be used
-    """
-    # Create fitness and individuals based on the strategy
-    # chosen
-    if strategy == 'sga':
-        creator.create("FitnessMin", base.Fitness, weights=(-1.0,)) # Just Fitness
-        creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
-    elif strategy == 'ns-es':
-        creator.create("FitnessMax", base.Fitness, weights=(1.0)) # Just Novelty
-        creator.create("Individual", np.ndarray, fitness=creator.FitnessMax)
-    elif strategy == 'nsr-es':
-        creator.create("FitnessMulti", base.Fitness, weights=(-1.0, 1.0)) # Both Fitness and Novelty
-        creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)
-    elif strategy == 'cma-es':
-        raise NotImplementedError
-    else:
-        raise NotImplementedError
-
-
-def load_ckpt(strategy, ckpt):
-    """Loads the checkpoint given after creating the fitness and individual
-    templates for DEAP evolution
-
-    Args:
-        strategy (str): The evolutionary strategy to be used
-        ckpt (str): The checkpoint file path that stores the population and other information of a generation
-
-    Returns:
-        A dictionary containing key features of the generation
-    """
-    with open(ckpt, "rb") as cp_file:
-        init_ind_fitness(strategy)
-        cp = pickle.load(cp_file)
-
-    return cp
-
-def save_ckpt(population,
-              generation,
-              halloffame,
-              logbook,
-              rndstate,
-              exp_ckpt_dir):
-    """Saves the checkpoint of the current generation of Population
-    and some other information
-
-    Args:
-        population 
-        generation
-        halloffame
-        logbook
-        rndstate
-        exp_ckpt_dir
-    """
-    # Fill the dictionary using the dict(key=value[, ...]) constructor
-    cp = dict(population=population,
-              generation=generation,
-              halloffame=halloffame,
-              logbook=logbook,
-              rndstate=rndstate)
-
-    with open(os.path.join(exp_ckpt_dir, 'checkpoint_gen{}.pkl'.format(g)), "wb") as cp_file:
-        pickle.dump(cp, cp_file)

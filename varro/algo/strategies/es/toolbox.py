@@ -10,8 +10,7 @@ from deap import base, creator, tools
 from varro.algo.util import init_ind_fitness
 
 
-def es_toolbox(strategy,
-               i_shape,
+def es_toolbox(i_shape,
                evaluate_population,
                model_type,
                imutpb=None,
@@ -20,9 +19,10 @@ def es_toolbox(strategy,
     """Initializes and configures the DEAP toolbox for evolving the parameters of a model.
 
     Args:
-        strategy (str): The strategy to be used for evolving, Simple Genetic Algorithm (sga) / Novelty Search (ns-es) / Covariance-Matrix Adaptation (cma-es), ...
         i_shape (int or tuple): Size or shape of an individual in the population
         evaluate_population (function): Function to evaluate an entire population
+        model_type (str): A string specifying whether we're optimizing on a neural network
+            or field programmable gate array
         imutpb (float): Mutation probability for each individual's attribute
         imutmu (float): Mean parameter for the Gaussian Distribution we're mutating an attribute from
         imutsigma (float): Sigma parameter for the Gaussian Distribution we're mutating an attribute from
@@ -38,20 +38,16 @@ def es_toolbox(strategy,
     # Initialzie Toolbox
     toolbox = base.Toolbox()
 
-    # Create fitness and individuals based on the strategy
-    # chosen
-    init_ind_fitness(strategy)
-
     # Defines Individual
     if model_type == "nn":
         toolbox.register("attribute", random.random)
         toolbox.register("individual",
-                         tools.initRepeat,
-                         creator.Individual,
-                         toolbox.attribute,
+                         getattr(tools, 'initRepeat'),
+                         getattr(creator, 'Individual'),
+                         getattr(toolbox, 'attribute'),
                          n=i_shape)
         toolbox.register("mutate",
-                         tools.mutGaussian,
+                         getattr(tools, mutGaussian),
                          mu=imutmu,
                          sigma=imutsigma,
                          indpb=imutpb)
@@ -63,7 +59,7 @@ def es_toolbox(strategy,
             return ind_class(np.random.choice([False, True], size=size))
         toolbox.register("individual",
                          init_individual,
-                         creator.Individual)
+                         getattr(creator, 'Individual'))
 
         def mutate_individual(ind):
             idx = np.argwhere(np.random.choice([False, True], size, p=[0.9, 0.1]))
@@ -72,13 +68,13 @@ def es_toolbox(strategy,
         toolbox.register("mutate", mutate_individual)
 
     toolbox.register("population",
-                     tools.initRepeat,
+                     getattr(tools, 'initRepeat'),
                      list,
-                     toolbox.individual)
+                     getattr(toolbox, 'individual'))
     toolbox.register("mate",
-                     tools.cxTwoPoint)
+                     getattr(tools, 'cxTwoPoint'))
     toolbox.register("select",
-                     tools.selTournament,
+                     getattr(tools, 'selTournament'),
                      tournsize=3)
     toolbox.register("evaluate_population",
                      evaluate_population)

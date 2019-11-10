@@ -17,7 +17,7 @@ from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PA
 from varro.algo.util import get_args, load_ckpt
 from varro.algo.problems import Problem, ProblemFuncApprox, ProblemMNIST
 from varro.algo.strategies.es.evolve import evolve
-from varro.algo.strategies.es.toolbox import es_toolbox
+from varro.algo.strategies import Strategy
 from varro.algo.evaluate import evaluate
 
 
@@ -33,6 +33,8 @@ def fit(model_type,
         elitesize=None,
         ngen=None,
         ckpt=None,
+        novelty_metric=None,
+        halloffamesize=None,
         grid_search=False):
     """Control center to call other modules to execute the optimization
 
@@ -50,6 +52,9 @@ def fit(model_type,
         elitesize (float): Percentage of fittest individuals to pass on to next generation
         ngen (int): Number of generations to run an evolutionary algorithm
         ckpt (str): Location of checkpoint to load the population
+        novelty_metric (str): The distance metric to be used to measure an Individual's novelty
+        halloffamesize (float): Percentage of individuals in population we store in the HallOfFame / Archive
+        grid_search (bool): Whether grid search will be in effect
 
     """
     # 1. Choose Problem and get the specific evaluation function
@@ -71,36 +76,55 @@ def fit(model_type,
         from varro.algo.models import ModelFPGA
         model = ModelFPGA()
 
-    # 3. Choose Strategy through the evaluation function
-    evaluate_population = partial(evaluate,
-                                  model=model,
-                                  problem=problem,
-                                  strategy=strategy)
+    # 3. Set Strategy
+    if strategy == 'sga':
+        strategy = StrategySGA(model=model,
+                               problem=problem,
+                               cxpb=cxpb,
+                               mutpb=mutpb,
+                               popsize=popsize,
+                               elitesize=elitesize,
+                               ngen=ngen,
+                               imutpb=imutpb,
+                               imutmu=imutmu,
+                               imutsigma=imutsigma,
+                               ckpt=ckpt,
+                               halloffamesize=halloffamesize)
+    elif strategy == 'ns-es':
+        strategy = StrategyNSES(novelty_metric=novelty_metric,
+                                model=model,
+                                problem=problem,
+                                cxpb=cxpb,
+                                mutpb=mutpb,
+                                popsize=popsize,
+                                elitesize=elitesize,
+                                ngen=ngen,
+                                imutpb=imutpb,
+                                imutmu=imutmu,
+                                imutsigma=imutsigma,
+                                ckpt=ckpt,
+                                halloffamesize=halloffamesize)
+    elif strategy == 'nsr-es':
+        strategy = StrategyNSRES(novelty_metric=novelty_metric,
+                                 model=model,
+                                 problem=problem,
+                                 cxpb=cxpb,
+                                 mutpb=mutpb,
+                                 popsize=popsize,
+                                 elitesize=elitesize,
+                                 ngen=ngen,
+                                 imutpb=imutpb,
+                                 imutmu=imutmu,
+                                 imutsigma=imutsigma,
+                                 ckpt=ckpt,
+                                 halloffamesize=halloffamesize)
+    elif strategy == 'cma-es':
+        raise NotImplementedError
+    else:
+        raise NotImplementedError
 
-    # Set the individual size to the number of parameters
-    # we can alter in the neural network architecture specified,
-    # and initialize the fitness metrics needed to evaluate an individual
-    toolbox = es_toolbox(strategy=strategy,
-                         i_shape=model.parameters_shape,
-                         evaluate_population=evaluate_population,
-                         model_type=model_type,
-                         imutpb=imutpb,
-                         imutmu=imutmu,
-                         imutsigma=imutsigma)
-
-    # Evolve
+    # 4. Evolve
     pop, avg_fitness_scores = evolve(strategy=strategy,
-                                     problem=problem,
-                                     toolbox=toolbox,
-                                     crossover_prob=cxpb,
-                                     mutation_prob=mutpb,
-                                     pop_size=popsize,
-                                     elite_size=elitesize,
-                                     num_generations=ngen,
-                                     imutpb=imutpb,
-                                     imutmu=imutmu,
-                                     imutsigma=imutsigma,
-                                     checkpoint=ckpt,
                                      grid_search=grid_search)
 
 
@@ -187,7 +211,9 @@ def main():
             popsize=args.popsize,
             elitesize=args.elitesize,
             ngen=args.ngen,
-            ckpt=args.ckpt)
+            ckpt=args.ckpt,
+            novelty_metric=args.novelty_metric,
+            halloffamesize=args.halloffamesize)
 
     else:
 
