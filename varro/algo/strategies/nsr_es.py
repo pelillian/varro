@@ -26,7 +26,7 @@ class StrategyNSRES(StrategyNSES):
     #############
     def init_fitness_and_inds(self):
         """Initializes the fitness and definition of individuals"""
-        Fitness = type('Fitness', (base.Fitness,), dict(values=namedtuple('Scores', field_names=('fitness_score', 'novelty_score',))))
+        Fitness = type('Fitness', (base.Fitness,), dict(values=namedtuple('Scores', field_names=('fitness_score', 'novelty_score',)), __len__=lambda self: len(self.values)))
         creator.create("FitnessMulti", Fitness, weights=(-1.0, 1.0,)) # Both Fitness and Novelty
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)
 
@@ -67,7 +67,7 @@ class StrategyNSRES(StrategyNSES):
                   logbook=self.logbook,
                   rndstate=self.rndstate)
 
-        with open(os.path.join(exp_ckpt_dir, 'checkpoint_gen{}.pkl'.format(g)), "wb") as cp_file:
+        with open(os.path.join(exp_ckpt_dir, 'checkpoint_gen{}.pkl'.format(self.curr_gen)), "wb") as cp_file:
             pickle.dump(cp, cp_file)
 
 
