@@ -26,7 +26,7 @@ class StrategyNSRES(StrategyNSES):
     #############
     def init_fitness_and_inds(self):
         """Initializes the fitness and definition of individuals"""
-        Fitness = type('Fitness', (base.Fitness,), dict(values=namedtuple('Scores', field_names=('fitness_score', 'novelty_score',)), __len__=lambda self: len(self.values)))
+        Fitness = type('Fitness', (base.Fitness,), dict(values=namedtuple('Scores', field_names=('fitness_score', 'novelty_score',)), __len__=lambda x: len(x.values)))
         creator.create("FitnessMulti", Fitness, weights=(-1.0, 1.0,)) # Both Fitness and Novelty
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)
 
