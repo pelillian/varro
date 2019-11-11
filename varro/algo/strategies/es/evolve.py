@@ -161,4 +161,4 @@ def evolve(strategy,
                     break;
 
 
-    return pop, avg_fitness_scores
+    return strategy.pop, avg_fitness_scores
