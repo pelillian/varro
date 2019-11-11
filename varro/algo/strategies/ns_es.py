@@ -68,7 +68,7 @@ class StrategyNSES(StrategySGA):
             k: The nearest k neighbors will be used for novelty calculation
         """
         # Init BallTree to find k-Nearest Neighbors
-        tree = BallTree(population, metric=self.novelty_metric)
+        tree = BallTree(pop, metric=self.novelty_metric)
 
         for ind in pop:
 
