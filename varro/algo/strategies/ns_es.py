@@ -27,7 +27,7 @@ class StrategyNSES(StrategySGA):
     def init_fitness_and_inds(self):
         """Initializes the fitness and definition of individuals"""
         Novelty = type('Novelty', (base.Fitness,), dict(values=namedtuple('Scores', field_names=('novelty_score',))))
-        creator.create("NoveltyMax", Novelty, weights=(1.0)) # Just Novelty
+        creator.create("NoveltyMax", Novelty, weights=(1.0,)) # Just Novelty
         creator.create("Individual", np.ndarray, fitness=creator.NoveltyMax)
 
 
