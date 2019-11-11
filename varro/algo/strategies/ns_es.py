@@ -74,7 +74,7 @@ class StrategyNSES(StrategySGA):
 
             # Get the k-nearest neighbors of
             # the individual
-            dist, ind_idxs = tree.query(ind, k=k)
+            dist, ind_idxs = tree.query(ind.reshape(1, -1), k=k)
 
             # Ignore first value as it'll be 0 since
             # there's an instance of the same vector in
