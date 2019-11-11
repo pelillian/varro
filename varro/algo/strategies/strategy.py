@@ -197,8 +197,8 @@ class Strategy(ABC):
                 # Delete fitness values after crossover
                 # because the individuals are changed
                 # and will have different fitness values
-                child1.fitness.valid = False
-                child2.fitness.valid = False
+                child1.fitness.delValues()
+                child2.fitness.delValues()
 
 
     def mutate(self, pop):
@@ -218,7 +218,7 @@ class Strategy(ABC):
                 # Delete fitness values after crossover
                 # because the individuals are changed
                 # and will have different fitness values
-                mutant.fitness.valid = False
+                mutant.fitness.delValues()
 
 
     ########

@@ -2,6 +2,7 @@
 This module contains the class for Simple Genetic Algorithm strategy
 """
 
+import os
 import pickle
 import numpy as np
 import random
