@@ -122,9 +122,6 @@ class StrategySGA(Strategy):
         # Re-generates the training set for the problem (if possible) to prevent overfitting
         self.problem.reset_train_set()
 
-        # Define fitness
-        Fitness = namedtuple('Fitness', ['fitness_score'])
-
         # Compute all fitness for population
         num_invalid_inds = self.compute_fitness(pop)
 
