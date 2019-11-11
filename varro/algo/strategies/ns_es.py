@@ -79,7 +79,7 @@ class StrategyNSES(StrategySGA):
             # Ignore first value as it'll be 0 since
             # there's an instance of the same vector in
             # population
-            ind.fitness.values.novelty_score = np.mean(dist[1:])
+            ind.fitness.values.novelty_score = np.mean(dist.flatten()[1:])
 
 
     def evaluate(self, pop):

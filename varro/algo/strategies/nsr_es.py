@@ -122,7 +122,7 @@ class StrategyNSRES(StrategyNSES):
     def __init__(self, novelty_metric, **kwargs):
 
         # Call Strategy constructor
-        Strategy.__init__(name='nsr-es', **kwargs)
+        Strategy.__init__(self, name='nsr-es', **kwargs)
 
         # Set Novelty metric
         # Supported novelty metrics:
