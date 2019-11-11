@@ -49,7 +49,7 @@ class StrategyNSRES(StrategyNSES):
 
         # If we have a multiobjective strategy,
         # we also need to keep the Pareto Fronts
-        self.paretofront = cp["paretofront"] if self.ckpt else tools.ParetoFront()
+        self.paretofront = cp["paretofront"] if self.ckpt else tools.ParetoFront(similar=np.array_equal)
 
 
     def save_ckpt(self, exp_ckpt_dir):
