@@ -55,7 +55,7 @@ class StrategyNSES(StrategySGA):
         Args:
             exp_ckpt_dir (str): The experiment's checkpointing directory
         """
-        super().save_ckpt()
+        super().save_ckpt(exp_ckpt_dir)
 
 
     def compute_novelty(self, pop, k=5):
