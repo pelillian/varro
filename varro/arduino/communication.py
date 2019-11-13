@@ -40,7 +40,7 @@ if __name__=="__main__":
 
         # Serial read section
         print("Python message: {}".format(val))
-        msg = send_and_recieve(arduino, val, 0.1)
+        msg = send_and_recieve(arduino, val, 0.5)
         print ("Message from arduino: ")
         print (msg.decode("utf-8"))
 
