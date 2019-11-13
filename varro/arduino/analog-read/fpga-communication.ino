@@ -9,35 +9,16 @@ void setup()
   pinMode(OUTPUT_PIN, OUTPUT);
   pinMode(INPUT_ADC_READ, INPUT); 
   // int output = 0; 
-
+  // TODO: Config all pins that will have inputs at some point
+  // TODO: Configure clock pin (digital I/O pin)
 }
 
 int output = 0; 
 void loop()
 {
-  char c = ' ';
-  while(!Serial.available()) {}
-
-  if (Serial.available() > 0)
-  {
-    c = Serial.read();  //gets one byte from serial buffer
-  }
-
-  if(c == 0)
-  {
-    // digitalWrite(OUTPUT_PIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-    // Serial.println("LED set to high");
-
-  } else if(c == 1){
-    // digitalWrite(OUTPUT_PIN, LOW);   // turn the LED on (HIGH is the voltage level)
-    // Serial.println("LED set to low");
-
-  } else {
-    // Serial.println("Could not process input: ");
-    // Serial.println((int)c);
-
-  }
-
+  // TODO: increment count to correspond with pin on FPGA
+  // TODO: Sample the analong input pin
+  // TODO: Print information over serial
   int val = analogRead(INPUT_ADC_READ); 
   // Serial.println("Analog value read from adjacent pin: ");
   char str [3];   
