@@ -2,6 +2,7 @@
 This module contains the class for Simple Genetic Algorithm strategy
 """
 
+import os
 import numpy as np
 import random
 from deap import base, creator, tools
@@ -26,7 +27,7 @@ class StrategyNSRES(StrategyNSES):
     #############
     def init_fitness_and_inds(self):
         """Initializes the fitness and definition of individuals"""
-        
+
         class Scores(list):
             def __init__(self, fitness_score=None, novelty_score=None):
                 super().__init__([fitness_score, novelty_score,])
