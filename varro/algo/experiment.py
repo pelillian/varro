@@ -172,7 +172,7 @@ def predict(model_type,
     # time so that the first element of the hall of fame
     # is the individual that has the best first fitness value
     # ever seen, according to the weights provided to the fitness at creation time.
-    with open(self.ckpt, "rb") as cp_file:
+    with open(ckpt, "rb") as cp_file:
         best_ind = pickle.load(cp_file)["halloffame"][0]
 
     # Load Weights into model using individual
