@@ -127,7 +127,7 @@ def evolve(strategy,
         # time so that the first element of the hall of fame
         # is the individual that has the best first fitness value
         # ever seen, according to the weights provided to the fitness at creation time.
-        if strategy.name == 'sga' or strategy.name == 'nsr_es':
+        if strategy.name == 'sga' or strategy.name == 'nsr-es':
             fittest_ind_score = strategy.halloffame[0].fitness.values.fitness_score
         elif strategy.name == 'ns-es':
             fittest_ind_score = strategy.halloffame[0].fitness.values.novelty_score
