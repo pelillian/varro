@@ -19,7 +19,26 @@ class StrategySGA(Strategy):
     #############
     def init_fitness_and_inds(self):
         """Initializes the fitness and definition of individuals"""
-        Fitness = type('Fitness', (base.Fitness,), dict(values=namedtuple('Scores', field_names=('fitness_score',)), __len__=lambda x: len(x.values)))
+
+        class Scores(list):
+            def __init__(self, fitness_score=None):
+                super().__init__([fitness_score,])
+                self.fitness_score = fitness_score
+
+            @property
+            def fitness_score(self):
+                return self.__fitness_score
+
+            @fitness_score.setter
+            def fitness_score(self, fitness_score):
+                self.__fitness_score = fitness_score
+                super().__setitem__(0, fitness_score)
+
+            def __setitem__(self, key, value):
+                if key == 0:
+                    self.fitness_score = value
+
+        Fitness = type('Fitness', (base.Fitness,), dict(values=Scores()))
         creator.create("FitnessMin", Fitness, weights=(-1.0,)) # Just Fitness
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
 
