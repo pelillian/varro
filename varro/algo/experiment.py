@@ -4,6 +4,7 @@ experiment to solve the problem using a specified
 evolutionary algorithm
 """
 
+import pickle
 from os import listdir
 from os.path import isfile, join
 from functools import partial
