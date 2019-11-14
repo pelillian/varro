@@ -169,7 +169,7 @@ class Strategy(ABC):
             return -categorical_accuracy
 
         elif self.problem.approx_type == Problem.REGRESSION:
-            rmse = sqrt(mean_squared_error(self.problem.X_train, y_pred))
+            rmse = sqrt(mean_squared_error(self.problem.y_train, y_pred))
             return rmse
 
         else:
