@@ -1,40 +1,38 @@
-const int OUTPUT_PIN = 13;
-const int INPUT_ADC_ADJACENT = A1; 
+const int CLOCK_SIGNAL = 13;
 const int INPUT_ADC_READ = A0; 
+
+int* adjacentPorts = {A1, A2, A3, A4, A5};
 
 void setup()
 {
 
   Serial.begin(9600);  // initialize serial communications at 9600 bps
-  pinMode(OUTPUT_PIN, OUTPUT);
+  pinMode(CLOCK_SIGNAL, OUTPUT);
   pinMode(INPUT_ADC_READ, INPUT); 
   // int output = 0; 
-  // TODO: Config all pins that will have inputs at some point
-  // TODO: Configure clock pin (digital I/O pin)
+  // Config all pins that will have inputs at some point
+  for (int port : adjacentPorts) {
+    pinMode(port, INPUT);
+  }
 }
 
 int output = 0; 
+int portIndex = 0; 
+
 void loop()
 {
-  // TODO: increment count to correspond with pin on FPGA
+  // Alterate the clock signal
+  char* buf[50]; 
+  sprintf(buf, "Setting clock signal to %d", output); 
+  Serial.println(buf); 
+  digitalWrite(CLOCK_SIGNAL, output); 
+  output ^= 1; 
+
+  // increment count to correspond with pin on FPGA
+  sprintf(buf, "Attempting to read pin %d", adjacentPorts[portIndex]);  
+      
   // TODO: Sample the analong input pin
   // TODO: Print information over serial
-  int val = analogRead(INPUT_ADC_READ); 
-  // Serial.println("Analog value read from adjacent pin: ");
-  char str [3];   
-  for (int i = 0; i < sizeof(str); i++) {
-    str[i] = 0; 
-  }
-  sprintf(str, "%d", val); 
-  Serial.println(str); 
-  if (output == 0) {
-    digitalWrite(OUTPUT_PIN, LOW); 
-  } else {
-    digitalWrite(OUTPUT_PIN, HIGH);
-  }
-
-  output %= 1;  
-
   Serial.flush();
   delay(100); 
 }
