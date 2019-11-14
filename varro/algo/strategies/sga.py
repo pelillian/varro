@@ -166,7 +166,7 @@ class StrategySGA(Strategy):
         """
         # Keep the elite individuals for next generation
         # without mutation or cross over
-        elite_num = int(self.elitesize*self.popsize) + 1
+        elite_num = int(self.elitesize*self.popsize)
         elite = self.toolbox.select_elite(self.pop, k=elite_num)
 
         # Clone the selected individuals

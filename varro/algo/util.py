@@ -157,8 +157,8 @@ def get_args():
     # 13. What standard deviation for gaussian distribution to pull the mutant attribute from? #
     ############################################################################################
     parser.add_argument('--imutsigma',
-                        default=1,
-                        const=1,
+                        default=0.1,
+                        const=0.1,
                         nargs='?',
                         metavar='IND-MUTATION-SIGMA',
                         action='store',
@@ -169,8 +169,8 @@ def get_args():
     # 14. What population size do you want? #
     #########################################
     parser.add_argument('--popsize',
-                        default=10,
-                        const=10,
+                        default=100,
+                        const=100,
                         nargs='?',
                         metavar='POPULATION-SIZE',
                         action='store',
@@ -183,8 +183,8 @@ def get_args():
     # best fitness individuals do you not want to change?) #
     ########################################################
     parser.add_argument('--elitesize',
-                        default=0.1,
-                        const=0.1,
+                        default=0.2,
+                        const=0.2,
                         nargs='?',
                         metavar='ELITE-SIZE',
                         action='store',
@@ -221,8 +221,8 @@ def get_args():
     # 18. The size of HallOfFame which will store the best (fittest / novel) individuals #
     ######################################################################################
     parser.add_argument('--halloffamesize',
-                        default=0.05,
-                        const=0.05,
+                        default=0.01,
+                        const=0.01,
                         nargs='?',
                         metavar='HALLOFFAME-SIZE',
                         action='store',
@@ -255,5 +255,13 @@ def get_args():
     # Check that halloffame size is smaller than elitesize
     if settings.halloffamesize > settings.elitesize:
         parser.error("--halloffamesize must be smaller than --elitesize")
+
+    # Check that elite size will be more than equal to 1
+    if int(self.elitesize*self.popsize) < 1:
+        parser.error("--elitesize too small")
+
+    # Check that halloffame size will be more than equal to 1
+    if int(settings.halloffamesize*settings.popsize) < 1:
+        parser.error("--halloffamesize too small")
 
     return settings
