@@ -257,7 +257,7 @@ def get_args():
         parser.error("--halloffamesize must be smaller than --elitesize")
 
     # Check that elite size will be more than equal to 1
-    if int(self.elitesize*self.popsize) < 1:
+    if int(settings.elitesize*settings.popsize) < 1:
         parser.error("--elitesize too small")
 
     # Check that halloffame size will be more than equal to 1
