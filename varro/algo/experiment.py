@@ -189,7 +189,7 @@ def predict(model_type,
 
         # Initialize individual based on strategy
         cp = pickle.load(cp_file)
-        best_ind = ["halloffame"][0]
+        best_ind = cp["halloffame"][0]
 
     # Load Weights into model using individual
     model.load_parameters(best_ind)
