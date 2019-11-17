@@ -132,6 +132,7 @@ def fit(model_type,
 
 def predict(model_type,
             problem_type,
+            strategy,
             X,
             ckpt,
             save_dir):
@@ -142,6 +143,7 @@ def predict(model_type,
         model_type (str): A string specifying whether we're optimizing on a neural network
             or field programmable gate array
         problem_type (str): A string specifying what type of problem we're trying to optimize
+        strategy (str): A string specifying what type of optimization algorithm to use
         X (str): Path to the .npy that stores the np.ndarray to use as Input data for model
         ckpt (str): Location of checkpoint to load the population
         save_dir (str): Location of where to store the predictions
@@ -174,19 +176,19 @@ def predict(model_type,
     # is the individual that has the best first fitness value
     # ever seen, according to the weights provided to the fitness at creation time.
     with open(ckpt, "rb") as cp_file:
-        # Initialize individual based on strategy
-        cp = pickle.load(cp_file)
-        if cp['strategy'] == 'sga':
+        if strategy == 'sga':
             StrategySGA.init_fitness_and_inds()
-        elif cp['strategy'] == 'ns-es':
+        elif strategy == 'ns-es':
             StrategyNSES.init_fitness_and_inds()
-        elif cp['strategy'] == 'nsr-es':
+        elif strategy == 'nsr-es':
             StrategyNSRES.init_fitness_and_inds()
-        elif cp['strategy'] == 'cma-es':
+        elif strategy == 'cma-es':
             raise NotImplementedError
         else:
             raise NotImplementedError
 
+        # Initialize individual based on strategy
+        cp = pickle.load(cp_file)
         best_ind = ["halloffame"][0]
 
     # Load Weights into model using individual
@@ -241,6 +243,7 @@ def main():
             for ckpt in tqdm(ckpt_files):
                 predict(model_type=args.model_type,
                         problem_type=args.problem_type,
+                        strategy=args.strategy,
                         X=args.X,
                         ckpt=ckpt,
                         save_dir=save_dir)
@@ -250,6 +253,7 @@ def main():
             make_path(save_dir)
             predict(model_type=args.model_type,
                     problem_type=args.problem_type,
+                    strategy=args.strategy,
                     X=args.X,
                     ckpt=args.ckpt,
                     save_dir=save_dir)
