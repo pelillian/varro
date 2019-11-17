@@ -15,40 +15,42 @@ from varro.algo.strategies.strategy import Strategy
 
 class StrategySGA(Strategy):
 
-    class Fitness(base.Fitness):
-        def __init__(self):
-            super();
-            self.__fitness_score = None
-
-        @property
-        def fitness_score(self):
-            return self.values[0]
-
-        @fitness_score.setter
-        def fitness_score(self, fitness_score):
-            self.__fitness_score = fitness_score
-            if fitness_score:
-                # WARNING:
-                # Setting values breaks alot of things:
-                # self.__fitness_score is reset to None
-                # after setting values, so you should only
-                # set values after all the scores you require are set
-                self.values = (fitness_score,)
-
-        @fitness_score.deleter
-        def fitness_score(self):
-            del self.__fitness_score
-
-        def delValues(self):
-            super().delValues()
-            del self.__fitness_score
-
     #############
     # FUNCTIONS #
     #############
-    def init_fitness_and_inds(self):
+    @staticmethod
+    def init_fitness_and_inds():
         """Initializes the fitness and definition of individuals"""
-        creator.create("FitnessMin", self.Fitness, weights=(-1.0,)) # Just Fitness
+
+        class Fitness(base.Fitness):
+            def __init__(self):
+                super();
+                self.__fitness_score = None
+
+            @property
+            def fitness_score(self):
+                return self.values[0]
+
+            @fitness_score.setter
+            def fitness_score(self, fitness_score):
+                self.__fitness_score = fitness_score
+                if fitness_score:
+                    # WARNING:
+                    # Setting values breaks alot of things:
+                    # self.__fitness_score is reset to None
+                    # after setting values, so you should only
+                    # set values after all the scores you require are set
+                    self.values = (fitness_score,)
+
+            @fitness_score.deleter
+            def fitness_score(self):
+                del self.__fitness_score
+
+            def delValues(self):
+                super().delValues()
+                del self.__fitness_score
+
+        creator.create("FitnessMin", Fitness, weights=(-1.0,)) # Just Fitness
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
 
 

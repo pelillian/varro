@@ -13,34 +13,6 @@ from varro.algo.strategies.sga import StrategySGA
 
 class StrategyNSES(StrategySGA):
 
-    class Novelty(base.Fitness):
-        def __init__(self):
-            super();
-            self.__novelty_score = None
-
-        @property
-        def novelty_score(self):
-            return self.values[0]
-
-        @novelty_score.setter
-        def novelty_score(self, novelty_score):
-            self.__novelty_score = novelty_score
-            if novelty_score:
-                # WARNING:
-                # Setting values breaks alot of things:
-                # self.__novelty_score is reset to None
-                # after setting values, so you should only
-                # set values after all the scores you require are set
-                self.values = (novelty_score,)
-
-        @novelty_score.deleter
-        def novelty_score(self):
-            del self.__novelty_score
-
-        def delValues(self):
-            super().delValues()
-            del self.__novelty_score
-
     #############
     # VARIABLES #
     #############
@@ -52,9 +24,39 @@ class StrategyNSES(StrategySGA):
     #############
     # FUNCTIONS #
     #############
-    def init_fitness_and_inds(self):
-        """Initializes the fitness and definition of individuals"""
-        creator.create("NoveltyMax", self.Novelty, weights=(1.0,)) # Just Novelty
+    @staticmethod
+    def init_fitness_and_inds():
+        """Initializes the novelty and definition of individuals"""
+
+        class Novelty(base.Fitness):
+            def __init__(self):
+                super();
+                self.__novelty_score = None
+
+            @property
+            def novelty_score(self):
+                return self.values[0]
+
+            @novelty_score.setter
+            def novelty_score(self, novelty_score):
+                self.__novelty_score = novelty_score
+                if novelty_score:
+                    # WARNING:
+                    # Setting values breaks alot of things:
+                    # self.__novelty_score is reset to None
+                    # after setting values, so you should only
+                    # set values after all the scores you require are set
+                    self.values = (novelty_score,)
+
+            @novelty_score.deleter
+            def novelty_score(self):
+                del self.__novelty_score
+
+            def delValues(self):
+                super().delValues()
+                del self.__novelty_score
+
+        creator.create("NoveltyMax", Novelty, weights=(1.0,)) # Just Novelty
         creator.create("Individual", np.ndarray, fitness=creator.NoveltyMax)
 
 

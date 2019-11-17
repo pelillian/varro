@@ -15,48 +15,6 @@ from varro.algo.strategies.ns_es import StrategyNSES
 
 class StrategyNSRES(StrategyNSES):
 
-    class Fitness(base.Fitness):
-        def __init__(self):
-            super();
-            self.__fitness_score = None
-            self.__novelty_score = None
-
-        @property
-        def fitness_score(self):
-            return self.__fitness_score if self.__fitness_score else self.values[0]
-
-        @fitness_score.setter
-        def fitness_score(self, fitness_score):
-            self.__fitness_score = fitness_score
-
-        @fitness_score.deleter
-        def fitness_score(self):
-            del self.__fitness_score
-
-        @property
-        def novelty_score(self):
-            return self.__novelty_score if self.__novelty_score else self.values[1]
-
-        @novelty_score.setter
-        def novelty_score(self, novelty_score):
-            self.__novelty_score = novelty_score
-            if novelty_score:
-                # WARNING:
-                # Setting values breaks alot of things:
-                # self.__novelty_score is reset to None
-                # after setting values, so you should only
-                # set values after all the scores you require are set
-                self.values = (self.fitness_score, novelty_score,)
-
-        @novelty_score.deleter
-        def novelty_score(self):
-            del self.__novelty_score
-
-        def delValues(self):
-            super().delValues()
-            del self.__fitness_score
-            del self.__novelty_score
-
     #############
     # VARIABLES #
     #############
@@ -68,9 +26,53 @@ class StrategyNSRES(StrategyNSES):
     #############
     # FUNCTIONS #
     #############
-    def init_fitness_and_inds(self):
+    @staticmethod
+    def init_fitness_and_inds():
         """Initializes the fitness and definition of individuals"""
-        creator.create("FitnessMulti", self.Fitness, weights=(-1.0, 1.0,)) # Both Fitness and Novelty
+
+        class Fitness(base.Fitness):
+            def __init__(self):
+                super();
+                self.__fitness_score = None
+                self.__novelty_score = None
+
+            @property
+            def fitness_score(self):
+                return self.__fitness_score if self.__fitness_score else self.values[0]
+
+            @fitness_score.setter
+            def fitness_score(self, fitness_score):
+                self.__fitness_score = fitness_score
+
+            @fitness_score.deleter
+            def fitness_score(self):
+                del self.__fitness_score
+
+            @property
+            def novelty_score(self):
+                return self.__novelty_score if self.__novelty_score else self.values[1]
+
+            @novelty_score.setter
+            def novelty_score(self, novelty_score):
+                self.__novelty_score = novelty_score
+                if novelty_score:
+                    # WARNING:
+                    # Setting values breaks alot of things:
+                    # self.__novelty_score is reset to None
+                    # after setting values, so you should only
+                    # set values after all the scores you require are set
+                    self.values = (self.fitness_score, novelty_score,)
+
+            @novelty_score.deleter
+            def novelty_score(self):
+                del self.__novelty_score
+
+            def delValues(self):
+                super().delValues()
+                del self.__fitness_score
+                del self.__novelty_score
+
+        creator.create("FitnessMulti", Fitness, weights=(-1.0, 1.0,)) # Both Fitness and Novelty
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)
 
 
@@ -104,6 +106,7 @@ class StrategyNSRES(StrategyNSES):
         """
         # Fill the dictionary using the dict(key=value[, ...]) constructor
         cp = dict(pop=self.pop,
+                  strategy=self.name,
                   curr_gen=self.curr_gen,
                   halloffame=self.halloffame,
                   paretofront=self.paretofront,

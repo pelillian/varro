@@ -174,7 +174,20 @@ def predict(model_type,
     # is the individual that has the best first fitness value
     # ever seen, according to the weights provided to the fitness at creation time.
     with open(ckpt, "rb") as cp_file:
-        best_ind = pickle.load(cp_file)["halloffame"][0]
+        # Initialize individual based on strategy
+        cp = pickle.load(cp_file)
+        if cp['strategy'] == 'sga':
+            StrategySGA.init_fitness_and_inds()
+        elif cp['strategy'] == 'ns-es':
+            StrategyNSES.init_fitness_and_inds()
+        elif cp['strategy'] == 'nsr-es':
+            StrategyNSRES.init_fitness_and_inds()
+        elif cp['strategy'] == 'cma-es':
+            raise NotImplementedError
+        else:
+            raise NotImplementedError
+
+        best_ind = ["halloffame"][0]
 
     # Load Weights into model using individual
     model.load_parameters(best_ind)
