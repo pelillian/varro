@@ -46,7 +46,7 @@ class StrategyNSRES(StrategyNSES):
                 # self.__novelty_score is reset to None
                 # after setting values, so you should only
                 # set values after all the scores you require are set
-                self.values = (self.__fitness_score, novelty_score,)
+                self.values = (self.fitness_score, novelty_score,)
 
         @novelty_score.deleter
         def novelty_score(self):
