@@ -8,38 +8,47 @@ import numpy as np
 import random
 from deap import base, creator, tools
 from collections import namedtuple
+from functools import partial
 
 from varro.algo.strategies.strategy import Strategy
 
 
 class StrategySGA(Strategy):
 
+    class Fitness(base.Fitness):
+        def __init__(self):
+            super();
+            self.__fitness_score = None
+
+        @property
+        def fitness_score(self):
+            return self.values[0]
+
+        @fitness_score.setter
+        def fitness_score(self, fitness_score):
+            self.__fitness_score = fitness_score
+            if fitness_score:
+                # WARNING:
+                # Setting values breaks alot of things:
+                # self.__fitness_score is reset to None
+                # after setting values, so you should only
+                # set values after all the scores you require are set
+                self.values = (fitness_score,)
+
+        @fitness_score.deleter
+        def fitness_score(self):
+            del self.__fitness_score
+
+        def delValues(self):
+            super().delValues()
+            del self.__fitness_score
+
     #############
     # FUNCTIONS #
     #############
     def init_fitness_and_inds(self):
         """Initializes the fitness and definition of individuals"""
-
-        class Scores(list):
-            def __init__(self, fitness_score=None):
-                super().__init__([fitness_score,])
-                self.fitness_score = fitness_score
-
-            @property
-            def fitness_score(self):
-                return self.__fitness_score
-
-            @fitness_score.setter
-            def fitness_score(self, fitness_score):
-                self.__fitness_score = fitness_score
-                super().__setitem__(0, fitness_score)
-
-            def __setitem__(self, key, value):
-                if key == 0:
-                    self.fitness_score = value
-
-        Fitness = type('Fitness', (base.Fitness,), dict(values=Scores()))
-        creator.create("FitnessMin", Fitness, weights=(-1.0,)) # Just Fitness
+        creator.create("FitnessMin", self.Fitness, weights=(-1.0,)) # Just Fitness
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
 
 
@@ -121,7 +130,7 @@ class StrategySGA(Strategy):
             self.model.load_parameters(ind)
 
             # Calculate the Fitness score of the individual
-            ind.fitness.values.fitness_score = super().fitness_score()
+            ind.fitness.fitness_score = super().fitness_score()
 
         return len(invalid_inds)
 
@@ -153,7 +162,7 @@ class StrategySGA(Strategy):
         # record = self.stats.compile(self.pop)
         # self.logbook.record(gen=self.curr_gen, evals=num_invalid_inds, **record)
 
-        return np.mean([ind.fitness.values.fitness_score for ind in pop])
+        return np.mean([ind.fitness.fitness_score for ind in pop])
 
 
     def generate_offspring(self):

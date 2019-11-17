@@ -128,9 +128,9 @@ def evolve(strategy,
         # is the individual that has the best first fitness value
         # ever seen, according to the weights provided to the fitness at creation time.
         if strategy.name == 'sga' or strategy.name == 'nsr-es':
-            fittest_ind_score = strategy.halloffame[0].fitness.values.fitness_score
+            fittest_ind_score = strategy.halloffame[0].fitness.fitness_score
         elif strategy.name == 'ns-es':
-            fittest_ind_score = strategy.halloffame[0].fitness.values.novelty_score
+            fittest_ind_score = strategy.halloffame[0].fitness.novelty_score
         else:
             raise NotImplementedError
 

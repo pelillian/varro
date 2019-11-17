@@ -13,6 +13,34 @@ from varro.algo.strategies.sga import StrategySGA
 
 class StrategyNSES(StrategySGA):
 
+    class Novelty(base.Fitness):
+        def __init__(self):
+            super();
+            self.__novelty_score = None
+
+        @property
+        def novelty_score(self):
+            return self.values[0]
+
+        @novelty_score.setter
+        def novelty_score(self, novelty_score):
+            self.__novelty_score = novelty_score
+            if novelty_score:
+                # WARNING:
+                # Setting values breaks alot of things:
+                # self.__novelty_score is reset to None
+                # after setting values, so you should only
+                # set values after all the scores you require are set
+                self.values = (novelty_score,)
+
+        @novelty_score.deleter
+        def novelty_score(self):
+            del self.__novelty_score
+
+        def delValues(self):
+            super().delValues()
+            del self.__novelty_score
+
     #############
     # VARIABLES #
     #############
@@ -26,27 +54,7 @@ class StrategyNSES(StrategySGA):
     #############
     def init_fitness_and_inds(self):
         """Initializes the fitness and definition of individuals"""
-        
-        class Scores(list):
-            def __init__(self, novelty_score=None):
-                super().__init__([novelty_score,])
-                self.novelty_score = novelty_score
-
-            @property
-            def novelty_score(self):
-                return self.__novelty_score
-
-            @novelty_score.setter
-            def novelty_score(self, novelty_score):
-                self.__novelty_score = novelty_score
-                super().__setitem__(0, novelty_score)
-
-            def __setitem__(self, key, value):
-                if key == 0:
-                    self.novelty_score = value
-
-        Novelty = type('Novelty', (base.Fitness,), dict(values=Scores()))
-        creator.create("NoveltyMax", Novelty, weights=(1.0,)) # Just Novelty
+        creator.create("NoveltyMax", self.Novelty, weights=(1.0,)) # Just Novelty
         creator.create("Individual", np.ndarray, fitness=creator.NoveltyMax)
 
 
@@ -98,7 +106,7 @@ class StrategyNSES(StrategySGA):
             # Ignore first value as it'll be 0 since
             # there's an instance of the same vector in
             # population
-            ind.fitness.values.novelty_score = np.mean(dist.flatten()[1:])
+            ind.fitness.novelty_score = np.mean(dist.flatten()[1:])
 
 
     def evaluate(self, pop):
@@ -128,7 +136,7 @@ class StrategyNSES(StrategySGA):
         # record = self.stats.compile(self.pop)
         # self.logbook.record(gen=self.curr_gen, evals=len(self.pop), **record)
 
-        return np.mean([ind.fitness.values.novelty_score for ind in pop])
+        return np.mean([ind.fitness.novelty_score for ind in pop])
 
 
     def generate_offspring(self):
