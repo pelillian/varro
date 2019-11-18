@@ -37,42 +37,68 @@ def es_toolbox(strategy_name,
     # Initialzie Toolbox
     toolbox = base.Toolbox()
 
-    # Defines Individual
+    # Defining tools specific to model
     if model_type == "nn":
+
+        # ATTRIBUTE
         toolbox.register("attribute", random.random)
+
+        # INDIVIDUAL
         toolbox.register("individual",
                          getattr(tools, 'initRepeat'),
                          getattr(creator, 'Individual'),
                          getattr(toolbox, 'attribute'),
                          n=i_shape)
+
+        # MUTATION
         toolbox.register("mutate",
                          getattr(tools, 'mutGaussian'),
                          mu=imutmu,
                          sigma=imutsigma,
                          indpb=imutpb)
+
+        # POPULATION
+        toolbox.register("population",
+                         getattr(tools, 'initRepeat'),
+                         list,
+                         getattr(toolbox, 'individual'))
+
+        # MATING
+        toolbox.register("mate",
+                         getattr(tools, 'cxTwoPoint'))
+
     elif model_type == "fpga":
+
+        # ATTRIBUTE
         toolbox.register("attribute", np.random.choice, [False, True])
         size = np.prod(i_shape)
 
+        # INDIVIDUAL
         def init_individual(ind_class):
             return ind_class(np.random.choice([False, True], size=size))
         toolbox.register("individual",
                          init_individual,
                          getattr(creator, 'Individual'))
 
+        # MUTATION
         def mutate_individual(ind):
             idx = np.argwhere(np.random.choice([False, True], size, p=[0.9, 0.1]))
             ind[idx] = np.invert(ind[idx])
             return ind
         toolbox.register("mutate", mutate_individual)
 
-    toolbox.register("population",
-                     getattr(tools, 'initRepeat'),
-                     list,
-                     getattr(toolbox, 'individual'))
-    toolbox.register("mate",
-                     getattr(tools, 'cxTwoPoint'))
+        # POPULATION
+        toolbox.register("population",
+                         getattr(tools, 'initRepeat'),
+                         list,
+                         getattr(toolbox, 'individual'))
 
+        # MATING
+        def mate_individuals(ind1, ind2):
+            import pdb; pdb.set_trace()
+        toolbox.register("mate", mate_individuals)
+
+    # SELECTION METHOD
     if strategy_name == 'nsr-es':
         toolbox.register("select_elite",
                          getattr(tools, 'selSPEA2')) # Use Multi-objective selection method
@@ -85,6 +111,7 @@ def es_toolbox(strategy_name,
         toolbox.register("select",
                          getattr(tools, 'selRandom'))
 
+    # EVALUATE
     toolbox.register("evaluate",
                      evaluate)
 
