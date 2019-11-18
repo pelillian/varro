@@ -1,5 +1,5 @@
 """
-This module contains the utility functions to run the experiment.py
+This module contains the utility functions to run experiment.py
 """
 
 import os
