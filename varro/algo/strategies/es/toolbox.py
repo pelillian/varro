@@ -94,9 +94,8 @@ def es_toolbox(strategy_name,
                          getattr(toolbox, 'individual'))
 
         # MATING
-        def mate_individuals(ind1, ind2):
-            import pdb; pdb.set_trace()
-        toolbox.register("mate", mate_individuals)
+        from varro.fpga.cross_over import cross_over
+        toolbox.register("mate", cross_over)
 
     # SELECTION METHOD
     if strategy_name == 'nsr-es':
