@@ -1,7 +1,7 @@
 const int CLOCK_SIGNAL = 13;
 const int INPUT_ADC_READ = A0; 
 
-int* adjacentPorts = {A1, A2, A3, A4, A5};
+int adjacentPorts[] = {A1, A2, A3, A4, A5};
 
 void setup()
 {
@@ -22,7 +22,7 @@ int portIndex = 0;
 void loop()
 {
   // Alterate the clock signal
-  char* buf[50]; 
+  char buf[50]; 
   sprintf(buf, "Setting clock signal to %d", output); 
   Serial.println(buf); 
   digitalWrite(CLOCK_SIGNAL, output); 
@@ -30,9 +30,16 @@ void loop()
 
   // increment count to correspond with pin on FPGA
   sprintf(buf, "Attempting to read pin %d", adjacentPorts[portIndex]);  
-      
-  // TODO: Sample the analong input pin
-  // TODO: Print information over serial
+  // TODO print buf for the above message
+ 
+  // TODO increment port index accordingly
+
+  // Sample the analong input pin
+  int val = analogRead(INPUT_ADC_READ);
+
+  // Print information over serial
+  sprintf(buf, "Read an analog value of %d", val); 
+  Serial.println(buf); 
   Serial.flush();
-  delay(100); 
+  delay(960); 
 }
