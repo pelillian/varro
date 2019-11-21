@@ -20,7 +20,7 @@ def send_char(arduino, val):
 
     return retval
 
-def send_and_recieve(arduino, val, wait_time):
+def send_and_receive(arduino, val, wait_time):
     send_char(arduino, val)
 
     time.sleep(wait_time)
@@ -37,11 +37,8 @@ if __name__=="__main__":
     while True:
         # Serial write section
         arduino.flush()
-
+        msg = send_and_receive(arduino, 0, 0.960)
         # Serial read section
-        print("Python message: {}".format(val))
-        msg = send_and_recieve(arduino, val, 0.960)
-        print ("Message from arduino: ")
         print (msg.decode("utf-8"))
 
         val = 0 if val else 1

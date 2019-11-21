@@ -1,14 +1,12 @@
 const int CLOCK_SIGNAL = 13;
-const int INPUT_ADC_READ = A0; 
 
-int adjacentPorts[] = {A1, A2, A3, A4, A5};
+int adjacentPorts[] = {A0, A1, A2, A3, A4, A5};
 
 void setup()
 {
 
   Serial.begin(9600);  // initialize serial communications at 9600 bps
   pinMode(CLOCK_SIGNAL, OUTPUT);
-  pinMode(INPUT_ADC_READ, INPUT); 
   // int output = 0; 
   // Config all pins that will have inputs at some point
   for (int port : adjacentPorts) {
@@ -27,19 +25,13 @@ void loop()
   Serial.println(buf); 
   digitalWrite(CLOCK_SIGNAL, output); 
   output ^= 1; 
-
-  // increment count to correspond with pin on FPGA
-  sprintf(buf, "Attempting to read pin %d", adjacentPorts[portIndex]);  
-  // TODO print buf for the above message
- 
-  // TODO increment port index accordingly
-
-  // Sample the analong input pin
-  int val = analogRead(INPUT_ADC_READ);
-
-  // Print information over serial
-  sprintf(buf, "Read an analog value of %d", val); 
-  Serial.println(buf); 
+  
+  // print out the pin readings for each analog pin
+  for (int pin : adjacentPorts) {
+    int val = analogRead(pin);
+    sprintf(buf, "%d: %d", pin, val);
+    Serial.println(buf);
+  }
   Serial.flush();
   delay(960); 
 }
