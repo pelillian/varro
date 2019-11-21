@@ -1,12 +1,3 @@
-module pin_out (
-p_out, p_in); 
-
-output p_out;
-input p_in; 
-
-assign p_out = p_in; 
-
-endmodule
 
 module analog_read(A0, A1, A2, A3, A4, A5, arduino_clk);
 

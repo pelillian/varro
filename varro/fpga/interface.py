@@ -77,13 +77,25 @@ class FpgaConfig:
 
         results = []
         for datum in data:
-            # Send the data and recieves a string back
-            return_value = send_and_recieve(arduino_connection, datum, 0.2)
+            # Format data to be written to digital pins on Arduino
+            # For now, just send either all ones or all zero
+            value = str(data[0])
+            msg = "".join([value] * 12)
 
-            # Parse the correct value from the string
-            return_value = return_value.decode("utf-8").split("Read value: ", 1)[1][0]
+            # TODO: Split send and receive into separate functions
+            # Send formatted data to Arduino
+            return_value = send_and_receive(arduino_connection, msg, 0.96)
 
-            results.append(int(return_value))
+            # Retrieve raw data from analog pins
+            return_value = send_and_receive(arduino_connection, msg, 0.96)
+
+            # convert data into format usable for evaluation
+            data = return_value.decode("utf-8")
+            data = data.split(",")
+            for num in data: 
+                num = int(num)
+                num /= 1024
+
+            results.append(data)
 
         return results
-
