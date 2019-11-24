@@ -2,6 +2,7 @@
 This module defines the mating protocol to be used for FPGA evolutionary algos
 """
 
+import numpy as np
 import pytrellis
 
 from varro.fpga.interface import FpgaConfig
