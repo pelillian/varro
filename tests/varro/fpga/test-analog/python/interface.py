@@ -10,7 +10,7 @@ from varro.cython.fast_cram import load_cram_fast
 from varro.misc.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
 from varro.fpga.util import make_path, get_new_id, get_config_dir
 from varro.fpga.flash import flash_config_file
-from varro.arduino.communication import initialize_connection, send_and_recieve
+from varro.arduino.communication import initialize_connection, send, receive
 
 pytrellis.load_database(PRJTRELLIS_DATABASE)
 arduino_connection = initialize_connection()
@@ -80,11 +80,7 @@ class FpgaConfig:
             value = str(data[0])
             msg = "".join([value] * 12)
 
-            # TODO: Split send and receive into separate functions
-            # Send formatted data to Arduino
-            return_value = send_and_receive(arduino_connection, msg, 0.96)
-
-            # Retrieve raw data from analog pins
+            # Send and receive formatted data 
             return_value = send_and_receive(arduino_connection, msg, 0.96)
 
             # convert data into format usable for evaluation
