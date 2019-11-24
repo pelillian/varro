@@ -29,6 +29,12 @@ def send_and_receive(arduino, val, wait_time):
 
     return msg
 
+def send(arduino, val):
+    send_char(arduino, val)
+
+def receive(arduino):
+    msg = arduino.read(arduino,inWaiting())
+    return msg
 
 if __name__=="__main__":
     arduino = initialize_connection()
