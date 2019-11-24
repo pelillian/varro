@@ -7,6 +7,7 @@ import json
 import pickle
 import random
 import logging
+import logaugment
 import numpy as np
 import functools
 from tqdm import tqdm
@@ -52,13 +53,24 @@ def evolve(strategy,
     make_path(experiment_checkpoints_dir)
 
     # Set Logging configuration
-    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    log_fmt = '%(asctime)s - %(time_since_last)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(filename=experiment_logs_file,
                         level=logging.INFO,
                         format=log_fmt)
 
-    # Get logger
     logger = logging.getLogger(__name__)
+
+    def process_record(record):
+        now = datetime.utcnow()
+        try:
+            delta = now - process_record.now
+        except AttributeError:
+            delta = 0
+        process_record.now = now
+        return {'time_since_last': delta}
+
+    logaugment.add(logger, process_record)
+ 
     logger.info('Start Evolution ...')
     logger.info('strategy: {}'.format(strategy.name))
     logger.info('problem_type: {}'.format(strategy.problem.name))
