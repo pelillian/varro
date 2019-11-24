@@ -6,6 +6,7 @@ import os
 from os.path import join
 import pytrellis
 
+from varro.cython.fast_cram import load_cram_fast
 from varro.misc.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
 from varro.fpga.util import make_path, get_new_id, get_config_dir
 from varro.fpga.flash import flash_config_file
@@ -39,10 +40,7 @@ class FpgaConfig:
         return self.base_file_name + ".config"
 
     def load_cram(self, config_data):
-        # TODO: Speed this loop up using C++
-        for i in range(self.chip.cram.frames()):
-            for j in range(self.chip.cram.bits()):
-                self.chip.cram.set_bit(i, j, bool(config_data[i,j]))
+        load_cram_fast(self.chip.cram, config_data)
 
     def write_config_file(self):
         with open(self.config_file, "w") as f:
