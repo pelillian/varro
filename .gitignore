@@ -171,6 +171,7 @@ tags
 # data & bitstream folders
 data
 config
+logs
 
 # arduino flashing
 build-pro/
