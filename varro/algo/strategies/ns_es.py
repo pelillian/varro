@@ -54,7 +54,7 @@ class StrategyNSES(StrategySGA):
 
             def delValues(self):
                 super().delValues()
-                del self.__novelty_score
+                del self.novelty_score
 
         creator.create("NoveltyMax", Novelty, weights=(1.0,)) # Just Novelty
         creator.create("Individual", np.ndarray, fitness=creator.NoveltyMax)

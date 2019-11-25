@@ -48,7 +48,7 @@ class StrategySGA(Strategy):
 
             def delValues(self):
                 super().delValues()
-                del self.__fitness_score
+                del self.fitness_score
 
         creator.create("FitnessMin", Fitness, weights=(-1.0,)) # Just Fitness
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)

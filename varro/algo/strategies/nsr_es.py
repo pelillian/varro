@@ -69,8 +69,8 @@ class StrategyNSRES(StrategyNSES):
 
             def delValues(self):
                 super().delValues()
-                del self.__fitness_score
-                del self.__novelty_score
+                del self.fitness_score
+                del self.novelty_score
 
         creator.create("FitnessMulti", Fitness, weights=(-1.0, 1.0,)) # Both Fitness and Novelty
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)
