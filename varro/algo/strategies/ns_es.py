@@ -2,6 +2,7 @@
 This module contains the class for Simple Genetic Algorithm strategy
 """
 
+from scipy.stats import wasserstein_distance
 import numpy as np
 import random
 from sklearn.neighbors import BallTree
@@ -99,7 +100,10 @@ class StrategyNSES(StrategySGA):
             k: The nearest k neighbors will be used for novelty calculation
         """
         # Init BallTree to find k-Nearest Neighbors
-        tree = BallTree(np.asarray(pop), metric=self.novelty_metric)
+        if self.novelty_metric == 'wasserstein':
+            tree = BallTree(np.asarray(pop), metric='pyfunc', func=wasserstein_distance)
+        else:
+            tree = BallTree(np.asarray(pop), metric=self.novelty_metric)
 
         for ind in pop:
 
