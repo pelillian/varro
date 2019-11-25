@@ -50,7 +50,7 @@ class StrategyNSES(StrategySGA):
 
             @novelty_score.deleter
             def novelty_score(self):
-                del self.__novelty_score
+                del self.novelty_score
 
             def delValues(self):
                 super().delValues()

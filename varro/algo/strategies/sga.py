@@ -44,7 +44,7 @@ class StrategySGA(Strategy):
 
             @fitness_score.deleter
             def fitness_score(self):
-                del self.__fitness_score
+                del self.fitness_score
 
             def delValues(self):
                 super().delValues()

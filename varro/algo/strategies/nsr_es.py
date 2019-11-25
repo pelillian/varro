@@ -46,7 +46,7 @@ class StrategyNSRES(StrategyNSES):
 
             @fitness_score.deleter
             def fitness_score(self):
-                del self.__fitness_score
+                del self.fitness_score
 
             @property
             def novelty_score(self):
@@ -65,7 +65,7 @@ class StrategyNSRES(StrategyNSES):
 
             @novelty_score.deleter
             def novelty_score(self):
-                del self.__novelty_score
+                del self.novelty_score
 
             def delValues(self):
                 super().delValues()
