@@ -46,7 +46,8 @@ class StrategyNSRES(StrategyNSES):
 
             @fitness_score.deleter
             def fitness_score(self):
-                del self.fitness_score
+                if hasattr(self, '__fitness_score'):
+                    del self.__fitness_score
 
             @property
             def novelty_score(self):
@@ -65,12 +66,15 @@ class StrategyNSRES(StrategyNSES):
 
             @novelty_score.deleter
             def novelty_score(self):
-                del self.novelty_score
+                if hasattr(self, '__novelty_score'):
+                    del self.__novelty_score
 
             def delValues(self):
                 super().delValues()
-                del self.fitness_score
-                del self.novelty_score
+                if hasattr(self, '__fitness_score'):
+                    del self.__fitness_score
+                if hasattr(self, '__novelty_score'):
+                    del self.__novelty_score
 
         creator.create("FitnessMulti", Fitness, weights=(-1.0, 1.0,)) # Both Fitness and Novelty
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)

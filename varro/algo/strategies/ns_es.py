@@ -50,11 +50,13 @@ class StrategyNSES(StrategySGA):
 
             @novelty_score.deleter
             def novelty_score(self):
-                del self.novelty_score
+                if hasattr(self, '__novelty_score'):
+                    del self.__novelty_score
 
             def delValues(self):
                 super().delValues()
-                del self.novelty_score
+                if hasattr(self, '__novelty_score'):
+                    del self.__novelty_score
 
         creator.create("NoveltyMax", Novelty, weights=(1.0,)) # Just Novelty
         creator.create("Individual", np.ndarray, fitness=creator.NoveltyMax)
