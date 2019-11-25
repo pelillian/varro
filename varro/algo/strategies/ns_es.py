@@ -2,6 +2,7 @@
 This module contains the class for Simple Genetic Algorithm strategy
 """
 
+from scipy.stats import wasserstein_distance
 import numpy as np
 import random
 from sklearn.neighbors import BallTree
@@ -50,11 +51,13 @@ class StrategyNSES(StrategySGA):
 
             @novelty_score.deleter
             def novelty_score(self):
-                del self.__novelty_score
+                if hasattr(self, '__novelty_score'):
+                    del self.__novelty_score
 
             def delValues(self):
                 super().delValues()
-                del self.__novelty_score
+                if hasattr(self, '__novelty_score'):
+                    del self.__novelty_score
 
         creator.create("NoveltyMax", Novelty, weights=(1.0,)) # Just Novelty
         creator.create("Individual", np.ndarray, fitness=creator.NoveltyMax)
@@ -97,7 +100,10 @@ class StrategyNSES(StrategySGA):
             k: The nearest k neighbors will be used for novelty calculation
         """
         # Init BallTree to find k-Nearest Neighbors
-        tree = BallTree(np.asarray(pop), metric=self.novelty_metric)
+        if self.novelty_metric == 'wasserstein':
+            tree = BallTree(np.asarray(pop), metric='pyfunc', func=wasserstein_distance)
+        else:
+            tree = BallTree(np.asarray(pop), metric=self.novelty_metric)
 
         for ind in pop:
 

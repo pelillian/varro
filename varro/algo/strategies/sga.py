@@ -44,11 +44,13 @@ class StrategySGA(Strategy):
 
             @fitness_score.deleter
             def fitness_score(self):
-                del self.__fitness_score
+                if hasattr(self, '__fitness_score'):
+                    del self.__fitness_score
 
             def delValues(self):
                 super().delValues()
-                del self.__fitness_score
+                if hasattr(self, '__fitness_score'):
+                    del self.__fitness_score
 
         creator.create("FitnessMin", Fitness, weights=(-1.0,)) # Just Fitness
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
