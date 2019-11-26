@@ -1,8 +1,7 @@
 """
-This module contains the class for Novelty Search Evolutionary Strategy
+This module contains the class for Covariance-Matrix Adaptation Evolutionary Strategy
 """
 
-from scipy.stats import wasserstein_distance
 import numpy as np
 import random
 from sklearn.neighbors import BallTree

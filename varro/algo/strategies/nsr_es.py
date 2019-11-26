@@ -1,5 +1,5 @@
 """
-This module contains the class for Simple Genetic Algorithm strategy
+This module contains the class for Novelty Search with Reward Evolutionary Strategy
 """
 
 import os

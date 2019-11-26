@@ -6,7 +6,7 @@ import os
 from os.path import join
 import pytrellis
 
-from varro.cython.fast_cram import load_cram_fast
+# from varro.cython.fast_cram import load_cram_fast
 from varro.misc.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
 from varro.fpga.util import make_path, get_new_id, get_config_dir
 from varro.fpga.flash import flash_config_file
@@ -19,6 +19,7 @@ arduino_connection = initialize_connection()
 class FpgaConfig:
     def __init__(self, config_data=None):
         """This class handles flashing and evaluating the FGPA bitstream"""
+        self.FPGA_BITSTREAM_SHAPE = (13294, 1136)
         self.chip = pytrellis.Chip(CHIP_NAME)
         self.id = get_new_id()
         if config_data is not None:
@@ -40,7 +41,19 @@ class FpgaConfig:
         return self.base_file_name + ".config"
 
     def load_cram(self, config_data):
-        load_cram_fast(self.chip.cram, config_data)
+        """Loads ctypes object of the config_data numpy boolean array as CRAM
+
+        Args:
+            config_data (numpy.ndarray(numpy.bool)): 1-D Boolean array representing individual
+
+        """
+        # load_cram_fast(self.chip.cram, config_data)
+
+        # By: Chengyi (Jeff) Chen
+        # https://scipy.github.io/old-wiki/pages/C%2B%2B_Extensions_that_use_NumPy_arrays.html
+        from numpyctypes import c_ndarray
+        c_myarray = c_ndarray(config_data.reshape(self.FPGA_BITSTREAM_SHAPE), dtype=np.bool, ndim=2)
+        self.chip.load_numpy_cram(c_myarray)
 
     def write_config_file(self):
         with open(self.config_file, "w") as f:
@@ -90,7 +103,7 @@ class FpgaConfig:
             # convert data into format usable for evaluation
             data = return_value.decode("utf-8")
             data = data.split(",")
-            for num in data: 
+            for num in data:
                 num = int(num)
                 num /= 1024
 
