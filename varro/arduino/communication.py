@@ -20,15 +20,6 @@ def send_char(arduino, val):
 
     return retval
 
-def send_and_receive(arduino, val, wait_time):
-    send_char(arduino, val)
-
-    time.sleep(wait_time)
-
-    msg = arduino.read(arduino.inWaiting()) # read all characters in buffer
-
-    return msg
-
 def send(arduino, val):
     send_char(arduino, val)
 
