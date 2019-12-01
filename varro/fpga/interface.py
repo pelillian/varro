@@ -5,6 +5,7 @@ This module handles communication of data to the FPGA
 import os
 from os.path import join
 import pytrellis
+from time import time
 
 from varro.cython.fast_cram import load_cram_fast
 from varro.misc.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
@@ -81,7 +82,9 @@ class FpgaConfig:
             msg = "".join([value] * 12)
 
             # Send and receive formatted data 
-            return_value = send_and_receive(arduino_connection, msg, 0.96)
+            send(arduino_connection, msg)
+            time.sleep(0.96)
+            return_value = receive(arduino_connection, msg) 
 
             # convert data into format usable for evaluation
             data = return_value.decode("utf-8")

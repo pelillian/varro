@@ -34,7 +34,9 @@ if __name__=="__main__":
     while True:
         # Serial write section
         arduino.flush()
-        msg = send_and_receive(arduino, 0, 0.960)
+        send(arduino, 0)
+        time.sleep(0.96)
+        msg = receive(arduino)
         # Serial read section
         print (msg.decode("utf-8"))
 
