@@ -1,11 +1,14 @@
 module test_analog (
-D0, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, A0, A1, A2, A3, A4, A5)
+digital0, digital1, digital2, digital3, digital4, digital5, digital6, digital7, digital8, digital9, digital10, digital11, analog0, analog1, analog2, analog3, analog4, analog5);
 
-assign A0 = D0; 
-assign A1 = D1; 
-assign A2 = D2; 
-assign A3 = D3; 
-assign A4 = D4; 
-assign A5 = D5 & D6 & D7 & D8 & D9 & D10 & D11; 
+input digital0, digital1, digital2, digital3, digital4, digital5, digital6, digital7, digital8, digital9, digital10, digital11;
+output analog0, analog1, analog2, analog3, analog4, analog5;
+
+assign analog0 = digital0; 
+assign analog1 = D1; 
+assign analog2 = D2; 
+assign analog3 = D3; 
+assign analog4 = D4; 
+assign analog5 = D5 & D6 & D7 & D8 & D9 & D10 & D11; 
 
 endmodule

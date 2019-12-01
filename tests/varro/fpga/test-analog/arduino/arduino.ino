@@ -56,7 +56,7 @@ void loop()
     Serial.println(buf); 
 
     // Flush serial
-    Serial.flush()
+    Serial.flush();
 }
 
 
