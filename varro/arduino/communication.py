@@ -19,7 +19,8 @@ def send_char(arduino, val):
     return retval
 
 def send(arduino, val):
-    send_char(arduino, val)
+    for c in val:
+        send_char(arduino, c)
 
 def receive(arduino):
     msg = arduino.read(arduino,inWaiting())
