@@ -24,34 +24,35 @@ void loop()
 {
     // Read in data from serial buffer
     char buf[50]; 
-    Serial.readBytes(buf, 50);
+    // Serial.readBytes(buf, 12);
 
     // Activate digital ports based the content of the buffer
-    for (int i = 0; i < sizeof(buf); i++) {
-        
-        // NOTE: We assume that digital pins will only be assigned to 0 or 1
-        char c = buf[i]; 
-        if (c != ',') {
-            if (c == '1') {
-                digitalWrite(digitalPorts[i], HIGH);
-            } else {
-                digitalWrite(digitalPorts[i], LOW);
-            }
-        }
-    }
+//    for (int i = 0; i < sizeof(buf); i++) {
+//        
+//        // NOTE: We assume that digital pins will only be assigned to 0 or 1
+//        char c = buf[i]; 
+//        if (c != ',') {
+//            if (c == '1') {
+//                digitalWrite(digitalPorts[i], HIGH);
+//            } else {
+//                digitalWrite(digitalPorts[i], LOW);
+//            }
+//        }
+//    }
 
     // Wait for 100us for generous propagation delay
-    delayMicroseconds(100); 
+    // delayMicroseconds(100); 
 
     // Read values at analog ports
-    int portValues[sizeof(analogPorts)]; 
-    for (int i = 0; i < sizeof(analogPorts); i++) {
-       portValues[i] = analogRead(analogPorts[i]); 
-    } 
+    // int portValues[sizeof(analogPorts)]; 
+    // for (int i = 0; i < sizeof(analogPorts); i++) {
+    //    portValues[i] = analogRead(analogPorts[i]); 
+    // } 
 
     // Assemble serial message assuming there are 6 analog pins
-    sprintf(buf, "%d,%d,%d,%d,%d,%d", portValues[0], portValues[1], portValues[2], portValues[3], portValues[4], portValues[5], portValues[6]);     
+    // sprintf(buf, "%d,%d,%d,%d,%d,%d", portValues[0], portValues[1], portValues[2], portValues[3], portValues[4], portValues[5], portValues[6]);     
 
+    sprintf(buf, "1,2,3,4,5");
     // Send message to serial
     Serial.println(buf); 
 

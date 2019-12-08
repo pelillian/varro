@@ -1,9 +1,11 @@
+cimport numpy as npx
 import numpy as np
-cimport numpy as np
-
 import pytrellis
 
-def load_cram_fast(cram, np.ndarray config_data):
+DTYPE = np.bool
+ctypedef npx.int8_t DTYPE_t
+
+def load_cram_fast(cram, npx.ndarray[DTYPE_t, ndim=2] config_data):
     cdef int frames = cram.frames()
     cdef int bits_per_frame = cram.bits()
     

@@ -32,12 +32,12 @@ class FpgaConfig:
 
     @property
     def base_file_name(self):
-        """Returns this bitstream's base file name"""
+        """Returns this bitstream's base file name, without a file extension."""
         return join(self.basedir, str(self.id))
 
     @property
     def config_file(self):
-        """Returns this bitstream's base file name"""
+        """Returns this bitstream's config file name"""
         return self.base_file_name + ".config"
 
     def load_cram(self, config_data):
@@ -76,23 +76,24 @@ class FpgaConfig:
 
         results = []
         for datum in data:
-            # Format data to be written to digital pins on Arduino
-            # For now, just send either all ones or all zero
-            value = str(data[0])
-            msg = "".join([value] * 12)
-
-            # Send and receive formatted data 
-            send(arduino_connection, msg)
-            sleep(0.96)
-            return_value = receive(arduino_connection, msg) 
+#            # Format data to be written to digital pins on Arduino
+#            # For now, just send either all ones or all zero
+#            value = str(data[0])
+#            msg = "".join([value] * 12)
+#
+#            # Send and receive formatted data 
+#            # send(arduino_connection, msg)
+#            sleep(0.96)
+            return_value = receive(arduino_connection) 
 
             # convert data into format usable for evaluation
-            data = return_value.decode("utf-8")
-            data = data.split(",")
-            for num in data: 
-                num = int(num)
-                num /= 1024
-
-            results.append(data)
+#            data = return_value.decode("utf-8")
+#            data = data.split(",")
+#            for num in data: 
+#                import pdb; pdb.set_trace()
+#                num = int(num)
+#                num /= 1024
+#
+#            results.append(data)
 
         return results

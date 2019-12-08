@@ -7,6 +7,9 @@ python3 setup.py build_ext --inplace
 python3 setup.py install
 
 LIB=${DIR}/build/lib.linux-x86_64-3.7/varro/cython/fast_cram.cpython-37m-x86_64-linux-gnu.so
-ln -s ${LIB} ${DIR}/$(basename $LIB)
+LINK_LOCATION=${DIR}/$(basename $LIB)
+if [ ! -f ${LINK_LOCATION} ]; then
+    ln -s ${LIB} ${LINK_LOCATION}
+fi
 
 echo "import varro.cython.fast_cram" | python3
