@@ -32,7 +32,7 @@ class FpgaConfig:
 
     @property
     def base_file_name(self):
-        """Returns this bitstream's base file name"""
+        """Returns this bitstream's base file name, without a file extension."""
         return join(self.basedir, str(self.id))
 
     @property
