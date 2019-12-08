@@ -84,7 +84,7 @@ class FpgaConfig:
             # Send and receive formatted data 
             send(arduino_connection, msg)
             time.sleep(0.96)
-            return_value = receive(arduino_connection, msg) 
+            return_value = receive(arduino_connection) 
 
             # convert data into format usable for evaluation
             data = return_value.decode("utf-8")
