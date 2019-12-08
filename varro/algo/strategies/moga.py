@@ -1,6 +1,6 @@
 """
-This module contains the class for Novelty Search with Reward Evolutionary Strategy
--> Unique Individuals are benefitted
+This module contains the class for Multi-objective Genetic Algorithm
+-> Individuals that perform well on multiple objectives are benefitted
 """
 
 import os
@@ -14,81 +14,62 @@ from varro.algo.strategies.strategy import Strategy
 from varro.algo.strategies.ns_es import StrategyNSES
 
 
-class StrategyNSRES(StrategyNSES):
+OBJECTIVES = ['rmse', 'mae', 'wasserstein']
+
+class StrategyMOGA(StrategySGA):
 
     #############
     # VARIABLES #
     #############
     @property
-    def novelty_metric(self):
-        """The distance metric to be used to measure an Individual's novelty"""
-        return self._novelty_metric
+    def objectives(self):
+        """A list of the objectives (fitness scores) that we want to run moga for"""
+        return self._objectives
 
     #############
     # FUNCTIONS #
     #############
     @staticmethod
-    def init_fitness_and_inds():
+    def init_fitness_and_inds(objectives=OBJECTIVES):
         """Initializes the fitness and definition of individuals"""
 
         class Fitness(base.Fitness):
             def __init__(self):
                 super();
-                self.__fitness_score = None
-                self.__novelty_score = None
+                self.__fitness_scores = None
 
             @property
-            def fitness_score(self):
-                return self.__fitness_score if self.__fitness_score else self.values[0]
+            def fitness_scores(self):
+                return self.values
 
-            @fitness_score.setter
-            def fitness_score(self, fitness_score):
-                self.__fitness_score = fitness_score
-
-            @fitness_score.deleter
-            def fitness_score(self):
-                if hasattr(self, '__fitness_score'):
-                    del self.__fitness_score
-
-            @property
-            def novelty_score(self):
-                return self.__novelty_score if self.__novelty_score else self.values[1]
-
-            @novelty_score.setter
-            def novelty_score(self, novelty_score):
-                self.__novelty_score = novelty_score
-                if novelty_score:
+            @fitness_scores.setter
+            def fitness_scores(self, fitness_scores):
+                self.__fitness_scores = fitness_scores
+                if fitness_scores:
                     # WARNING:
                     # Setting values breaks alot of things:
-                    # self.__novelty_score is reset to None
+                    # self.__fitness_score is reset to None
                     # after setting values, so you should only
                     # set values after all the scores you require are set
-                    self.values = (self.fitness_score, novelty_score,)
+                    self.values = fitness_scores
 
-            @novelty_score.deleter
-            def novelty_score(self):
-                if hasattr(self, '__novelty_score'):
-                    del self.__novelty_score
+            @fitness_scores.deleter
+            def fitness_scores(self):
+                if hasattr(self, '__fitness_scores'):
+                    del self.__fitness_scores
 
             def delValues(self):
                 super().delValues()
-                if hasattr(self, '__fitness_score'):
-                    del self.__fitness_score
-                if hasattr(self, '__novelty_score'):
-                    del self.__novelty_score
+                if hasattr(self, '__fitness_scores'):
+                    del self.__fitness_scores
 
-        creator.create("FitnessMulti", Fitness, weights=(-1.0, 1.0,)) # Both Fitness and Novelty
+        creator.create("FitnessMulti", Fitness, weights=tuple(-1.0 for _ in range(objectives))) # Weights for each objective
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)
 
 
     def init_toolbox(self):
         """Initializes the toolbox according to strategy"""
-        # Define specific Fitness and Individual for Novelty Search and Reward (Fitness)
-        self.init_fitness_and_inds()
-
-        # Configure the rest of the toolbox that is independent
-        # of which evolutionary strategy
-        super().config_toolbox()
+        super().init_toolbox()
 
 
     def load_es_vars(self):
@@ -122,6 +103,35 @@ class StrategyNSRES(StrategyNSES):
             pickle.dump(cp, cp_file)
 
 
+    def compute_fitness(self, pop):
+        """Calculates the fitness scores for the entire Population
+
+        Args:
+            pop (list): An iterable of Individual(np.ndarrays) that represent the individuals
+
+        Returns:
+            Number of individuals with invalid fitness scores we updated
+        """
+        # Evaluate the individuals with an invalid fitness or if we are at the start
+        # of the evolutionary algo, AKA curr_gen == 0
+        # (These are the individuals that have not been evaluated before -
+        # individuals at the start of the evolutionary algorithm - or those
+        # that have been mutated / the offspring after crossover with fitness deleted)
+        invalid_inds = [ind for ind in pop if not ind.fitness.valid or self.curr_gen == 0]
+
+        # Get fitness score for each individual with
+        # invalid fitness score in population
+        for ind in invalid_inds:
+
+            # Load Weights into model using individual
+            self.model.load_parameters(ind)
+
+            # Calculate the Fitness score of the individual
+            ind.fitness.fitness_scores = tuple(super().fitness_score(reg_metric=objective) for objective in self.objectives)
+
+        return len(invalid_inds)
+
+
     def evaluate(self, pop):
         """Evaluates an entire population on a dataset on the neural net / fpga
         architecture specified by the model, and calculates the fitness scores for
@@ -138,10 +148,7 @@ class StrategyNSRES(StrategyNSES):
         self.problem.reset_train_set()
 
         # Compute all fitness for population
-        num_invalid_inds = super(StrategyNSES, self).compute_fitness(pop)
-
-        # Calculate the Novelty scores for population
-        super().compute_novelty(pop)
+        num_invalid_inds = self.compute_fitness(pop)
 
         # The population is entirely replaced by the
         # evaluated offspring
@@ -170,12 +177,10 @@ class StrategyNSRES(StrategyNSES):
     ########
     # INIT #
     ########
-    def __init__(self, novelty_metric, **kwargs):
+    def __init__(self, **kwargs):
 
         # Call Strategy constructor
-        Strategy.__init__(self, name='nsr-es', **kwargs)
+        Strategy.__init__(self, name='moga', **kwargs)
 
-        # Set Novelty metric
-        # Supported novelty metrics:
-        # https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.DistanceMetric.html#sklearn.neighbors.DistanceMetric
-        self._novelty_metric = novelty_metric
+        # Set Objectives (Fitness scores) to optimize over
+        self._objectives = OBJECTIVES

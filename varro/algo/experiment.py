@@ -58,6 +58,9 @@ def fit(model_type,
         halloffamesize (float): Percentage of individuals in population we store in the HallOfFame / Archive
         grid_search (bool): Whether grid search will be in effect
 
+    Returns:
+        fittest_ind_score: Scalar of the best individual in the population's fitness score
+
     """
     # 1. Choose Problem and get the specific evaluation function
     # for that problem
@@ -126,8 +129,10 @@ def fit(model_type,
         raise NotImplementedError
 
     # 4. Evolve
-    pop, avg_fitness_scores = evolve(strategy=strategy,
-                                     grid_search=grid_search)
+    pop, avg_fitness_scores, fittest_ind_score = evolve(strategy=strategy,
+                                                        grid_search=grid_search)
+
+    return fittest_ind_score
 
 
 def predict(model_type,
