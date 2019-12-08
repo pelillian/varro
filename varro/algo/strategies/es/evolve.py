@@ -37,6 +37,7 @@ def evolve(strategy,
     Returns:
         pop: Population of the fittest individuals so far
         avg_fitness_scores: A list of the average fitness scores for each generation
+        fittest_ind_score: The Best Individual's fitness score
 
     """
     ########################################################
@@ -196,4 +197,4 @@ def evolve(strategy,
                     break;
 
 
-    return strategy.pop, avg_fitness_scores
+    return strategy.pop, avg_fitness_scores, fittest_ind_score

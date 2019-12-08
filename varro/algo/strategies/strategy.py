@@ -6,7 +6,8 @@ import random
 from abc import ABC, abstractmethod
 import numpy as np
 from sklearn.metrics import accuracy_score
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+from scipy.stats import wasserstein_distance
 from math import sqrt
 from deap import base, creator, tools
 
@@ -149,12 +150,17 @@ class Strategy(ABC):
                                   imutsigma=self.imutsigma)
 
 
-    def fitness_score(self):
+    def fitness_score(self, reg_metric='rmse'):
         """Calculates the fitness score for a particular
         model configuration (after loading parameters in the model) on the problem specified
 
+        Args:
+            reg_metric (str): The regression metric to be used to measure how fit a model is [Minimization Objective]
+
         Returns:
             Returns the fitness score of the model w.r.t. the problem specified
+            CLASSIFICATION fitness score: Accuracy
+            REGRESSION fitness score: Root Mean Squared Error
         """
         # Predict labels
         y_pred = np.array(self.model.predict(self.problem.X_train, problem=self.problem))
@@ -169,8 +175,9 @@ class Strategy(ABC):
             return -categorical_accuracy
 
         elif self.problem.approx_type == Problem.REGRESSION:
-            rmse = sqrt(mean_squared_error(self.problem.y_train, y_pred))
-            return rmse
+            return sqrt(mean_squared_error(self.problem.y_train, y_pred)) if reg_metric == 'rmse' \
+                    else mean_absolute_error(self.problem.y_train, y_pred) if reg_metric == 'mae' \
+                    else wasserstein_distance(self.problem.y_train, y_pred) if reg_metric == 'wasserstein' \
 
         else:
             raise ValueError('Unknown approximation type ' + str(self.problem.approx_type))

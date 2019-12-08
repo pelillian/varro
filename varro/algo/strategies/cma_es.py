@@ -1,5 +1,9 @@
 """
 This module contains the class for Covariance-Matrix Adaptation Evolutionary Strategy
+
+-- UNDER CONSTRUCTION --
+-> Need to implement CMA-ES with Discrete random vectors: https://arxiv.org/pdf/1812.11859.pdf
+
 """
 
 import numpy as np
@@ -11,7 +15,7 @@ from collections import namedtuple
 from varro.algo.strategies.sga import StrategySGA
 
 
-class StrategyNSES(StrategySGA):
+class StrategyCMAES(StrategySGA):
 
     #############
     # VARIABLES #
@@ -163,7 +167,7 @@ class StrategyNSES(StrategySGA):
     def __init__(self, novelty_metric, **kwargs):
 
         # Call Strategy constructor
-        super(StrategySGA, self).__init__(name='ns-es', **kwargs)
+        super(StrategySGA, self).__init__(name='cma-es', **kwargs)
 
         # Set Novelty metric
         # Supported novelty metrics:
