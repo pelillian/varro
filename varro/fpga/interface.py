@@ -37,7 +37,7 @@ class FpgaConfig:
 
     @property
     def config_file(self):
-        """Returns this bitstream's base file name"""
+        """Returns this bitstream's config file name"""
         return self.base_file_name + ".config"
 
     def load_cram(self, config_data):
