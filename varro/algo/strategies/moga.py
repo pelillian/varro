@@ -48,7 +48,7 @@ class StrategyMOGA(StrategySGA):
                 if fitness_scores:
                     # WARNING:
                     # Setting values breaks alot of things:
-                    # self.__fitness_score is reset to None
+                    # self.__fitness_scores is reset to None
                     # after setting values, so you should only
                     # set values after all the scores you require are set
                     self.values = fitness_scores
@@ -63,7 +63,7 @@ class StrategyMOGA(StrategySGA):
                 if hasattr(self, '__fitness_scores'):
                     del self.__fitness_scores
 
-        creator.create("FitnessMulti", Fitness, weights=tuple(-1.0 for _ in range(objectives))) # Weights for each objective
+        creator.create("FitnessMulti", Fitness, weights=tuple(-1.0 for _ in objectives)) # Weights for each objective
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)
 
 
@@ -160,7 +160,7 @@ class StrategyMOGA(StrategySGA):
         # record = self.stats.compile(self.pop)
         # self.logbook.record(gen=self.curr_gen, evals=num_invalid_inds, **record)
 
-        return np.mean([ind.fitness.fitness_score for ind in pop])
+        return np.mean([ind.fitness.fitness_scores[0] for ind in pop])
 
 
     def generate_offspring(self):

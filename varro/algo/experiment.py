@@ -19,6 +19,7 @@ from varro.algo.util import get_args
 from varro.algo.problems import Problem, ProblemFuncApprox, ProblemMNIST
 from varro.algo.strategies.es.evolve import evolve
 from varro.algo.strategies.sga import StrategySGA
+from varro.algo.strategies.moga import StrategyMOGA
 from varro.algo.strategies.ns_es import StrategyNSES
 from varro.algo.strategies.nsr_es import StrategyNSRES
 
@@ -95,6 +96,20 @@ def fit(model_type,
                                imutsigma=imutsigma,
                                ckpt=ckpt,
                                halloffamesize=halloffamesize)
+
+    elif strategy == 'moga':
+        strategy = StrategyMOGA(model=model,
+                                problem=problem,
+                                cxpb=cxpb,
+                                mutpb=mutpb,
+                                popsize=popsize,
+                                elitesize=elitesize,
+                                ngen=ngen,
+                                imutpb=imutpb,
+                                imutmu=imutmu,
+                                imutsigma=imutsigma,
+                                ckpt=ckpt,
+                                halloffamesize=halloffamesize)
     elif strategy == 'ns-es':
         strategy = StrategyNSES(novelty_metric=novelty_metric,
                                 model=model,
@@ -183,6 +198,8 @@ def predict(model_type,
     with open(ckpt, "rb") as cp_file:
         if strategy == 'sga':
             StrategySGA.init_fitness_and_inds()
+        elif strategy == 'moga':
+            StrategyMOGA.init_fitness_and_inds()
         elif strategy == 'ns-es':
             StrategyNSES.init_fitness_and_inds()
         elif strategy == 'nsr-es':

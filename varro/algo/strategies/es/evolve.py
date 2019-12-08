@@ -167,6 +167,8 @@ def evolve(strategy,
             fittest_ind_score = strategy.halloffame[0].fitness.fitness_score
         elif strategy.name == 'ns-es':
             fittest_ind_score = strategy.halloffame[0].fitness.novelty_score
+        elif strategy.name == 'moga':
+            fittest_ind_score = strategy.halloffame[0].fitness.fitness_scores[0] # Gets the first objective
         else:
             raise NotImplementedError
 
