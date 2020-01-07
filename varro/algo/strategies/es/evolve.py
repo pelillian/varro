@@ -12,7 +12,6 @@ import functools
 from tqdm import tqdm
 from deap import base, creator, tools
 from datetime import datetime
-import tensorflow as tf
 
 from varro.misc.util import make_path, get_problem_range, get_tb_fig
 from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH, FREQ, DATE_NAME_FORMAT
@@ -129,19 +128,6 @@ def evolve(strategy,
 
             # Save the checkpoint
             strategy.save_ckpt(exp_ckpt_dir=experiment_checkpoints_dir)
-
-        # Tensorboard checkpointing loads by default
-        if not grid_search:
-            # Load weights into model and make predictions
-            model.load_parameters(strategy.halloffame[0])
-            y_pred = np.array(model.predict(get_problem_range(strategy.problem.name)))
-            # Plot y_pred onto base graph
-            figure = get_tb_fig(strategy.problem.name, y_pred)
-
-            # Convert to image and log
-            with file_writer.as_default():
-                tf.summary.image("gen-{}, {}".format(g, strategy.problem.name),\
-                                                     figure, step=g)
 
         # Best individual's fitness / novelty score,
         # whichever is the first element of the fitness
