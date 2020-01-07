@@ -3,4 +3,4 @@ echo $( pwd )
 echo "Compiling cython"
 bash ${DIR}/varro/cython/build_fast_cram.bash
 echo "Flashing Arduino"
-${DIR}/varro/arduino/flash_arduino.sh ${DIR}/tests/varro/fpga/test-analog/arduino/
+${DIR}/varro/arduino/flash_arduino.sh ${DIR}/varro/arduino/fpga-communication
