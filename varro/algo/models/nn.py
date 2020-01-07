@@ -8,11 +8,10 @@ from datetime import datetime
 
 from varro.algo.models import Model
 from varro.algo.problems import Problem
-from varro.misc.variables import ABS_ALGO_TENSORBOARD_PATH
 
 
 class ModelNN(Model):
-    def __init__(self, problem, tensorboard_logs=True):
+    def __init__(self, problem):
         """Neural network architecture wrapper class specific to a problem
 
         Args:
@@ -21,7 +20,6 @@ class ModelNN(Model):
         """
         from keras.layers import Dense, BatchNormalization
         from keras.models import Sequential
-        from keras.callbacks import TensorBoard
         # Suppress Tensorflow / Keras warnings
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -57,12 +55,6 @@ class ModelNN(Model):
         else:
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
 
-        # Set up tensorboard to logs
-        self.tensorboard_logs = tensorboard_logs
-        if self.tensorboard_logs:
-            self.tensorboard = TensorBoard(log_dir="{}/{}".format(ABS_ALGO_TENSORBOARD_PATH,
-                                                                  datetime.now().strftime("%b-%d-%Y-%H:%M:%S")))
-
         # Set the number of parameters we can change in the architecture
         self.num_parameters_alterable = np.sum([np.prod(layer.shape) for layer in self.model.get_weights()])
 
@@ -89,9 +81,7 @@ class ModelNN(Model):
 
     def predict(self, X, problem=None):
         """Evaluates the model on given data."""
-        if not self.tensorboard_logs:
-            return self.model.predict(X)
-        return self.model.predict(X, callbacks=[self.tensorboard])
+        return self.model.predict(X)
 
     @property
     def parameters_shape(self):

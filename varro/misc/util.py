@@ -9,9 +9,11 @@ def make_path(dir):
     """Ensures a given path exists."""
     os.makedirs(dir, exist_ok=True)
 
-# TFBoard helper fns
-def get_problem_range(problem):
 
+# TFBoard helper fns
+
+def get_problem_range(problem):
+    # Returns np.linspace(x_lower_bound, x_upper_bound, num_steps) for a given problem.__name__
     import numpy as np
 
     if problem == 'sinx':
@@ -34,7 +36,7 @@ def get_problem_range(problem):
         raise ValueError('Problem \'' + str(problem) + '\' not recognised')
 
 def get_tb_fig(problem, y_pred):
-
+    # Returns tf image object for a given problem.__name__ and np array of predictions
     import matplotlib.pyplot as plt
     import io
     import matplotlib.lines as mlines

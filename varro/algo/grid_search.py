@@ -24,7 +24,6 @@
 
 import argparse
 from itertools import product
-import logging
 import numpy as np
 import os
 import pickle
@@ -34,7 +33,7 @@ from varro.misc.variables import GRID_SEARCH_CHECKPOINTS_PATH
 from varro.algo.experiment import fit
 from varro.misc.util import make_path
 
-# Create Logs folder if not created
+# Ensure checkpoints dir is on local
 make_path(GRID_SEARCH_CHECKPOINTS_PATH)
 
 def grid_search():

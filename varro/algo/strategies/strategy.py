@@ -175,9 +175,14 @@ class Strategy(ABC):
             return -categorical_accuracy
 
         elif self.problem.approx_type == Problem.REGRESSION:
-            return sqrt(mean_squared_error(self.problem.y_train, y_pred)) if reg_metric == 'rmse' \
-                    else mean_absolute_error(self.problem.y_train, y_pred) if reg_metric == 'mae' \
-                    else wasserstein_distance(self.problem.y_train, y_pred) if reg_metric == 'wasserstein' \
+            if reg_metric == 'rmse':
+                return sqrt(mean_squared_error(self.problem.y_train, y_pred))
+            elif reg_metric == 'mae':
+                return mean_absolute_error(self.problem.y_train, y_pred)
+            elif reg_metric == 'wasserstein':
+                return wasserstein_distance(self.problem.y_train, y_pred)
+            else:
+                raise ValueError('Unknown reg metric ' + str(reg_metric))
 
         else:
             raise ValueError('Unknown approximation type ' + str(self.problem.approx_type))

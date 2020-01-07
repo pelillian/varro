@@ -4,17 +4,18 @@ experiment to solve the problem using a specified
 evolutionary algorithm
 """
 
-import pickle
+import datetime
+from deap import base, creator
+from dowel import logger, TextOutput, StdOutput
+from functools import partial
+import numpy as np
 from os import listdir
 from os.path import isfile, join
-from functools import partial
+import pickle
 from tqdm import tqdm
-import numpy as np
-import logging
-from deap import base, creator
 
 from varro.misc.util import make_path
-from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, ABS_ALGO_PREDICTIONS_PATH
+from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, ABS_ALGO_PREDICTIONS_PATH, DATE_NAME_FORMAT
 from varro.algo.util import get_args
 from varro.algo.problems import Problem, ProblemFuncApprox, ProblemMNIST
 from varro.algo.strategies.es.evolve import evolve
@@ -75,7 +76,7 @@ def fit(model_type,
     if model_type == 'nn':
         from varro.algo.models import ModelNN  # Import here so we don't load tensorflow if not needed
         if grid_search:
-            model = ModelNN(problem, tensorboard_logs=False)
+            model = ModelNN(problem)
         else:
             model = ModelNN(problem)
     elif model_type == 'fpga':
@@ -169,8 +170,6 @@ def predict(model_type,
         save_dir (str): Location of where to store the predictions
 
     """
-    # Get logger
-    logger = logging.getLogger(__name__)
 
     # 1. Choose Problem and get the specific evaluation function
     # for that problem
@@ -222,7 +221,6 @@ def predict(model_type,
     # Save the y_pred into a file
     y_pred_path = join(save_dir, ckpt.split('_')[-1][:-4] + '_' + X[:-4].split('/')[-1] + '_y_pred.npy')
     np.save(y_pred_path, y_pred)
-    logger.info('Predictions saved in {}!'.format(y_pred_path))
 
 
 def main():
@@ -233,6 +231,12 @@ def main():
 
     # Get the Arguments parsed from file execution
     args = get_args()
+
+    # Init Loggers
+    log_path = join(ABS_ALGO_EXP_LOGS_PATH, "{}_{}.log".format(args.problem_type, datetime.datetime.now().strftime(DATE_NAME_FORMAT)))
+
+    logger.add_output(StdOutput())
+    logger.add_output(TextOutput(log_path))
 
     # Check if we're fitting or predicting
     if args.purpose == 'fit':

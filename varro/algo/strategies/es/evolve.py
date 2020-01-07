@@ -2,12 +2,11 @@
 This module contains the evolutionary algorithm logic
 """
 
+from dowel import logger
 import os
 import json
 import pickle
 import random
-import logging
-import logaugment
 import numpy as np
 import functools
 from tqdm import tqdm
@@ -56,17 +55,9 @@ def evolve(strategy,
     make_path(ABS_ALGO_EXP_LOGS_PATH)
     make_path(experiment_checkpoints_dir)
 
-    # Either grid search OR TFBoard
+    # Enable either grid search OR TFBoard
     if not grid_search:
         file_writer = tf.summary.create_file_writer(experiment_checkpoints_dir)
-
-    # Set Logging configuration
-    log_fmt = '%(asctime)s - %(time_since_last)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(filename=experiment_logs_file,
-                        level=logging.INFO,
-                        format=log_fmt)
-
-    logger = logging.getLogger(__name__)
 
     def process_record(record):
         now = datetime.utcnow()
@@ -77,25 +68,23 @@ def evolve(strategy,
         process_record.now = now
         return {'time_since_last': delta}
 
-    logaugment.add(logger, process_record)
-
-    logger.info('Start Evolution ...')
-    logger.info('strategy: {}'.format(strategy.name))
-    logger.info('problem_type: {}'.format(strategy.problem.name))
-    logger.info('cxpb: {}'.format(strategy.cxpb))
-    logger.info('mutpb: {}'.format(strategy.mutpb))
-    logger.info('popsize: {}'.format(strategy.popsize))
-    logger.info('elitesize: {}'.format(strategy.elitesize))
-    logger.info('ngen: {}'.format(strategy.ngen))
-    logger.info('imutpb: {}'.format(strategy.imutpb))
-    logger.info('imutmu: {}'.format(strategy.imutmu))
-    logger.info('imutsigma: {}'.format(strategy.imutsigma))
-    logger.info('halloffamesize: {}'.format(strategy.halloffamesize))
+    logger.log('Start Evolution ...')
+    logger.log('strategy: {}'.format(strategy.name))
+    logger.log('problem_type: {}'.format(strategy.problem.name))
+    logger.log('cxpb: {}'.format(strategy.cxpb))
+    logger.log('mutpb: {}'.format(strategy.mutpb))
+    logger.log('popsize: {}'.format(strategy.popsize))
+    logger.log('elitesize: {}'.format(strategy.elitesize))
+    logger.log('ngen: {}'.format(strategy.ngen))
+    logger.log('imutpb: {}'.format(strategy.imutpb))
+    logger.log('imutmu: {}'.format(strategy.imutmu))
+    logger.log('imutsigma: {}'.format(strategy.imutsigma))
+    logger.log('halloffamesize: {}'.format(strategy.halloffamesize))
 
     # Set additional logging information about experiment
     # if not simple genetic algorithm strategy
     if strategy.name == 'ns-es' or strategy.name == 'nsr-es':
-        logger.info('novelty_metric: {}'.format(strategy.novelty_metric))
+        logger.log('novelty_metric: {}'.format(strategy.novelty_metric))
 
     ###############################
     # 2. CURRENT POPULATION STATS #
@@ -141,7 +130,7 @@ def evolve(strategy,
             # Save the checkpoint
             strategy.save_ckpt(exp_ckpt_dir=experiment_checkpoints_dir)
 
-        # Load tensorboard
+        # Tensorboard checkpointing loads by default
         if not grid_search:
             # Load weights into model and make predictions
             model.load_parameters(strategy.halloffame[0])
@@ -173,7 +162,7 @@ def evolve(strategy,
             raise NotImplementedError
 
         # Log Average score of population
-        logger.info('Generation {} Avg. Fitness Score: {} | Fittest Individual Score: {}'\
+        logger.log('Generation {} Avg. Fitness Score: {} | Fittest Individual Score: {}'\
                         .format(g,
                                 avg_fitness_score,
                                 fittest_ind_score))
@@ -185,18 +174,17 @@ def evolve(strategy,
         if strategy.name == 'sga' or strategy.name == 'nsr-es':
             if strategy.problem.approx_type == Problem.CLASSIFICATION:
                 if round(-fittest_ind_score, 4) > 0.95:
-                    logger.info('Early Stopping activated because Accuracy > 95%.')
+                    logger.log('Early Stopping activated because Accuracy > 95%.')
                     break;
                 if len(avg_fitness_scores) > 10 and len(set(avg_fitness_scores[-10:])) == 1:
-                    logger.info('Early Stopping activated because fitness scores have converged.')
+                    logger.log('Early Stopping activated because fitness scores have converged.')
                     break;
             else:
                 if round(fittest_ind_score, 4) < 0.01:
-                    logger.info('Early Stopping activated because MSE < 0.01.')
+                    logger.log('Early Stopping activated because MSE < 0.01.')
                     break;
                 if len(avg_fitness_scores) > 10 and len(set(avg_fitness_scores[-10:])) == 1:
-                    logger.info('Early Stopping activated because fitness scores have converged.')
+                    logger.log('Early Stopping activated because fitness scores have converged.')
                     break;
-
 
     return strategy.pop, avg_fitness_scores, fittest_ind_score

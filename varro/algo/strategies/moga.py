@@ -11,6 +11,7 @@ from deap import base, creator, tools
 from collections import namedtuple
 
 from varro.algo.strategies.strategy import Strategy
+from varro.algo.strategies.sga import StrategySGA
 from varro.algo.strategies.ns_es import StrategyNSES
 
 
