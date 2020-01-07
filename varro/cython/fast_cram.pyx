@@ -4,7 +4,7 @@ import numpy as np
 import pytrellis
 
 DTYPE = np.bool
-ctypedef npx.int8_t DTYPE_t
+ctypedef npx.npy_bool DTYPE_t
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
