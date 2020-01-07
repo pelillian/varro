@@ -1,59 +1,63 @@
-const int OUTPUT_PIN = 13;
-const int INPUT_ADC_ADJACENT = A1; 
-const int INPUT_ADC_READ = A0; 
+const int CLOCK_SIGNAL = 13;
 
+int analogPorts[] = {A0, A1, A2, A3, A4, A5};
+int digitalPorts[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
 void setup()
 {
 
   Serial.begin(9600);  // initialize serial communications at 9600 bps
-  pinMode(OUTPUT_PIN, OUTPUT);
-  pinMode(INPUT_ADC_READ, INPUT); 
+  pinMode(CLOCK_SIGNAL, OUTPUT);
   // int output = 0; 
-
+  // Config all pins that will have inputs at some point
+  for (int port : analogPorts) {
+    pinMode(port, INPUT);
+  }
+  for (int port : digitalPorts) {
+    pinMode(port, OUTPUT);
+  }
 }
 
 int output = 0; 
+int portIndex = 0; 
+
 void loop()
 {
-  char c = ' ';
-  while(!Serial.available()) {}
+    // Read in data from serial buffer
+    char buf[50]; 
+    // Serial.readBytes(buf, 12);
 
-  if (Serial.available() > 0)
-  {
-    c = Serial.read();  //gets one byte from serial buffer
-  }
+    // Activate digital ports based the content of the buffer
+//    for (int i = 0; i < sizeof(buf); i++) {
+//        
+//        // NOTE: We assume that digital pins will only be assigned to 0 or 1
+//        char c = buf[i]; 
+//        if (c != ',') {
+//            if (c == '1') {
+//                digitalWrite(digitalPorts[i], HIGH);
+//            } else {
+//                digitalWrite(digitalPorts[i], LOW);
+//            }
+//        }
+//    }
 
-  if(c == 0)
-  {
-    // digitalWrite(OUTPUT_PIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-    // Serial.println("LED set to high");
+    // Wait for 100us for generous propagation delay
+    // delayMicroseconds(100); 
 
-  } else if(c == 1){
-    // digitalWrite(OUTPUT_PIN, LOW);   // turn the LED on (HIGH is the voltage level)
-    // Serial.println("LED set to low");
+    // Read values at analog ports
+    // int portValues[sizeof(analogPorts)]; 
+    // for (int i = 0; i < sizeof(analogPorts); i++) {
+    //    portValues[i] = analogRead(analogPorts[i]); 
+    // } 
 
-  } else {
-    // Serial.println("Could not process input: ");
-    // Serial.println((int)c);
+    // Assemble serial message assuming there are 6 analog pins
+    // sprintf(buf, "%d,%d,%d,%d,%d,%d", portValues[0], portValues[1], portValues[2], portValues[3], portValues[4], portValues[5], portValues[6]);     
 
-  }
+    sprintf(buf, "1,2,3,4,5");
+    // Send message to serial
+    Serial.println(buf); 
 
-  int val = analogRead(INPUT_ADC_READ); 
-  // Serial.println("Analog value read from adjacent pin: ");
-  char str [3];   
-  for (int i = 0; i < sizeof(str); i++) {
-    str[i] = 0; 
-  }
-  sprintf(str, "%d", val); 
-  Serial.println(str); 
-  if (output == 0) {
-    digitalWrite(OUTPUT_PIN, LOW); 
-  } else {
-    digitalWrite(OUTPUT_PIN, HIGH);
-  }
-
-  output %= 1;  
-
-  Serial.flush();
-  delay(100); 
+    // Flush serial
+    Serial.flush();
 }
+
+
