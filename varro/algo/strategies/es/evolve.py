@@ -54,10 +54,6 @@ def evolve(strategy,
     make_path(ABS_ALGO_EXP_LOGS_PATH)
     make_path(experiment_checkpoints_dir)
 
-    # Enable either grid search OR TFBoard
-    if not grid_search:
-        file_writer = tf.summary.create_file_writer(experiment_checkpoints_dir)
-
     def process_record(record):
         now = datetime.utcnow()
         try:
