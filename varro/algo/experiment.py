@@ -66,12 +66,14 @@ def fit(model_type,
     """
     # 1. Choose Problem and get the specific evaluation function
     # for that problem
+    logger.log("Loading problem...")
     if problem_type == 'mnist':
         problem = ProblemMNIST()
     else:
         problem = ProblemFuncApprox(func=problem_type)
 
     # 2. Choose Target Platform
+    logger.log("Loading Target Platform...")
     # Neural Network
     if model_type == 'nn':
         from varro.algo.models import ModelNN  # Import here so we don't load tensorflow if not needed
@@ -84,6 +86,7 @@ def fit(model_type,
         model = ModelFPGA()
 
     # 3. Set Strategy
+    logger.log("Loading Strategy...")
     if strategy == 'sga':
         strategy = StrategySGA(model=model,
                                problem=problem,
@@ -145,6 +148,7 @@ def fit(model_type,
         raise NotImplementedError
 
     # 4. Evolve
+    logger.log("Starting Evolution...")
     pop, avg_fitness_scores, fittest_ind_score = evolve(strategy=strategy,
                                                         grid_search=grid_search)
 
@@ -240,6 +244,7 @@ def main():
 
     # Check if we're fitting or predicting
     if args.purpose == 'fit':
+        logger.log("Starting model training...")
 
         # Start Optimization
         fit(model_type=args.model_type,
@@ -258,6 +263,7 @@ def main():
             halloffamesize=args.halloffamesize)
 
     else:
+        logger.log("Starting model prediction...")
 
         if args.ckptfolder:
             # Make predictions using the best

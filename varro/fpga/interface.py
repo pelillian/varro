@@ -42,7 +42,7 @@ class FpgaConfig:
         return self.base_file_name + ".config"
 
     def load_cram(self, config_data):
-        load_cram_fast(self.chip.cram, np.array(config_data))
+        load_cram_fast(self.chip.cram, config_data)
 
     def write_config_file(self):
         with open(self.config_file, "w") as f:
