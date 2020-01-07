@@ -241,11 +241,11 @@ def main():
 
     logger.add_output(StdOutput())
     logger.add_output(TextOutput(log_path))
+    logger.log("Running Project Varro")
+    logger.log("Purpose: " + args.purpose)
 
     # Check if we're fitting or predicting
     if args.purpose == 'fit':
-        logger.log("Starting model training...")
-
         # Start Optimization
         fit(model_type=args.model_type,
             problem_type=args.problem_type,
@@ -263,8 +263,6 @@ def main():
             halloffamesize=args.halloffamesize)
 
     else:
-        logger.log("Starting model prediction...")
-
         if args.ckptfolder:
             # Make predictions using the best
             # individual from each generation

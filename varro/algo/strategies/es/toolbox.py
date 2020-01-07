@@ -5,6 +5,7 @@ for neural net / fpga
 
 import random
 import numpy as np
+from dowel import logger
 from deap import base, creator, tools
 
 
@@ -31,6 +32,7 @@ def es_toolbox(strategy_name,
         toolbox (deap.base.Toolbox): Configured DEAP Toolbox for the algorithm.
 
     """
+    logger.log("Initializing toolbox...")
     # Set seed
     random.seed(100)
 
