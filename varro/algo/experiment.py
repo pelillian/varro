@@ -73,7 +73,7 @@ def fit(model_type,
         problem = ProblemFuncApprox(func=problem_type)
 
     # 2. Choose Target Platform
-    logger.log("Loading Target Platform...")
+    logger.log("Loading target platform...")
     # Neural Network
     if model_type == 'nn':
         from varro.algo.models import ModelNN  # Import here so we don't load tensorflow if not needed
@@ -86,7 +86,7 @@ def fit(model_type,
         model = ModelFPGA()
 
     # 3. Set Strategy
-    logger.log("Loading Strategy...")
+    logger.log("Loading strategy...")
     if strategy == 'sga':
         strategy = StrategySGA(model=model,
                                problem=problem,
@@ -148,7 +148,7 @@ def fit(model_type,
         raise NotImplementedError
 
     # 4. Evolve
-    logger.log("Starting Evolution...")
+    logger.log("Starting evolution...")
     pop, avg_fitness_scores, fittest_ind_score = evolve(strategy=strategy,
                                                         grid_search=grid_search)
 
