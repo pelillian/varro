@@ -6,6 +6,7 @@ import os
 from os.path import join
 import pytrellis
 from time import sleep
+import numpy as np
 
 from varro.cython.fast_cram import load_cram_fast
 from varro.misc.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
@@ -41,7 +42,7 @@ class FpgaConfig:
         return self.base_file_name + ".config"
 
     def load_cram(self, config_data):
-        load_cram_fast(self.chip.cram, config_data)
+        load_cram_fast(self.chip.cram, np.array(config_data))
 
     def write_config_file(self):
         with open(self.config_file, "w") as f:
