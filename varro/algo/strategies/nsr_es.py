@@ -35,7 +35,7 @@ class StrategyNSRES(StrategyNSES):
 
         class Fitness(base.Fitness):
             def __init__(self):
-                super();
+                super().__init__()
                 self.__fitness_score = None
                 self.__novelty_score = None
 
@@ -140,10 +140,10 @@ class StrategyNSRES(StrategyNSES):
         self.problem.reset_train_set()
 
         # Compute all fitness for population
-        num_invalid_inds = super(StrategyNSES, self).compute_fitness(pop)
+        num_invalid_inds = self.compute_fitness(pop)
 
         # Calculate the Novelty scores for population
-        super().compute_novelty(pop)
+        self.compute_novelty(pop)
 
         # The population is entirely replaced by the
         # evaluated offspring
@@ -156,14 +156,3 @@ class StrategyNSRES(StrategyNSES):
         # self.logbook.record(gen=self.curr_gen, evals=num_invalid_inds, **record)
 
         return np.mean([ind.fitness.fitness_score for ind in pop])
-
-
-    def generate_offspring(self):
-        """Generates new offspring using a combination of the selection methods
-        specified to choose fittest individuals and custom preference
-
-        Returns:
-            A Tuple of (Non-alterable offspring, Alterable offspring)
-
-        """
-        return super().generate_offspring()

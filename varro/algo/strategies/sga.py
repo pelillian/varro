@@ -26,7 +26,7 @@ class StrategySGA(Strategy):
 
         class Fitness(base.Fitness):
             def __init__(self):
-                super();
+                super().__init__()
                 self.__fitness_score = None
 
             @property
@@ -136,7 +136,7 @@ class StrategySGA(Strategy):
             self.model.load_parameters(ind)
 
             # Calculate the Fitness score of the individual
-            ind.fitness.fitness_score = super().fitness_score()
+            ind.fitness.fitness_score = self.fitness_score()
 
         return len(invalid_inds)
 

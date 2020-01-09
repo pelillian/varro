@@ -41,7 +41,7 @@ class StrategyMOGA(StrategySGA):
 
         class Fitness(base.Fitness):
             def __init__(self):
-                super();
+                super().__init__()
                 self.__fitness_scores = None
 
             @property
@@ -71,11 +71,6 @@ class StrategyMOGA(StrategySGA):
 
         creator.create("FitnessMulti", Fitness, weights=tuple(-1.0 for _ in objectives)) # Weights for each objective
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)
-
-
-    def init_toolbox(self):
-        """Initializes the toolbox according to strategy"""
-        super().init_toolbox()
 
 
     def load_es_vars(self):
@@ -133,7 +128,7 @@ class StrategyMOGA(StrategySGA):
             self.model.load_parameters(ind)
 
             # Calculate the Fitness score of the individual
-            ind.fitness.fitness_scores = tuple(super().fitness_score(reg_metric=objective) for objective in self.objectives)
+            ind.fitness.fitness_scores = tuple(self.fitness_score(reg_metric=objective) for objective in self.objectives)
 
         return len(invalid_inds)
 
@@ -167,14 +162,3 @@ class StrategyMOGA(StrategySGA):
         # self.logbook.record(gen=self.curr_gen, evals=num_invalid_inds, **record)
 
         return np.mean([ind.fitness.fitness_scores[0] for ind in pop])
-
-
-    def generate_offspring(self):
-        """Generates new offspring using a combination of the selection methods
-        specified to choose fittest individuals and custom preference
-
-        Returns:
-            A Tuple of (Non-alterable offspring, Alterable offspring)
-
-        """
-        return super().generate_offspring()

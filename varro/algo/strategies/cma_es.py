@@ -36,7 +36,7 @@ class StrategyCMAES(StrategySGA):
 
         class Novelty(base.Fitness):
             def __init__(self):
-                super();
+                super().__init__()
                 self.__novelty_score = None
 
             @property
@@ -76,23 +76,6 @@ class StrategyCMAES(StrategySGA):
         # Configure the rest of the toolbox that is independent
         # of which evolutionary strategy
         super().config_toolbox()
-
-
-    def load_es_vars(self):
-        """Loads the evolutionary strategy variables from checkpoint given after
-        creating the fitness and individual templates for DEAP evolution or initializes them
-        """
-        super().load_es_vars()
-
-
-    def save_ckpt(self, exp_ckpt_dir):
-        """Saves the checkpoint of the current generation of Population
-        and some other information
-
-        Args:
-            exp_ckpt_dir (str): The experiment's checkpointing directory
-        """
-        super().save_ckpt(exp_ckpt_dir)
 
 
     def compute_novelty(self, pop, k=5):
@@ -150,16 +133,3 @@ class StrategyCMAES(StrategySGA):
         # self.logbook.record(gen=self.curr_gen, evals=len(self.pop), **record)
 
         return np.mean([ind.fitness.novelty_score for ind in pop])
-
-
-    def generate_offspring(self):
-        """Generates new offspring using a combination of the selection methods
-        specified to choose fittest individuals and custom preference
-
-        Returns:
-            A Tuple of (Non-alterable offspring, Alterable offspring)
-
-        """
-        return super().generate_offspring()
-
-
