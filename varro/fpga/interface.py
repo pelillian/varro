@@ -81,6 +81,6 @@ class FpgaConfig:
             return_value = receive(arduino_connection)
             return_value = return_value.decode("utf-8")
             return_value = data.split(",")
-            results.append(return_value)
+            results.append(np.sum(return_value))
 
         return results
