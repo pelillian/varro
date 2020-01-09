@@ -28,6 +28,7 @@ import numpy as np
 import os
 import pickle
 from shutil import rmtree
+
 from varro.misc.variables import GRID_SEARCH_CHECKPOINTS_PATH
 from varro.algo.fit import fit
 from varro.misc.util import make_path

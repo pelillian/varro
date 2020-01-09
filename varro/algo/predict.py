@@ -1,3 +1,5 @@
+import pickle
+import numpy as np
 from dowel import logger
 
 from varro.algo.problems import Problem, ProblemFuncApprox, ProblemMNIST
