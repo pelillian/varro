@@ -243,6 +243,18 @@ def get_args():
                         help='Set whether or not to stop the algorithm early when accuracy converges',
                         type=bool)
 
+    ######################################################################################
+    # 20. Whether or not to run hyperparameter optimization and the type to run
+    ######################################################################################
+    parser.add_argument('--hyper_opt',
+                        default=None,
+                        const=None,
+                        nargs='?',
+                        metavar='HYPERPARAMETER-OPTIMIZATION-TYPE',
+                        action='store',
+                        choices=[None, 'grid_search', 'bayesian_opt'],
+                        help='The type of hyperparameter optimization to run')
+
     settings = parser.parse_args()
 
     # If we are predicting, we need to specify a

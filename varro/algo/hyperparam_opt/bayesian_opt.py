@@ -87,8 +87,7 @@ def best_fitness_score(parameters, model_type=MODEL_TYPE):
     return score
 
 
-def main():
-
+def bayesian_opt():
     optimizer = BayesianOptimization(f=best_fitness_score,
                                      domain=bounds(),
                                      model_type='GP',
@@ -100,7 +99,3 @@ def main():
     # Only 20 iterations because we have 5 initial random points
     optimizer.run_optimization(max_iter=20)
     print(np.maximum.accumulate(-optimizer.Y).ravel())
-
-
-if __name__ == "__main__":
-    main()

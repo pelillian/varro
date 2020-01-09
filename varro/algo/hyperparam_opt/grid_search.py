@@ -28,10 +28,20 @@ import numpy as np
 import os
 import pickle
 from shutil import rmtree
-from tests.varro.algo.grid_search.config import HYPERPARAM_DICT
 from varro.misc.variables import GRID_SEARCH_CHECKPOINTS_PATH
-from varro.algo.experiment import fit
+from varro.algo.fit import fit
 from varro.misc.util import make_path
+
+HYPERPARAM_DICT = {}
+HYPERPARAM_DICT['cxpb'] = [0.0]
+HYPERPARAM_DICT['elitesize'] = [0.05]
+HYPERPARAM_DICT['imutpb'] = [0.01, 0.05, 0.1, 0.2, 0.5]
+HYPERPARAM_DICT['imutsigma'] = [1, 3, 5, 8, 10]
+HYPERPARAM_DICT['mutpb'] = [0.01, 0.02, 0.03]
+HYPERPARAM_DICT['ngen'] = [100]
+HYPERPARAM_DICT['popsize'] = [20, 30, 40]
+HYPERPARAM_DICT['problem_type'] = ['x']
+HYPERPARAM_DICT['strategy'] = ['ea']
 
 # Ensure checkpoints dir is on local
 make_path(GRID_SEARCH_CHECKPOINTS_PATH)
@@ -97,7 +107,3 @@ def grid_search():
     fittest_pkl_path = os.path.join(experiment_path, 'fittest.pkl')
     with open(fittest_pkl_path, 'w') as fittest_file:
         pickle.dump([fittest, all_runs], fittest_file)
-
-if __name__ == '__main__':
-
-    grid_search()
