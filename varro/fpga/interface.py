@@ -74,27 +74,10 @@ class FpgaConfig:
 
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
-
-        results = []
-        for datum in data:
-#            # Format data to be written to digital pins on Arduino
-#            # For now, just send either all ones or all zero
-#            value = str(data[0])
-#            msg = "".join([value] * 12)
-#
-#            # Send and receive formatted data 
-#            # send(arduino_connection, msg)
-#            sleep(0.96)
-            return_value = receive(arduino_connection) 
-
-            # convert data into format usable for evaluation
-#            data = return_value.decode("utf-8")
-#            data = data.split(",")
-#            for num in data: 
-#                import pdb; pdb.set_trace()
-#                num = int(num)
-#                num /= 1024
-#
-#            results.append(data)
-
-        return results
+        
+        send(arduino_connection, data)
+        sleep(0.96)
+        return_value = receive(arduino_connection)
+        results = return_value.decode("utf-8")
+        results = data.split(",")
+        return data
