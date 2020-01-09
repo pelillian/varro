@@ -25,4 +25,3 @@ class Model:
     @property
     def parameters_shape(self):
         pass
-

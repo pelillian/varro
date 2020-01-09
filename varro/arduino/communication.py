@@ -40,4 +40,3 @@ if __name__=="__main__":
         print (msg.decode("utf-8"))
 
         val = 0 if val else 1
-

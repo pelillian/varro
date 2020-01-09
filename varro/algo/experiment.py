@@ -26,7 +26,7 @@ def main():
 
     # Get the Arguments parsed from file execution
     args = get_args()
-    
+
     if args.hyper_opt is not None:
         if args.hyper_opt == 'grid_search':
             grid_search()

@@ -1,6 +1,6 @@
 '''This module contains the utility functions to run grid search for experiment.py
 
-# TODO: 
+# TODO:
 - Create directory structure for logs, pkls
     - Proposed:
 
