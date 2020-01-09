@@ -74,10 +74,13 @@ class FpgaConfig:
 
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
-        
-        send(arduino_connection, data)
-        sleep(0.96)
-        return_value = receive(arduino_connection)
-        results = return_value.decode("utf-8")
-        results = data.split(",")
-        return data
+        results = []
+        for datum in data:
+            send(arduino_connection, data)
+            sleep(0.96)
+            return_value = receive(arduino_connection)
+            return_value = return_value.decode("utf-8")
+            return_value = data.split(",")
+            results.append(return_value)
+
+        return results
