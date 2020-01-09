@@ -75,13 +75,6 @@ def es_toolbox(strategy_name,
         toolbox.register("attribute", np.random.choice, [False, True])
         size = np.prod(i_shape)
 
-        # INDIVIDUAL
-        def init_individual(ind_class):
-            return ind_class(np.random.choice([False, True], size=size))
-        toolbox.register("individual",
-                         init_individual,
-                         getattr(creator, 'Individual'))
-
         # MUTATION
         def mutate_individual(ind):
             idx = np.argwhere(np.random.choice([False, True], size, p=[0.9, 0.1]))
@@ -90,10 +83,12 @@ def es_toolbox(strategy_name,
         toolbox.register("mutate", mutate_individual)
 
         # POPULATION
+        def init_population(ind_class, n):
+            pop = np.random.choice([False, True], size=(n, size))
+            return [ind_class(ind) for ind in pop]
         toolbox.register("population",
-                         getattr(tools, 'initRepeat'),
-                         list,
-                         getattr(toolbox, 'individual'))
+                         init_population,
+                         getattr(creator, 'Individual'))
 
         # MATING
         from varro.fpga.cross_over import cross_over
