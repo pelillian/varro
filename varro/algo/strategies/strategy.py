@@ -255,6 +255,7 @@ class Strategy(ABC):
                  imutsigma,
                  ckpt,
                  halloffamesize,
+                 novelty_metric,
                  earlystop):
         """This class defines the strategy and the methods that come with that strategy."""
         self._name = name
@@ -269,6 +270,7 @@ class Strategy(ABC):
         self._ckpt = ckpt
         self._halloffamesize = halloffamesize
         self._earlystop = earlystop
+        self._noveltymetric = novelty_metric
 
         # Storing model and problem
         self.model = model

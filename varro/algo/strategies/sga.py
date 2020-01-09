@@ -14,6 +14,8 @@ from varro.algo.strategies.strategy import Strategy
 
 
 class StrategySGA(Strategy):
+    def __init__(self, **kwargs):
+        super().__init__(name='sga', **kwargs)
 
     #############
     # FUNCTIONS #
@@ -193,10 +195,3 @@ class StrategySGA(Strategy):
         return non_alterable_elite_offspring, alterable_offspring
 
 
-    ########
-    # INIT #
-    ########
-    def __init__(self, **kwargs):
-
-        # Call Strategy constructor
-        super().__init__(name='sga', **kwargs)

@@ -206,6 +206,8 @@ def get_args():
     ###############################################################################
     # 17. What Distance metric will we use for measuring an individual's novelty? #
     ###############################################################################
+    # Supported novelty metrics:
+    # https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.DistanceMetric.html#sklearn.neighbors.DistanceMetric
     parser.add_argument('--novelty_metric',
                         default='euclidean',
                         const='euclidean',

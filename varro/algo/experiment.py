@@ -5,13 +5,13 @@ evolutionary algorithm
 """
 
 import datetime
+import pickle
+import numpy as np
 from deap import base, creator
 from dowel import logger, TextOutput, StdOutput
 from functools import partial
-import numpy as np
 from os import listdir
 from os.path import isfile, join
-import pickle
 from tqdm import tqdm
 
 from varro.misc.util import make_path
@@ -81,67 +81,32 @@ def fit(model_type,
         from varro.algo.models import ModelFPGA as Model
     model = Model(problem)
 
+    strategy_args = {'novelty_metric' : novelty_metric,
+            'model' : model,
+            'problem' : problem,
+            'cxpb' : cxpb,
+            'mutpb' : mutpb,
+            'popsize' : popsize,
+            'elitesize' : elitesize,
+            'ngen' : ngen,
+            'imutpb' : imutpb,
+            'imutmu' : imutmu,
+            'imutsigma' : imutsigma,
+            'ckpt' : ckpt,
+            'halloffamesize' : halloffamesize,
+            'earlystop' : earlystop}
+
     # 3. Set Strategy
     logger.log("Loading strategy...")
     if strategy == 'sga':
-        strategy = StrategySGA(model=model,
-                               problem=problem,
-                               cxpb=cxpb,
-                               mutpb=mutpb,
-                               popsize=popsize,
-                               elitesize=elitesize,
-                               ngen=ngen,
-                               imutpb=imutpb,
-                               imutmu=imutmu,
-                               imutsigma=imutsigma,
-                               ckpt=ckpt,
-                               halloffamesize=halloffamesize,
-                               earlystop=earlystop)
+        strategy = StrategySGA(**strategy_args)
 
     elif strategy == 'moga':
-        strategy = StrategyMOGA(model=model,
-                                problem=problem,
-                                cxpb=cxpb,
-                                mutpb=mutpb,
-                                popsize=popsize,
-                                elitesize=elitesize,
-                                ngen=ngen,
-                                imutpb=imutpb,
-                                imutmu=imutmu,
-                                imutsigma=imutsigma,
-                                ckpt=ckpt,
-                                halloffamesize=halloffamesize,
-                                earlystop=earlystop)
+        strategy = StrategyMOGA(**strategy_argsp)
     elif strategy == 'ns-es':
-        strategy = StrategyNSES(novelty_metric=novelty_metric,
-                                model=model,
-                                problem=problem,
-                                cxpb=cxpb,
-                                mutpb=mutpb,
-                                popsize=popsize,
-                                elitesize=elitesize,
-                                ngen=ngen,
-                                imutpb=imutpb,
-                                imutmu=imutmu,
-                                imutsigma=imutsigma,
-                                ckpt=ckpt,
-                                halloffamesize=halloffamesize,
-                                earlystop=earlystop)
+        strategy = StrategyNSES(**strategy_args)
     elif strategy == 'nsr-es':
-        strategy = StrategyNSRES(novelty_metric=novelty_metric,
-                                 model=model,
-                                 problem=problem,
-                                 cxpb=cxpb,
-                                 mutpb=mutpb,
-                                 popsize=popsize,
-                                 elitesize=elitesize,
-                                 ngen=ngen,
-                                 imutpb=imutpb,
-                                 imutmu=imutmu,
-                                 imutsigma=imutsigma,
-                                 ckpt=ckpt,
-                                 halloffamesize=halloffamesize,
-                                 earlystop=earlystop)
+        strategy = StrategyNSRES(**strategy_args)
     elif strategy == 'cma-es':
         raise NotImplementedError
     else:

@@ -13,6 +13,8 @@ from varro.algo.strategies.sga import StrategySGA
 
 
 class StrategyNSES(StrategySGA):
+    def __init__(self, **kwargs):
+        super().__init__(name='ns-es', **kwargs)
 
     #############
     # VARIABLES #
@@ -158,15 +160,3 @@ class StrategyNSES(StrategySGA):
         return super().generate_offspring()
 
 
-    ########
-    # INIT #
-    ########
-    def __init__(self, novelty_metric, **kwargs):
-
-        # Call Strategy constructor
-        super(StrategySGA, self).__init__(name='ns-es', **kwargs)
-
-        # Set Novelty metric
-        # Supported novelty metrics:
-        # https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.DistanceMetric.html#sklearn.neighbors.DistanceMetric
-        self._novelty_metric = novelty_metric

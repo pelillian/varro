@@ -18,6 +18,11 @@ from varro.algo.strategies.ns_es import StrategyNSES
 OBJECTIVES = ['rmse', 'mae', 'wasserstein']
 
 class StrategyMOGA(StrategySGA):
+    def __init__(self, **kwargs):
+        super().__init__(self, name='moga', **kwargs)
+
+        # Set Objectives (Fitness scores) to optimize over
+        self._objectives = OBJECTIVES
 
     #############
     # VARIABLES #
@@ -175,13 +180,3 @@ class StrategyMOGA(StrategySGA):
         return super().generate_offspring()
 
 
-    ########
-    # INIT #
-    ########
-    def __init__(self, **kwargs):
-
-        # Call Strategy constructor
-        Strategy.__init__(self, name='moga', **kwargs)
-
-        # Set Objectives (Fitness scores) to optimize over
-        self._objectives = OBJECTIVES

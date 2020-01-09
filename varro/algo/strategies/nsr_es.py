@@ -15,6 +15,8 @@ from varro.algo.strategies.ns_es import StrategyNSES
 
 
 class StrategyNSRES(StrategyNSES):
+    def __init__(self, **kwargs):
+        super().__init__(self, name='nsr-es', **kwargs)
 
     #############
     # VARIABLES #
@@ -167,15 +169,3 @@ class StrategyNSRES(StrategyNSES):
         return super().generate_offspring()
 
 
-    ########
-    # INIT #
-    ########
-    def __init__(self, novelty_metric, **kwargs):
-
-        # Call Strategy constructor
-        Strategy.__init__(self, name='nsr-es', **kwargs)
-
-        # Set Novelty metric
-        # Supported novelty metrics:
-        # https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.DistanceMetric.html#sklearn.neighbors.DistanceMetric
-        self._novelty_metric = novelty_metric
