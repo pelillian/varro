@@ -229,6 +229,18 @@ def get_args():
                         help='Set the size of HallOfFame which will store the best (fittest / novel) individuals',
                         type=float)
 
+    ######################################################################################
+    # 19. Whether or not to stop the algorithm early when accuracy converges
+    ######################################################################################
+    parser.add_argument('--earlystop',
+                        default=False,
+                        const=False,
+                        nargs='?',
+                        metavar='EARLY-STOPPING',
+                        action='store',
+                        help='Set whether or not to stop the algorithm early when accuracy converges',
+                        type=bool)
+
     settings = parser.parse_args()
 
     # If we are predicting, we need to specify a

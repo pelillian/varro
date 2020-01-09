@@ -63,7 +63,7 @@ def evolve(strategy,
         process_record.now = now
         return {'time_since_last': delta}
 
-    logger.log('Start Evolution ...')
+    logger.log('Starting Evolution ...')
     logger.log('strategy: {}'.format(strategy.name))
     logger.log('problem_type: {}'.format(strategy.problem.name))
     logger.log('cxpb: {}'.format(strategy.cxpb))
@@ -75,6 +75,7 @@ def evolve(strategy,
     logger.log('imutmu: {}'.format(strategy.imutmu))
     logger.log('imutsigma: {}'.format(strategy.imutsigma))
     logger.log('halloffamesize: {}'.format(strategy.halloffamesize))
+    logger.log('earlystop: {}'.format(strategy.earlystop))
 
     # Set additional logging information about experiment
     # if not simple genetic algorithm strategy
@@ -153,7 +154,7 @@ def evolve(strategy,
         # score is close to the minimum possible,
         # or if stuck at local optima (average fitness score
         # hasnt changed for past 10 rounds)
-        if strategy.name == 'sga' or strategy.name == 'nsr-es':
+        if earlystop and (strategy.name == 'sga' or strategy.name == 'nsr-es'):
             if strategy.problem.approx_type == Problem.CLASSIFICATION:
                 if round(-fittest_ind_score, 4) > 0.95:
                     logger.log('Early Stopping activated because Accuracy > 95%.')

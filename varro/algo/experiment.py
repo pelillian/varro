@@ -39,6 +39,7 @@ def fit(model_type,
         ckpt=None,
         novelty_metric=None,
         halloffamesize=None,
+        earlystop=False,
         grid_search=False):
     """Control center to call other modules to execute the optimization
 
@@ -74,16 +75,11 @@ def fit(model_type,
 
     # 2. Choose Target Platform
     logger.log("Loading target platform...")
-    # Neural Network
     if model_type == 'nn':
-        from varro.algo.models import ModelNN  # Import here so we don't load tensorflow if not needed
-        if grid_search:
-            model = ModelNN(problem)
-        else:
-            model = ModelNN(problem)
+        from varro.algo.models import ModelNN as Model  # Import here so we don't load tensorflow if not needed
     elif model_type == 'fpga':
-        from varro.algo.models import ModelFPGA
-        model = ModelFPGA()
+        from varro.algo.models import ModelFPGA as Model
+    model = Model(problem)
 
     # 3. Set Strategy
     logger.log("Loading strategy...")
@@ -99,7 +95,8 @@ def fit(model_type,
                                imutmu=imutmu,
                                imutsigma=imutsigma,
                                ckpt=ckpt,
-                               halloffamesize=halloffamesize)
+                               halloffamesize=halloffamesize,
+                               earlystop=earlystop)
 
     elif strategy == 'moga':
         strategy = StrategyMOGA(model=model,
@@ -113,7 +110,8 @@ def fit(model_type,
                                 imutmu=imutmu,
                                 imutsigma=imutsigma,
                                 ckpt=ckpt,
-                                halloffamesize=halloffamesize)
+                                halloffamesize=halloffamesize,
+                                earlystop=earlystop)
     elif strategy == 'ns-es':
         strategy = StrategyNSES(novelty_metric=novelty_metric,
                                 model=model,
@@ -127,7 +125,8 @@ def fit(model_type,
                                 imutmu=imutmu,
                                 imutsigma=imutsigma,
                                 ckpt=ckpt,
-                                halloffamesize=halloffamesize)
+                                halloffamesize=halloffamesize,
+                                earlystop=earlystop)
     elif strategy == 'nsr-es':
         strategy = StrategyNSRES(novelty_metric=novelty_metric,
                                  model=model,
@@ -141,14 +140,14 @@ def fit(model_type,
                                  imutmu=imutmu,
                                  imutsigma=imutsigma,
                                  ckpt=ckpt,
-                                 halloffamesize=halloffamesize)
+                                 halloffamesize=halloffamesize,
+                                 earlystop=earlystop)
     elif strategy == 'cma-es':
         raise NotImplementedError
     else:
         raise NotImplementedError
 
     # 4. Evolve
-    logger.log("Starting evolution...")
     pop, avg_fitness_scores, fittest_ind_score = evolve(strategy=strategy,
                                                         grid_search=grid_search)
 
@@ -183,13 +182,11 @@ def predict(model_type,
         problem = ProblemFuncApprox(func=problem_type)
 
     # 1. Choose Target Platform
-    # Neural Network
     if model_type == 'nn':
-        from varro.algo.models import ModelNN  # Import here so we don't load tensorflow if not needed
-        model = ModelNN(problem)
+        from varro.algo.models import ModelNN as Model  # Import here so we don't load tensorflow if not needed
     elif model_type == 'fpga':
-        from varro.algo.models import ModelFPGA
-        model = ModelFPGA()
+        from varro.algo.models import ModelFPGA as Model
+    model = Model(problem)
 
     # Load data from pickle file
     # The hall of fame contains the best individual
@@ -260,7 +257,8 @@ def main():
             ngen=args.ngen,
             ckpt=args.ckpt,
             novelty_metric=args.novelty_metric,
-            halloffamesize=args.halloffamesize)
+            halloffamesize=args.halloffamesize,
+            earlystop=args.earlystop)
 
     else:
         if args.ckptfolder:

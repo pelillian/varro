@@ -75,6 +75,11 @@ class Strategy(ABC):
         """Percentage of individuals in population we store in the HallOfFame / Archive"""
         return self._halloffamesize
 
+    @property
+    def earlystop(self):
+        """Percentage of individuals in population we store in the HallOfFame / Archive"""
+        return self._earlystop
+
     #############
     # FUNCTIONS #
     #############
@@ -249,7 +254,8 @@ class Strategy(ABC):
                  imutmu,
                  imutsigma,
                  ckpt,
-                 halloffamesize):
+                 halloffamesize,
+                 earlystop):
         """This class defines the strategy and the methods that come with that strategy."""
         self._name = name
         self._cxpb = cxpb
@@ -262,6 +268,7 @@ class Strategy(ABC):
         self._imutsigma = imutsigma
         self._ckpt = ckpt
         self._halloffamesize = halloffamesize
+        self._earlystop = earlystop
 
         # Storing model and problem
         self.model = model

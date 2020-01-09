@@ -11,7 +11,7 @@ from varro.algo.models import Model
 class ModelFPGA(Model):
     FPGA_BITSTREAM_SHAPE = (13294, 1136)
 
-    def __init__(self):
+    def __init__(self, problem):
         """FPGA architecture wrapper class"""
         pass
 

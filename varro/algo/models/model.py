@@ -4,7 +4,7 @@ This module contains classes for defining each type of model.
 
 
 class Model:
-    def __init__(self):
+    def __init__(self, problem):
         """Wrapper class for different types of models."""
         pass
 
