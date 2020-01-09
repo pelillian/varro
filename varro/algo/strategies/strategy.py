@@ -16,6 +16,51 @@ from varro.algo.strategies.es.toolbox import es_toolbox
 
 
 class Strategy(ABC):
+    def __init__(self,
+                 name,
+                 model,
+                 problem,
+                 cxpb,
+                 mutpb,
+                 popsize,
+                 elitesize,
+                 ngen,
+                 imutpb,
+                 imutmu,
+                 imutsigma,
+                 ckpt,
+                 halloffamesize,
+                 novelty_metric,
+                 earlystop):
+        """This class defines the strategy and the methods that come with that strategy."""
+        self._name = name
+        self._cxpb = cxpb
+        self._mutpb = mutpb
+        self._popsize = popsize
+        self._elitesize = elitesize
+        self._ngen = ngen
+        self._imutpb = imutpb
+        self._imutmu = imutmu
+        self._imutsigma = imutsigma
+        self._ckpt = ckpt
+        self._halloffamesize = halloffamesize
+        self._earlystop = earlystop
+        self._noveltymetric = novelty_metric
+
+        # Storing model and problem
+        self.model = model
+        self.problem = problem
+
+        # Initialize Toolbox
+        self.init_toolbox()
+
+        # Load evolutionary strategy variables
+        self.load_es_vars()
+
+        # Initialize stats we care about for population
+        self.stats = tools.Statistics(lambda ind: ind.fitness.values)
+        self.stats.register("avg", np.mean)
+        self.stats.register("max", np.max)
 
     #############
     # VARIABLES #
@@ -236,53 +281,3 @@ class Strategy(ABC):
                 # because the individuals are changed
                 # and will have different fitness values
                 mutant.fitness.delValues()
-
-
-    ########
-    # INIT #
-    ########
-    def __init__(self,
-                 name,
-                 model,
-                 problem,
-                 cxpb,
-                 mutpb,
-                 popsize,
-                 elitesize,
-                 ngen,
-                 imutpb,
-                 imutmu,
-                 imutsigma,
-                 ckpt,
-                 halloffamesize,
-                 novelty_metric,
-                 earlystop):
-        """This class defines the strategy and the methods that come with that strategy."""
-        self._name = name
-        self._cxpb = cxpb
-        self._mutpb = mutpb
-        self._popsize = popsize
-        self._elitesize = elitesize
-        self._ngen = ngen
-        self._imutpb = imutpb
-        self._imutmu = imutmu
-        self._imutsigma = imutsigma
-        self._ckpt = ckpt
-        self._halloffamesize = halloffamesize
-        self._earlystop = earlystop
-        self._noveltymetric = novelty_metric
-
-        # Storing model and problem
-        self.model = model
-        self.problem = problem
-
-        # Initialize Toolbox
-        self.init_toolbox()
-
-        # Load evolutionary strategy variables
-        self.load_es_vars()
-
-        # Initialize stats we care about for population
-        self.stats = tools.Statistics(lambda ind: ind.fitness.values)
-        self.stats.register("avg", np.mean)
-        self.stats.register("max", np.max)

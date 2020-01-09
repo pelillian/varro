@@ -178,5 +178,3 @@ class StrategyMOGA(StrategySGA):
 
         """
         return super().generate_offspring()
-
-

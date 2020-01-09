@@ -193,5 +193,3 @@ class StrategySGA(Strategy):
         alterable_offspring = list(map(self.toolbox.clone, random_inds))
 
         return non_alterable_elite_offspring, alterable_offspring
-
-

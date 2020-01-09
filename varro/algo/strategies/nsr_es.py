@@ -167,5 +167,3 @@ class StrategyNSRES(StrategyNSES):
 
         """
         return super().generate_offspring()
-
-
