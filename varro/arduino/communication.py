@@ -19,12 +19,10 @@ def send_char(arduino, val):
     return retval
 
 def send(arduino, val):
-    import pdb; pdb.set_trace()
     for c in val:
         send_char(arduino, c)
 
 def receive(arduino):
-    import pdb; pdb.set_trace()
     msg = arduino.read(arduino.inWaiting())
     return msg
 
