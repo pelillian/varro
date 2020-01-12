@@ -36,6 +36,18 @@ def rosenbrock(x):
     return (np.sum( (1 - x0) **2 ) + 100 * np.sum( (x1 - x0**2) **2 ))
 
 class ProblemFuncApprox(Problem):
+    def __init__(self, func):
+        # Set seed
+        random.seed(100)
+
+        # Choose classification or regression
+        self._approx_type = Problem.REGRESSION
+        self._name = func
+        self._input_dim = 1
+        self._output_dim = 1
+
+        # Set the X_train and y_train for function to approximate
+        self.reset_train_set()
 
     def sample_float(self, start, end, step, size=500):
         """Gets a random list of floats from a range of floats
@@ -103,16 +115,3 @@ class ProblemFuncApprox(Problem):
             self._approx_type = Problem.CLASSIFICATION
         else:
             raise ValueError('Problem \'' + str(func) + '\' not recognised')
-
-    def __init__(self, func):
-        # Set seed
-        random.seed(100)
-
-        # Choose classification or regression
-        self._approx_type = Problem.REGRESSION
-        self._name = func
-        self._input_dim = 1
-        self._output_dim = 1
-
-        # Set the X_train and y_train for function to approximate
-        self.reset_train_set()

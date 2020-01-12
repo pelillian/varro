@@ -12,18 +12,6 @@ from varro.algo.problems import Problem
 TRAIN_SIZE = 0.2
 
 class ProblemMNIST(Problem):
-
-    def reset_train_set(self):
-        """Sets the ground truth training input X_train and output y_train
-        for the function specified to approximate
-
-        """
-        # Get a random set of training
-        # set indices from mnist training data
-        train_idxs = np.random.choice(np.arange(len(self.full_X_train)), size=int(len(self.full_X_train)*TRAIN_SIZE))
-
-        self.X_train, self.y_train = self.full_X_train[train_idxs], self.full_y_train[train_idxs]
-
     def __init__(self):
         # Set seed
         random.seed(100)
@@ -47,3 +35,14 @@ class ProblemMNIST(Problem):
         # Set the input output dimensions for NN
         self._input_dim = np.prod(self.X_train[0].shape)
         self._output_dim = len(np.unique(self.y_train))
+
+    def reset_train_set(self):
+        """Sets the ground truth training input X_train and output y_train
+        for the function specified to approximate
+
+        """
+        # Get a random set of training
+        # set indices from mnist training data
+        train_idxs = np.random.choice(np.arange(len(self.full_X_train)), size=int(len(self.full_X_train)*TRAIN_SIZE))
+
+        self.X_train, self.y_train = self.full_X_train[train_idxs], self.full_y_train[train_idxs]
