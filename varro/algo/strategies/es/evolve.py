@@ -9,7 +9,6 @@ import pickle
 import random
 import numpy as np
 import functools
-from tqdm import tqdm
 from deap import base, creator, tools
 from datetime import datetime
 
@@ -100,7 +99,7 @@ def evolve(strategy,
     #################################
     # Iterate for generations
     start_gen = strategy.curr_gen
-    for g in tqdm(range(start_gen, strategy.ngen)):
+    for g in range(start_gen, strategy.ngen):
 
         # Select the next generation individuals
         non_alterable, alterable = strategy.generate_offspring()
