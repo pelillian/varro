@@ -15,7 +15,6 @@ from datetime import datetime
 from varro.misc.util import make_path, get_problem_range, get_tb_fig
 from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH, FREQ, DATE_NAME_FORMAT
 from varro.algo.problems import Problem
-from varro.algo.models.nn import ModelNN
 from varro.algo.problems.func_approx import rastrigin, rosenbrock
 
 
@@ -90,9 +89,6 @@ def evolve(strategy,
     # Evaluate the entire population
     avg_fitness_score = strategy.toolbox.evaluate(pop=strategy.pop)
     avg_fitness_scores.append(avg_fitness_score)
-
-    # Load model for predictions
-    model = ModelNN(strategy.problem)
 
     #################################
     # 4. EVOLVE THROUGH GENERATIONS #
