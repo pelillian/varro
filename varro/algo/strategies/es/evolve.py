@@ -138,7 +138,7 @@ def evolve(strategy,
             raise NotImplementedError
 
         # Log Average score of population
-        logger.log('Generation {:0' + str(len(str(strategy.ngen))) + '} | Avg. Fitness Score: {0:.5f} | Fittest Individual Score: {0:.5f}'\
+        logger.log(('Generation {:0' + str(len(str(strategy.ngen-1))) + '} | Avg. Fitness Score: {:.5f} | Fittest Individual Score: {:.5f}')\
                         .format(g, avg_fitness_score, fittest_ind_score))
 
         # Early Stopping if average fitness
