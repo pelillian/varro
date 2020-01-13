@@ -40,12 +40,11 @@ def evolve(strategy,
     # 1. SET UP LOGGER, FOLDERS, AND FILES TO SAVE DATA TO #
     ########################################################
 
-    # Set log and checkpoint dirs
+    # Set checkpoint dirs
     if grid_search:
         experiment_checkpoints_dir = os.path.join(GRID_SEARCH_CHECKPOINTS_PATH, 'tmp')
     else:
         experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, strategy.problem.name + '_' + datetime.now().strftime(DATE_NAME_FORMAT))
-    experiment_logs_file = os.path.join(ABS_ALGO_EXP_LOGS_PATH, strategy.problem.name + '_' + datetime.now().strftime(DATE_NAME_FORMAT) + '.log')
 
     # Create experiment folder to store
     # snapshots of population
