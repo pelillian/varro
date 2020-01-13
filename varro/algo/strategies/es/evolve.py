@@ -116,7 +116,6 @@ def evolve(strategy,
 
         # Save snapshot of population (offspring)
         if g % FREQ == 0:
-
             # Save the checkpoint
             strategy.save_ckpt(exp_ckpt_dir=experiment_checkpoints_dir)
 
@@ -139,10 +138,8 @@ def evolve(strategy,
             raise NotImplementedError
 
         # Log Average score of population
-        logger.log('Generation {} Avg. Fitness Score: {} | Fittest Individual Score: {}'\
-                        .format(g,
-                                avg_fitness_score,
-                                fittest_ind_score))
+        logger.log('Generation {:0' + str(len(str(strategy.ngen))) + '} | Avg. Fitness Score: {0:.5f} | Fittest Individual Score: {0:.5f}'\
+                        .format(g, avg_fitness_score, fittest_ind_score))
 
         # Early Stopping if average fitness
         # score is close to the minimum possible,
