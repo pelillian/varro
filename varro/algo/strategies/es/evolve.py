@@ -9,14 +9,12 @@ import pickle
 import random
 import numpy as np
 import functools
-from tqdm import tqdm
 from deap import base, creator, tools
 from datetime import datetime
 
 from varro.misc.util import make_path, get_problem_range, get_tb_fig
 from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH, FREQ, DATE_NAME_FORMAT
 from varro.algo.problems import Problem
-from varro.algo.models.nn import ModelNN
 from varro.algo.problems.func_approx import rastrigin, rosenbrock
 
 
@@ -42,12 +40,11 @@ def evolve(strategy,
     # 1. SET UP LOGGER, FOLDERS, AND FILES TO SAVE DATA TO #
     ########################################################
 
-    # Set log and checkpoint dirs
+    # Set checkpoint dirs
     if grid_search:
         experiment_checkpoints_dir = os.path.join(GRID_SEARCH_CHECKPOINTS_PATH, 'tmp')
     else:
         experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, strategy.problem.name + '_' + datetime.now().strftime(DATE_NAME_FORMAT))
-    experiment_logs_file = os.path.join(ABS_ALGO_EXP_LOGS_PATH, strategy.problem.name + '_' + datetime.now().strftime(DATE_NAME_FORMAT) + '.log')
 
     # Create experiment folder to store
     # snapshots of population
@@ -92,15 +89,12 @@ def evolve(strategy,
     avg_fitness_score = strategy.toolbox.evaluate(pop=strategy.pop)
     avg_fitness_scores.append(avg_fitness_score)
 
-    # Load model for predictions
-    model = ModelNN(strategy.problem)
-
     #################################
     # 4. EVOLVE THROUGH GENERATIONS #
     #################################
     # Iterate for generations
     start_gen = strategy.curr_gen
-    for g in tqdm(range(start_gen, strategy.ngen)):
+    for g in range(start_gen, strategy.ngen):
 
         # Select the next generation individuals
         non_alterable, alterable = strategy.generate_offspring()
@@ -122,7 +116,6 @@ def evolve(strategy,
 
         # Save snapshot of population (offspring)
         if g % FREQ == 0:
-
             # Save the checkpoint
             strategy.save_ckpt(exp_ckpt_dir=experiment_checkpoints_dir)
 
@@ -145,16 +138,14 @@ def evolve(strategy,
             raise NotImplementedError
 
         # Log Average score of population
-        logger.log('Generation {} Avg. Fitness Score: {} | Fittest Individual Score: {}'\
-                        .format(g,
-                                avg_fitness_score,
-                                fittest_ind_score))
+        logger.log(('Generation {:0' + str(len(str(strategy.ngen-1))) + '} | Avg. Fitness Score: {:.5f} | Fittest Individual Score: {:.5f}')\
+                        .format(g, avg_fitness_score, fittest_ind_score))
 
         # Early Stopping if average fitness
         # score is close to the minimum possible,
         # or if stuck at local optima (average fitness score
         # hasnt changed for past 10 rounds)
-        if earlystop and (strategy.name == 'sga' or strategy.name == 'nsr-es'):
+        if strategy.earlystop and (strategy.name == 'sga' or strategy.name == 'nsr-es'):
             if strategy.problem.approx_type == Problem.CLASSIFICATION:
                 if round(-fittest_ind_score, 4) > 0.95:
                     logger.log('Early Stopping activated because Accuracy > 95%.')

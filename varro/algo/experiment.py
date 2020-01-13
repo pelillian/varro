@@ -5,186 +5,16 @@ evolutionary algorithm
 """
 
 import datetime
-import pickle
-import numpy as np
-from deap import base, creator
 from dowel import logger, TextOutput, StdOutput
-from functools import partial
 from os import listdir
 from os.path import isfile, join
-from tqdm import tqdm
 
+from varro.algo.fit import fit
+from varro.algo.predict import predict
 from varro.misc.util import make_path
 from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, ABS_ALGO_PREDICTIONS_PATH, DATE_NAME_FORMAT
 from varro.algo.util import get_args
-from varro.algo.problems import Problem, ProblemFuncApprox, ProblemMNIST
-from varro.algo.strategies.es.evolve import evolve
-from varro.algo.strategies.sga import StrategySGA
-from varro.algo.strategies.moga import StrategyMOGA
-from varro.algo.strategies.ns_es import StrategyNSES
-from varro.algo.strategies.nsr_es import StrategyNSRES
-
-
-def fit(model_type,
-        problem_type,
-        strategy,
-        cxpb=None,
-        mutpb=None,
-        imutpb=None,
-        imutmu=None,
-        imutsigma=None,
-        popsize=None,
-        elitesize=None,
-        ngen=None,
-        ckpt=None,
-        novelty_metric=None,
-        halloffamesize=None,
-        earlystop=False,
-        grid_search=False):
-    """Control center to call other modules to execute the optimization
-
-    Args:
-        model_type (str): A string specifying whether we're optimizing on a neural network
-            or field programmable gate array
-        problem_type (str): A string specifying what type of problem we're trying to optimize
-        strategy (str): A string specifying what type of optimization algorithm to use
-        cxpb (float): Cross-over probability for evolutionary algorithm
-        mutpb (float): Mutation probability for evolutionary algorithm
-        imutpb (float): Mutation probability for each individual's attribute
-        imutmu (float): Mean parameter for the Gaussian Distribution we're mutating an attribute from
-        imutsigma (float): Sigma parameter for the Gaussian Distribution we're mutating an attribute from
-        popsize (int): Number of individuals to keep in each Population
-        elitesize (float): Percentage of fittest individuals to pass on to next generation
-        ngen (int): Number of generations to run an evolutionary algorithm
-        ckpt (str): Location of checkpoint to load the population
-        novelty_metric (str): The distance metric to be used to measure an Individual's novelty
-        halloffamesize (float): Percentage of individuals in population we store in the HallOfFame / Archive
-        grid_search (bool): Whether grid search will be in effect
-
-    Returns:
-        fittest_ind_score: Scalar of the best individual in the population's fitness score
-
-    """
-    # 1. Choose Problem and get the specific evaluation function for that problem
-    logger.log("Loading problem...")
-    if problem_type == 'mnist':
-        problem = ProblemMNIST()
-    else:
-        problem = ProblemFuncApprox(func=problem_type)
-
-    # 2. Choose Target Platform
-    logger.log("Loading target platform...")
-    if model_type == 'nn':
-        from varro.algo.models import ModelNN as Model  # Import here so we don't load tensorflow if not needed
-    elif model_type == 'fpga':
-        from varro.algo.models import ModelFPGA as Model
-    model = Model(problem)
-
-    strategy_args = {'novelty_metric' : novelty_metric,
-            'model' : model,
-            'problem' : problem,
-            'cxpb' : cxpb,
-            'mutpb' : mutpb,
-            'popsize' : popsize,
-            'elitesize' : elitesize,
-            'ngen' : ngen,
-            'imutpb' : imutpb,
-            'imutmu' : imutmu,
-            'imutsigma' : imutsigma,
-            'ckpt' : ckpt,
-            'halloffamesize' : halloffamesize,
-            'earlystop' : earlystop}
-
-    # 3. Set Strategy
-    logger.log("Loading strategy...")
-    if strategy == 'sga':
-        strategy = StrategySGA(**strategy_args)
-
-    elif strategy == 'moga':
-        strategy = StrategyMOGA(**strategy_argsp)
-    elif strategy == 'ns-es':
-        strategy = StrategyNSES(**strategy_args)
-    elif strategy == 'nsr-es':
-        strategy = StrategyNSRES(**strategy_args)
-    elif strategy == 'cma-es':
-        raise NotImplementedError
-    else:
-        raise NotImplementedError
-
-    # 4. Evolve
-    pop, avg_fitness_scores, fittest_ind_score = evolve(strategy=strategy, grid_search=grid_search)
-
-    return fittest_ind_score
-
-
-def predict(model_type,
-            problem_type,
-            strategy,
-            X,
-            ckpt,
-            save_dir):
-    """Predicts the output from loading the model saved in checkpoint
-    and saves y_pred into same path as X but with a _y_pred in the name
-
-    Args:
-        model_type (str): A string specifying whether we're optimizing on a neural network
-            or field programmable gate array
-        problem_type (str): A string specifying what type of problem we're trying to optimize
-        strategy (str): A string specifying what type of optimization algorithm to use
-        X (str): Path to the .npy that stores the np.ndarray to use as Input data for model
-        ckpt (str): Location of checkpoint to load the population
-        save_dir (str): Location of where to store the predictions
-
-    """
-
-    # 1. Choose Problem and get the specific evaluation function
-    # for that problem
-    if problem_type == 'mnist':
-        problem = ProblemMNIST()
-    else:
-        problem = ProblemFuncApprox(func=problem_type)
-
-    # 1. Choose Target Platform
-    if model_type == 'nn':
-        from varro.algo.models import ModelNN as Model  # Import here so we don't load tensorflow if not needed
-    elif model_type == 'fpga':
-        from varro.algo.models import ModelFPGA as Model
-    model = Model(problem)
-
-    # Load data from pickle file
-    # The hall of fame contains the best individual
-    # that ever lived in the population during the
-    # evolution. It is lexicographically sorted at all
-    # time so that the first element of the hall of fame
-    # is the individual that has the best first fitness value
-    # ever seen, according to the weights provided to the fitness at creation time.
-    with open(ckpt, "rb") as cp_file:
-        if strategy == 'sga':
-            StrategySGA.init_fitness_and_inds()
-        elif strategy == 'moga':
-            StrategyMOGA.init_fitness_and_inds()
-        elif strategy == 'ns-es':
-            StrategyNSES.init_fitness_and_inds()
-        elif strategy == 'nsr-es':
-            StrategyNSRES.init_fitness_and_inds()
-        elif strategy == 'cma-es':
-            raise NotImplementedError
-        else:
-            raise NotImplementedError
-
-        # Initialize individual based on strategy
-        cp = pickle.load(cp_file)
-        best_ind = cp["halloffame"][0]
-
-    # Load Weights into model using individual
-    model.load_parameters(best_ind)
-
-    # Predict labels using np array in X
-    y_pred = np.array(model.predict(np.load(X)))
-
-    # Save the y_pred into a file
-    y_pred_path = join(save_dir, ckpt.split('_')[-1][:-4] + '_' + X[:-4].split('/')[-1] + '_y_pred.npy')
-    np.save(y_pred_path, y_pred)
+from varro.algo.hyperparam_opt.grid_search import grid_search
 
 
 def main():
@@ -195,6 +25,16 @@ def main():
 
     # Get the Arguments parsed from file execution
     args = get_args()
+
+    if args.hyper_opt is not None:
+        if args.hyper_opt == 'grid_search':
+            grid_search()
+        elif args.hyper_opt == 'bayesian_opt':
+            raise NotImplementedError
+        else:
+            raise ValueError("Unknown hyperparameter optimization method.")
+        return
+
 
     # Init Loggers
     log_path = join(ABS_ALGO_EXP_LOGS_PATH, "{}_{}.log".format(args.problem_type, datetime.datetime.now().strftime(DATE_NAME_FORMAT)))
@@ -231,7 +71,7 @@ def main():
             save_dir = join(ABS_ALGO_PREDICTIONS_PATH, args.ckptfolder.split('/')[-1])
             make_path(save_dir)
             ckpt_files = [join(args.ckptfolder, f) for f in listdir(args.ckptfolder) if isfile(join(args.ckptfolder, f))]
-            for ckpt in tqdm(ckpt_files):
+            for ckpt in ckpt_files:
                 predict(model_type=args.model_type,
                         problem_type=args.problem_type,
                         strategy=args.strategy,

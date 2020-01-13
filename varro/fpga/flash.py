@@ -22,4 +22,3 @@ def config_to_bitstream(file_base_name):
 def flash_config_file(file_base_name):
     config_to_bitstream(file_base_name)
     flash_ecp5(file_base_name)
-

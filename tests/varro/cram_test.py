@@ -10,9 +10,10 @@ def printer(frame, event, arg):
 sys.settrace(printer)
 '''
 
-from varro.cython.fast_cram import load_cram_fast
 import numpy as np
 import pytrellis
+
+from varro.cython.fast_cram import load_cram_fast
 from varro.misc.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
 
 cram = pytrellis.CRAM(13294, 1136)

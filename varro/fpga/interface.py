@@ -83,6 +83,6 @@ class FpgaConfig:
             import pdb; pdb.set_trace()
             return_value = return_value.decode("utf-8")
             return_value = data.split(",")
-            results.append(return_value)
+            results.append(np.sum(return_value))
 
         return results
