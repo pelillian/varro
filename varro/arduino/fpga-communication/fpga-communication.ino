@@ -26,7 +26,7 @@ void loop()
     char buf[50]; 
     // Serial.readBytes(buf, 12);
     bool high; 
-    Serial.readBytes(buf, 1); 
+    int numBytes = Serial.readBytes(buf, 5); 
     for (int i = 0; i < sizeof(buf); i++) {
         char c = buf[i]; 
         if (c == '0') {
@@ -43,16 +43,18 @@ void loop()
             digitalWrite(port, LOW); 
     }
 
-    delayMicroseconds(100); 
+   // delayMicroseconds(100); 
 
-    int portValues[sizeof(analogPorts)]; 
-    for (int i = 0; i < sizeof(analogPorts); i++) {
+    int portValues[6]; 
+    for (int i = 0; i < 6; i++) {
         portValues[i] = analogRead(analogPorts[i]); 
     }
 
-    sprintf(buf, "%d,%d,%d,%d,%d,%d", portValues[0], portValues[1], portValues[2], portValues[3], portValues[4], portValues[5]); 
-    Serial.println(buf); 
+    char sendBuf[50]; 
+    sprintf(sendBuf, "%d,%d,%d,%d,%d,%d;", portValues[0], portValues[1], portValues[2], portValues[3], portValues[4], portValues[5]);
+    Serial.print(sendBuf);
     Serial.flush(); 
+    
 }
 
 
