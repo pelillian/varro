@@ -20,6 +20,7 @@ def send_char(arduino, val):
 
 def send(arduino, val):
     for c in val:
+        import pdb; pdb.set_trace()
         send_char(arduino, c)
 
 def receive(arduino):

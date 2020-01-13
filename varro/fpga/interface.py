@@ -76,9 +76,11 @@ class FpgaConfig:
         """Evaluates given data on the FPGA."""
         results = []
         for datum in data:
-            send(arduino_connection, data)
+            import pdb; pdb.set_trace()
+            send(arduino_connection, [datum])
             sleep(0.96)
             return_value = receive(arduino_connection)
+            import pdb; pdb.set_trace()
             return_value = return_value.decode("utf-8")
             return_value = data.split(",")
             results.append(return_value)
