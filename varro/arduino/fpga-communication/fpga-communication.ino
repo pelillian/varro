@@ -26,7 +26,7 @@ void loop()
     char buf[50]; 
     // Serial.readBytes(buf, 12);
     bool high; 
-    int numBytes = Serial.readBytes(buf, 5); 
+    int numBytes = Serial.readBytes(buf, 1); 
     for (int i = 0; i < sizeof(buf); i++) {
         char c = buf[i]; 
         if (c == '0') {
@@ -56,5 +56,4 @@ void loop()
     Serial.flush(); 
     
 }
-
 
