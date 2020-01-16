@@ -262,10 +262,8 @@ def get_args():
     # we can fit the NN or FPGA from scratch / evolve
     # from the checpoint
     if settings.purpose == 'predict' \
-            and settings.ckpt is None \
-            and settings.ckptfolder is None \
-            and settings.X is None:
-        parser.error("--purpose == 'predict' requires --ckpt or --ckptfolder and --X to be specified.")
+            and ((settings.ckpt is None and settings.ckptfolder is None) or settings.X is None):
+        parser.error("--purpose='predict' requires --X and either --ckpt or --ckptfolder to be specified.")
 
     # Check that X and y are .npy files
     if settings.X and settings.X[-3:] != 'npy':
