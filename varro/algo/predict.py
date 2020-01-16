@@ -1,6 +1,7 @@
 import pickle
 import numpy as np
 from dowel import logger
+from os.path import join
 
 from varro.algo.problems import Problem, ProblemFuncApprox, ProblemMNIST
 from varro.algo.strategies.sga import StrategySGA
