@@ -77,6 +77,7 @@ def predict(model_type,
     # Predict labels using np array in X
     logger.log("Running model.predict")
     y_pred = np.array(model.predict(np.load(X)))
+    logger.log(str(y_pred))
 
     # Save the y_pred into a file
     y_pred_path = join(save_dir, ckpt.split('_')[-1][:-4] + '_' + X[:-4].split('/')[-1] + '_y_pred.npy')
