@@ -15,7 +15,7 @@ from varro.fpga.flash import flash_config_file
 from varro.arduino.communication import initialize_connection, send, receive
 
 pytrellis.load_database(PRJTRELLIS_DATABASE)
-arduino_connection = initialize_connection()
+arduino_connection = initialize_connection() # TODO: Move this over to arduino/communication.py
 
 
 class FpgaConfig:
@@ -76,10 +76,16 @@ class FpgaConfig:
         """Evaluates given data on the FPGA."""
         results = []
         for datum in data:
-            send(arduino_connection, '12345')
+            send(arduino_connection, [datum])
             sleep(0.96)
             return_value = receive(arduino_connection)
-            return_value = data.split(",")
-            results.append(np.sum(return_value))
+            return_value = return_value.decode("utf-8")
+            if return_value[-1] == ';':
+                return_value = return_value[:-1]
+            return_value = return_value.split(";")[-1]
+            return_value = return_value.split(",")
+            return_value = list(map(int, return_value))
+            pred = np.mean(return_value) / 1024
+            results.append(pred)
 
         return results
