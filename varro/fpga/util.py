@@ -43,10 +43,14 @@ def get_new_id():
 
 def bit_to_cram(filename):
     """Take a .bit file and return the CRAM array."""
+    chip = load_bit_to_chip(filename)
+    return chip_to_cram(chip)
+
+def load_bit_to_chip(filename):
+    """Take a .bit file and return the deserialized chip."""
     pytrellis.load_database("../prjtrellis-db")
     bs = pytrellis.Bitstream.read_bit(filename)
-    chip = bs.deserialise_chip()
-    return chip_to_cram(chip)
+    return bs.deserialise_chip()
 
 def chip_to_cram(chip):
     """Take a pytrellis chip object and return the CRAM array."""
