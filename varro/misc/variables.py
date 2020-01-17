@@ -40,10 +40,11 @@ GRID_SEARCH_CONFIG_PATH = os.path.join(ROOT_DIR, 'tests/varro/algo/grid_search')
 FREQ = 1
 
 # Interface
+FPGA_BITSTREAM_SHAPE = (13294, 1136)
 PRJTRELLIS_DATABASE = "../prjtrellis-db"
 CHIP_NAME = "LFE5UM5G-85F"
 CHIP_COMMENT = ".comment Part: LFE5UM5G-85F-8CABGA381"
 ARDUINO_PORT = "/dev/ttyACM0"
+FPGA_CONFIG_DIR = "data/config"
 
-FPGA_BITSTREAM_SHAPE = (13294, 1136)
 

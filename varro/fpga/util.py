@@ -4,10 +4,12 @@ This module contains FPGA utility functions.
 
 import os
 from os.path import join
+import numpy as np
+import pytrellis
 
 from varro.misc.util import make_path
-
-FPGA_CONFIG_DIR = "data/config"
+from varro.misc.variables import FPGA_CONFIG_DIR
+from varro.misc.variables import FPGA_BITSTREAM_SHAPE
 
 
 def get_config_dir():
@@ -38,3 +40,16 @@ def get_new_id():
     new_id = get_max_id() + 1
     make_path(join(get_config_dir(), str(new_id)))
     return new_id
+
+def bit_to_cram(filename):
+    """Takes a .bit file and returns the CRAM array."""
+    pytrellis.load_database("../prjtrellis-db")
+    bs = pytrellis.Bitstream.read_bit(filename)
+    chip = bs.deserialise_chip()
+
+    cram_bits = np.empty(FPGA_BITSTREAM_SHAPE)
+    for i in range(chip.cram.frames()):
+        for j in range(chip.cram.bits()):
+            cram_bits[i][j] = chip.cram.bit(i, j)
+    return cram_bits
+
