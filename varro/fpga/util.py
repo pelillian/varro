@@ -42,13 +42,14 @@ def get_new_id():
     return new_id
 
 def bit_to_cram(filename):
-    """Takes a .bit file and returns the CRAM array."""
+    """Take a .bit file and return the CRAM array."""
     pytrellis.load_database("../prjtrellis-db")
     bs = pytrellis.Bitstream.read_bit(filename)
     chip = bs.deserialise_chip()
     return chip_to_cram(chip)
 
 def chip_to_cram(chip):
+    """Take a pytrellis chip object and return the CRAM array."""
     cram_bits = np.empty(FPGA_BITSTREAM_SHAPE)
     for i in range(chip.cram.frames()):
         for j in range(chip.cram.bits()):
