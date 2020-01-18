@@ -48,7 +48,7 @@ def predict(model_type,
     if ckpt.endswith(".bit"):
         logger.log("Loading data from bit file...")
         from varro.fpga.util import bit_to_cram
-        best_ind = bit_to_cram(ckpt)
+        predict_ind = bit_to_cram(ckpt)
     elif ckpt.endswith(".pkl"):
         logger.log("Loading data from pickle file...")
         with open(ckpt, "rb") as cp_file:
@@ -67,10 +67,12 @@ def predict(model_type,
 
             # Initialize individual based on strategy
             cp = pickle.load(cp_file)
-            best_ind = cp["halloffame"][0]
+            predict_ind = cp["halloffame"][0]
+    else:
+        raise ValueError("Checkpoint file has unrecognised extension.")
 
     # Load Weights into model using individual
-    model.load_parameters(best_ind)
+    model.load_parameters(predict_ind)
 
     # Predict labels using np array in X
     logger.log("Running model.predict")
