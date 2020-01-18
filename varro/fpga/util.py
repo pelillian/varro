@@ -54,7 +54,7 @@ def load_bit_to_chip(filename):
 
 def chip_to_cram(chip):
     """Take a pytrellis chip object and return the CRAM array."""
-    cram_bits = np.empty(FPGA_BITSTREAM_SHAPE)
+    cram_bits = np.empty(FPGA_BITSTREAM_SHAPE, dtype=np.bool)
     for i in range(chip.cram.frames()):
         for j in range(chip.cram.bits()):
             cram_bits[i][j] = chip.cram.bit(i, j)

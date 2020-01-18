@@ -222,6 +222,10 @@ def get_args():
     ######################################################################################
     # 18. The size of HallOfFame which will store the best (fittest / novel) individuals #
     ######################################################################################
+    # The hall of fame contains the best individuals of all time in the population. It is
+    # lexicographically sorted at all times so that the first element of the hall of fame
+    # is the individual that has the best first fitness value ever seen, according to the
+    # weights provided to the fitness at creation time.
     parser.add_argument('--halloffamesize',
                         default=0.01,
                         const=0.01,

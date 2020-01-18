@@ -45,31 +45,29 @@ def predict(model_type,
         from varro.algo.models import ModelFPGA as Model
     model = Model(problem)
 
-    # Load data from pickle file
-    # The hall of fame contains the best individual
-    # that ever lived in the population during the
-    # evolution. It is lexicographically sorted at all
-    # time so that the first element of the hall of fame
-    # is the individual that has the best first fitness value
-    # ever seen, according to the weights provided to the fitness at creation time.
-    logger.log("Loading data from pickle file...")
-    with open(ckpt, "rb") as cp_file:
-        if strategy == 'sga':
-            StrategySGA.init_fitness_and_inds()
-        elif strategy == 'moga':
-            StrategyMOGA.init_fitness_and_inds()
-        elif strategy == 'ns-es':
-            StrategyNSES.init_fitness_and_inds()
-        elif strategy == 'nsr-es':
-            StrategyNSRES.init_fitness_and_inds()
-        elif strategy == 'cma-es':
-            raise NotImplementedError
-        else:
-            raise NotImplementedError
+    if ckpt.endswith(".bit"):
+        logger.log("Loading data from bit file...")
+        from varro.fpga.util import bit_to_cram
+        best_ind = bit_to_cram(ckpt)
+    elif ckpt.endswith(".pkl"):
+        logger.log("Loading data from pickle file...")
+        with open(ckpt, "rb") as cp_file:
+            if strategy == 'sga':
+                StrategySGA.init_fitness_and_inds()
+            elif strategy == 'moga':
+                StrategyMOGA.init_fitness_and_inds()
+            elif strategy == 'ns-es':
+                StrategyNSES.init_fitness_and_inds()
+            elif strategy == 'nsr-es':
+                StrategyNSRES.init_fitness_and_inds()
+            elif strategy == 'cma-es':
+                raise NotImplementedError
+            else:
+                raise NotImplementedError
 
-        # Initialize individual based on strategy
-        cp = pickle.load(cp_file)
-        best_ind = cp["halloffame"][0]
+            # Initialize individual based on strategy
+            cp = pickle.load(cp_file)
+            best_ind = cp["halloffame"][0]
 
     # Load Weights into model using individual
     model.load_parameters(best_ind)
