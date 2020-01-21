@@ -11,13 +11,14 @@ def initialize_connection():
     return ard
 
 def send_char(arduino, val):
-    send_byte = int(val).to_bytes(1, byteorder="little") # Makes sure that the value can be represented as one byte
+    send_byte = int(val).to_bytes(1, byteorder="big") # Makes sure that the value can be represented as one byte
     retval = arduino.write(send_byte)
     arduino.flush()
 
     return retval
 
 def send(arduino, val):
+    # TODO: Flush arduino serial buffer before recieve is called
     for c in val:
         send_char(arduino, c)
 
