@@ -27,13 +27,11 @@ void loop()
     // Serial.readBytes(buf, 12);
     bool high; 
     int numBytes = Serial.readBytes(buf, 1); 
-    for (int i = 0; i < sizeof(buf); i++) {
-        char c = buf[i]; 
-        if (c == '0') {
-            high = false; 
-        } else {
-            high = true; 
-        }
+    char c = buf[0]; 
+    if (c == 1) {
+        high = true; 
+    } else {
+        high = false; 
     }
 
     for (int port : digitalPorts) {
