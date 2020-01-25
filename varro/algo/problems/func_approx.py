@@ -71,7 +71,6 @@ class ProblemFuncApprox(Problem):
         Args:
             start (int): The lower bound of our range
             end (int): The upper bound of our range
-            step (int): The precision of our ints to be sampled
             size (int): Number of ints to sample from list
 
         Returns:
@@ -80,6 +79,21 @@ class ProblemFuncApprox(Problem):
         self.minimum = start
         self.maximum = end
         return np.random.randint(start, end + 1, size=size)
+
+    def sample_bool(self, size=500):
+        """Gets a random list of bools, with the same number of 1's and 0's
+
+        Args:
+            size (int): Number of bools to sample
+
+        Returns:
+            A random sample of bools from the list
+        """
+        self.minimum = 0
+        self.maximum = 1
+        sample = np.concatenate((np.zeros(size//2), np.ones(size//2)))
+        np.random.shuffle(sample)
+        return sample
 
     def reset_train_set(self):
         """Sets the ground truth training input X_train and output y_train
@@ -109,7 +123,7 @@ class ProblemFuncApprox(Problem):
             self.X_train = self.sample_float(-10, 10, 0.001)
             self.y_train = (np.array(self.X_train) > 0).astype(float)
         elif func == 'simple_step':
-            self.X_train = self.sample_int(0, 1, size=50)
+            self.X_train = self.sample_bool(size=40)
             self.y_train = self.X_train
         else:
             raise ValueError('Problem \'' + str(func) + '\' not recognised')
