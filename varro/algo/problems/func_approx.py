@@ -109,7 +109,7 @@ class ProblemFuncApprox(Problem):
             self.X_train = self.sample_float(-10, 10, 0.001)
             self.y_train = (np.array(self.X_train) > 0).astype(float)
         elif func == 'simple_step':
-            self.X_train = self.sample_int(0, 1)
+            self.X_train = self.sample_int(0, 1, size=50)
             self.y_train = self.X_train
         else:
             raise ValueError('Problem \'' + str(func) + '\' not recognised')

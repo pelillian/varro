@@ -72,20 +72,29 @@ class FpgaConfig:
         self.write_config_file()
         flash_config_file(self.base_file_name)
 
+    def evaluate_one(self, datum):
+        send(arduino_connection, [datum])
+        sleep(0.96)
+        return_value = receive(arduino_connection)
+        return_value = return_value.decode("utf-8")
+        if return_value[-1] == ';':
+            return_value = return_value[:-1]
+        return_value = return_value.split(";")[-1]
+        return_value = return_value.split(",")
+        return_value = list(map(int, return_value))
+        pred = np.mean(return_value) / 1024
+        return pred
+
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
         results = []
         for datum in data:
-            send(arduino_connection, [datum])
-            sleep(0.96)
-            return_value = receive(arduino_connection)
-            return_value = return_value.decode("utf-8")
-            if return_value[-1] == ';':
-                return_value = return_value[:-1]
-            return_value = return_value.split(";")[-1]
-            return_value = return_value.split(",")
-            return_value = list(map(int, return_value))
-            pred = np.mean(return_value) / 1024
+            pred = None
+            while pred is None:
+                try:
+                    pred = self.evaluate_one(datum)
+                except UnicodeDecodeError:
+                    pass
             results.append(pred)
 
         return results
