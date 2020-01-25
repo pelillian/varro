@@ -74,7 +74,7 @@ class FpgaConfig:
 
     def evaluate_one(self, datum):
         send(arduino_connection, [datum])
-        sleep(0.96)
+        sleep(0.05)
         return_value = receive(arduino_connection)
         return_value = return_value.decode("utf-8")
         if return_value[-1] == ';':
