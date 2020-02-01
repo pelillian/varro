@@ -91,7 +91,7 @@ class ProblemFuncApprox(Problem):
         """
         self.minimum = 0
         self.maximum = 1
-        sample = np.concatenate((np.zeros(size//2), np.ones(size//2)))
+        sample = np.concatenate((np.zeros(size//2, dtype=np.int8), np.ones(size//2, dtype=np.int8)))
         np.random.shuffle(sample)
         return sample
 
