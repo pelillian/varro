@@ -4,6 +4,7 @@ This module contains FPGA utility functions.
 
 import os
 from os.path import join
+import shutil
 import numpy as np
 import pytrellis
 
@@ -16,6 +17,13 @@ def get_config_dir():
     """Returns the directory containing the bitstream/config folders."""
     make_path(FPGA_CONFIG_DIR)
     return FPGA_CONFIG_DIR
+
+def clean_config_dir():
+    configdir = get_config_dir()
+    if os.path.isdir(configdir) and not os.path.islink(configdir):
+        shutil.rmtree(configdir)
+    elif os.path.exists(configdir):
+        os.remove(configdir)
 
 def is_int(str):
     """Determines if a number is an integer."""
