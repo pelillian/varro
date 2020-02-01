@@ -37,7 +37,7 @@ GRID_SEARCH_CONFIG_PATH = os.path.join(ROOT_DIR, 'tests/varro/algo/grid_search')
 
 # Whole population will be written in a pickled
 # dictionary every FREQ generations
-FREQ = 10
+FREQ = 5
 
 # Interface
 FPGA_BITSTREAM_SHAPE = (13294, 1136)

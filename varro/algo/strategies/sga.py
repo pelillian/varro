@@ -79,7 +79,7 @@ class StrategySGA(Strategy):
                 cp = pickle.load(cp_file)
 
             self.rndstate = random.seed(cp["rndstate"])
-            self.pop = cp["population"]
+            self.pop = cp["pop"]
             self.curr_gen = int(cp["curr_gen"])
             self.halloffame = cp["halloffame"]
             self.logbook = cp["logbook"]
