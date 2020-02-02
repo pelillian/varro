@@ -264,6 +264,7 @@ def get_args():
     ######################################################################################
     parser.add_argument('--ckpt_freq',
                         default=10,
+                        type=int,
                         nargs='?',
                         metavar='CHECKPOINT-FREQUENCY',
                         action='store',
