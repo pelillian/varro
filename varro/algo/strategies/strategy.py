@@ -33,19 +33,19 @@ class Strategy(ABC):
                  novelty_metric,
                  earlystop):
         """This class defines the strategy and the methods that come with that strategy."""
-        self._name = name
-        self._cxpb = cxpb
-        self._mutpb = mutpb
-        self._popsize = popsize
-        self._elitesize = elitesize
-        self._ngen = ngen
-        self._imutpb = imutpb
-        self._imutmu = imutmu
-        self._imutsigma = imutsigma
-        self._ckpt = ckpt
-        self._halloffamesize = halloffamesize
-        self._earlystop = earlystop
-        self._noveltymetric = novelty_metric
+        self.name = name
+        self.cxpb = cxpb
+        self.mutpb = mutpb
+        self.popsize = popsize
+        self.elitesize = elitesize
+        self.ngen = ngen
+        self.imutpb = imutpb
+        self.imutmu = imutmu
+        self.imutsigma = imutsigma
+        self.ckpt = ckpt
+        self.halloffamesize = halloffamesize
+        self.earlystop = earlystop
+        self.noveltymetric = novelty_metric
 
         # Storing model and problem
         self.model = model
@@ -62,72 +62,6 @@ class Strategy(ABC):
         self.stats.register("avg", np.mean)
         self.stats.register("max", np.max)
 
-    #############
-    # VARIABLES #
-    #############
-    @property
-    def name(self):
-        """Name of Strategy we're using to optimize"""
-        return self._name
-
-    @property
-    def cxpb(self):
-        """Crossover probability from 0-1"""
-        return self._cxpb
-
-    @property
-    def mutpb(self):
-        """Mutation probability from 0-1"""
-        return self._mutpb
-
-    @property
-    def popsize(self):
-        """Number of individuals to keep in each Population"""
-        return self._popsize
-
-    @property
-    def elitesize(self):
-        """Percentage of fittest individuals to pass on to next generation"""
-        return self._elitesize
-
-    @property
-    def ngen(self):
-        """Number of generations to run algorithm"""
-        return self._ngen
-
-    @property
-    def imutpb(self):
-        """Mutation probability for each individual's attribute"""
-        return self._imutpb
-
-    @property
-    def imutmu(self):
-        """Mean parameter for the Gaussian Distribution we're mutating an attribute from"""
-        return self._imutmu
-
-    @property
-    def imutsigma(self):
-        """Sigma parameter for the Gaussian Distribution we're mutating an attribute from"""
-        return self._imutsigma
-
-    @property
-    def ckpt(self):
-        """String to specify an existing checkpoint file to load the population"""
-        return self._ckpt
-
-    @property
-    def halloffamesize(self):
-        """Percentage of individuals in population we store in the HallOfFame / Archive"""
-        return self._halloffamesize
-
-    @property
-    def earlystop(self):
-        """Percentage of individuals in population we store in the HallOfFame / Archive"""
-        return self._earlystop
-
-    #############
-    # FUNCTIONS #
-    #############
     @abstractmethod
     def init_fitness_and_inds(self):
         """Initializes the fitness and definition of individuals"""

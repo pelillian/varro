@@ -19,17 +19,6 @@ class StrategyCMAES(StrategySGA):
     def __init__(self, **kwargs):
         super().__init__(name='cma-es', **kwargs)
 
-    #############
-    # VARIABLES #
-    #############
-    @property
-    def novelty_metric(self):
-        """The distance metric to be used to measure an Individual's novelty"""
-        return self._novelty_metric
-
-    #############
-    # FUNCTIONS #
-    #############
     @staticmethod
     def init_fitness_and_inds():
         """Initializes the novelty and definition of individuals"""

@@ -24,6 +24,7 @@ def fit(model_type,
         elitesize=None,
         ngen=None,
         ckpt=None,
+        ckpt_freq=10,
         novelty_metric=None,
         halloffamesize=None,
         earlystop=False,
@@ -97,7 +98,6 @@ def fit(model_type,
     logger.log("Loading strategy...")
     if strategy == 'sga':
         strategy = StrategySGA(**strategy_args)
-
     elif strategy == 'moga':
         strategy = StrategyMOGA(**strategy_argsp)
     elif strategy == 'ns-es':
@@ -105,7 +105,7 @@ def fit(model_type,
     elif strategy == 'nsr-es':
         strategy = StrategyNSRES(**strategy_args)
     elif strategy == 'cma-es':
-        raise NotImplementedError
+        strategy = StrategyCMAES(**strategy_args)
     else:
         raise NotImplementedError
 
@@ -114,7 +114,7 @@ def fit(model_type,
     timer = time.time()
 
     # 4. Evolve
-    pop, avg_fitness_scores, fittest_ind_score = evolve(strategy=strategy, grid_search=grid_search)
+    pop, avg_fitness_scores, fittest_ind_score = evolve(strategy=strategy, grid_search=grid_search, ckpt_freq=ckpt_freq)
 
     timer = time.time() - timer
     logger.log('FIT.PY Evolving took {}s'.format(timer))

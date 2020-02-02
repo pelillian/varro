@@ -14,7 +14,7 @@ from datetime import datetime
 import time
 
 from varro.misc.util import make_path, get_problem_range, get_tb_fig
-from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH, FREQ, DATE_NAME_FORMAT
+from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH, DATE_NAME_FORMAT
 from varro.algo.problems import Problem
 from varro.algo.problems.func_approx import rastrigin, rosenbrock
 
@@ -22,7 +22,8 @@ from varro.algo.problems.func_approx import rastrigin, rosenbrock
 def evolve(strategy,
            logs_path=ABS_ALGO_EXP_LOGS_PATH,
            ckpts_path=EXPERIMENT_CHECKPOINTS_PATH,
-           grid_search=False):
+           grid_search=False,
+           ckpt_freq=10):
     """Evolves parameters to train a model on a dataset.
 
     Args:
@@ -140,7 +141,7 @@ def evolve(strategy,
 
 
         # Save snapshot of population (offspring)
-        if g % FREQ == 0 or g == strategy.ngen-1:
+        if g % ckpt_freq == 0 or g == strategy.ngen-1:
             # Save the checkpoint
             strategy.save_ckpt(exp_ckpt_dir=experiment_checkpoints_dir)
 

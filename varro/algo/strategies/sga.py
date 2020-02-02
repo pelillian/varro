@@ -19,9 +19,6 @@ class StrategySGA(Strategy):
     def __init__(self, **kwargs):
         super().__init__(name='sga', **kwargs)
 
-    #############
-    # FUNCTIONS #
-    #############
     @staticmethod
     def init_fitness_and_inds():
         timer = time.time()
@@ -106,6 +103,7 @@ class StrategySGA(Strategy):
             self.halloffame = tools.HallOfFame(maxsize=int(self.halloffamesize*self.popsize), similar=np.array_equal)
             self.logbook = tools.Logbook()
 
+        self.paretofront = None
         timer = time.time() - timer
         logger.log('SGA.PY Loading ES Vars took {}s'.format(timer))
 
@@ -125,6 +123,7 @@ class StrategySGA(Strategy):
                   strategy=self.name,
                   curr_gen=self.curr_gen,
                   halloffame=self.halloffame,
+                  paretofront=self.paretofront,
                   logbook=self.logbook,
                   rndstate=self.rndstate)
 
