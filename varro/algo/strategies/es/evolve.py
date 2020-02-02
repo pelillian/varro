@@ -115,7 +115,7 @@ def evolve(strategy,
         avg_fitness_scores.append(avg_fitness_score)
 
         # Save snapshot of population (offspring)
-        if g % FREQ == 0:
+        if g % FREQ == 0 or g == strategy.ngen-1:
             # Save the checkpoint
             strategy.save_ckpt(exp_ckpt_dir=experiment_checkpoints_dir)
 
