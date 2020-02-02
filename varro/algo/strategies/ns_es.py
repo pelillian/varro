@@ -16,9 +16,6 @@ class StrategyNSES(StrategySGA):
     def __init__(self, **kwargs):
         super().__init__(name='ns-es', **kwargs)
 
-    #############
-    # FUNCTIONS #
-    #############
     @staticmethod
     def init_fitness_and_inds():
         """Initializes the novelty and definition of individuals"""

@@ -18,9 +18,6 @@ class StrategyNSRES(StrategyNSES):
     def __init__(self, **kwargs):
         super().__init__(self, name='nsr-es', **kwargs)
 
-    #############
-    # FUNCTIONS #
-    #############
     @staticmethod
     def init_fitness_and_inds():
         """Initializes the fitness and definition of individuals"""

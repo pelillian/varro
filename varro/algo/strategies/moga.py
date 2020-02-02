@@ -22,19 +22,8 @@ class StrategyMOGA(StrategySGA):
         super().__init__(self, name='moga', **kwargs)
 
         # Set Objectives (Fitness scores) to optimize over
-        self._objectives = OBJECTIVES
+        self.objectives = OBJECTIVES
 
-    #############
-    # VARIABLES #
-    #############
-    @property
-    def objectives(self):
-        """A list of the objectives (fitness scores) that we want to run moga for"""
-        return self._objectives
-
-    #############
-    # FUNCTIONS #
-    #############
     @staticmethod
     def init_fitness_and_inds(objectives=OBJECTIVES):
         """Initializes the fitness and definition of individuals"""

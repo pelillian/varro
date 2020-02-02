@@ -17,9 +17,6 @@ class StrategySGA(Strategy):
     def __init__(self, **kwargs):
         super().__init__(name='sga', **kwargs)
 
-    #############
-    # FUNCTIONS #
-    #############
     @staticmethod
     def init_fitness_and_inds():
         """Initializes the fitness and definition of individuals"""

@@ -62,9 +62,6 @@ class Strategy(ABC):
         self.stats.register("avg", np.mean)
         self.stats.register("max", np.max)
 
-    #############
-    # FUNCTIONS #
-    #############
     @abstractmethod
     def init_fitness_and_inds(self):
         """Initializes the fitness and definition of individuals"""
