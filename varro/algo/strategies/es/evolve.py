@@ -11,6 +11,7 @@ import numpy as np
 import functools
 from deap import base, creator, tools
 from datetime import datetime
+import time
 
 from varro.misc.util import make_path, get_problem_range, get_tb_fig
 from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH, FREQ, DATE_NAME_FORMAT
@@ -86,8 +87,12 @@ def evolve(strategy,
     avg_fitness_scores = []
 
     # Evaluate the entire population
+    timer = time.time()
     avg_fitness_score = strategy.toolbox.evaluate(pop=strategy.pop)
     avg_fitness_scores.append(avg_fitness_score)
+    timer -= time.time()
+    logger.log('EVOLVE.PY strategy.toolbox.evaluate took {}s'.format(timer))
+    timer = time.time()
 
     #################################
     # 4. EVOLVE THROUGH GENERATIONS #
@@ -98,21 +103,39 @@ def evolve(strategy,
 
         # Select the next generation individuals
         non_alterable, alterable = strategy.generate_offspring()
+        
+        timer -= time.time()
+        logger.log('EVOLVE.PY Selecting the next generation individuals took {}s'.format(timer))
+        timer = time.time()
 
         # Mate offspring
         strategy.mate(alterable)
 
+        timer -= time.time()
+        logger.log('EVOLVE.PY Mating offspring took {}s'.format(timer))
+        timer = time.time()
+
         # Mutate offspring
         strategy.mutate(alterable)
+
+        timer -= time.time()
+        logger.log('EVOLVE.PY Mutating offspring took {}s'.format(timer))
+        timer = time.time()
 
         # Recombine Non-alterable offspring with the
         # ones that have been mutated / cross-overed
         offspring = non_alterable + alterable
 
+        timer = time.time()
         # Evaluate the entire population
         strategy.curr_gen = g # Set the current generation
         avg_fitness_score = strategy.toolbox.evaluate(pop=offspring)
         avg_fitness_scores.append(avg_fitness_score)
+
+        timer -= time.time()
+        logger.log('EVOLVE.PY Evaulating the entire population took {}s'.format(timer))
+        timer = time.time()
+
 
         # Save snapshot of population (offspring)
         if g % FREQ == 0:
@@ -160,5 +183,4 @@ def evolve(strategy,
                 if len(avg_fitness_scores) > 10 and len(set(avg_fitness_scores[-10:])) == 1:
                     logger.log('Early Stopping activated because fitness scores have converged.')
                     break;
-
     return strategy.pop, avg_fitness_scores, fittest_ind_score
