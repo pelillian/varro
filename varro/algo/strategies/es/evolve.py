@@ -90,7 +90,7 @@ def evolve(strategy,
     timer = time.time()
     avg_fitness_score = strategy.toolbox.evaluate(pop=strategy.pop)
     avg_fitness_scores.append(avg_fitness_score)
-    timer -= time.time()
+    timer = time.time() - timer
     logger.log('EVOLVE.PY strategy.toolbox.evaluate took {}s'.format(timer))
     timer = time.time()
 
@@ -101,24 +101,26 @@ def evolve(strategy,
     start_gen = strategy.curr_gen
     for g in range(start_gen, strategy.ngen):
 
+        timer = time.time()
+
         # Select the next generation individuals
         non_alterable, alterable = strategy.generate_offspring()
         
-        timer -= time.time()
+        timer = time.time() - timer
         logger.log('EVOLVE.PY Selecting the next generation individuals took {}s'.format(timer))
         timer = time.time()
 
         # Mate offspring
         strategy.mate(alterable)
 
-        timer -= time.time()
+        timer = time.time() - timer
         logger.log('EVOLVE.PY Mating offspring took {}s'.format(timer))
         timer = time.time()
 
         # Mutate offspring
         strategy.mutate(alterable)
 
-        timer -= time.time()
+        timer = time.time() - timer
         logger.log('EVOLVE.PY Mutating offspring took {}s'.format(timer))
         timer = time.time()
 
@@ -132,7 +134,7 @@ def evolve(strategy,
         avg_fitness_score = strategy.toolbox.evaluate(pop=offspring)
         avg_fitness_scores.append(avg_fitness_score)
 
-        timer -= time.time()
+        timer = time.time() - timer
         logger.log('EVOLVE.PY Evaulating the entire population took {}s'.format(timer))
         timer = time.time()
 
@@ -162,7 +164,7 @@ def evolve(strategy,
 
         # Log Average score of population
         logger.log(('Generation {:0' + str(len(str(strategy.ngen-1))) + '} | Avg. Fitness Score: {:.5f} | Fittest Individual Score: {:.5f}')\
-                        .format(g, avg_fitness_score, fittest_ind_score))
+                        .format(g, avg_fitness_score, fittest_ind_score)) 
 
         # Early Stopping if average fitness
         # score is close to the minimum possible,

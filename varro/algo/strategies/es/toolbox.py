@@ -7,7 +7,7 @@ import random
 import numpy as np
 from dowel import logger
 from deap import base, creator, tools
-
+import time
 
 def es_toolbox(strategy_name,
                i_shape,
@@ -34,16 +34,30 @@ def es_toolbox(strategy_name,
     """
     logger.log("Initializing toolbox...")
     # Set seed
-    random.seed(100)
+    seed = int(time.time())
+    random.seed(seed)
 
-    # Initialzie Toolbox
+    logger.log('TOOLBOX.PY random seed is {}'.format(seed))
+    
+    timer = time.time()
+
+    # Initialize Toolbox
     toolbox = base.Toolbox()
+
+    timer = time.time() - timer
+    logger.log('TOOLBOX.PY Initializing toolbox took {}s'.format(timer))
+    timer = time.time()
 
     # Defining tools specific to model
     if model_type == "nn":
 
         # ATTRIBUTE
         toolbox.register("attribute", random.random)
+
+        timer = time.time() - timer
+        logger.log('TOOLBOX.PY register("attribute") took {}s'.format(timer))
+        timer = time.time()
+
 
         # INDIVIDUAL
         toolbox.register("individual",
@@ -52,6 +66,10 @@ def es_toolbox(strategy_name,
                          getattr(toolbox, 'attribute'),
                          n=i_shape)
 
+        timer = time.time() - timer
+        logger.log('TOOLBOX.PY register("individual") took {}s'.format(timer))
+        timer = time.time()
+
         # MUTATION
         toolbox.register("mutate",
                          getattr(tools, 'mutGaussian'),
@@ -59,21 +77,42 @@ def es_toolbox(strategy_name,
                          sigma=imutsigma,
                          indpb=imutpb)
 
+        timer = time.time() - timer
+        logger.log('TOOLBOX.PY register("mutate") took {}s'.format(timer))
+        timer = time.time()
+
+
         # POPULATION
         toolbox.register("population",
                          getattr(tools, 'initRepeat'),
                          list,
                          getattr(toolbox, 'individual'))
 
+        timer = time.time() - timer
+        logger.log('TOOLBOX.PY register("population") took {}s'.format(timer))
+        timer = time.time()
+
         # MATING
         toolbox.register("mate",
                          getattr(tools, 'cxTwoPoint'))
 
+        timer = time.time() - timer
+        logger.log('TOOLBOX.PY register("mate") took {}s'.format(timer))
+        timer = time.time()
+
+
     elif model_type == "fpga":
+
+        timer = time.time()
 
         # ATTRIBUTE
         toolbox.register("attribute", np.random.choice, [False, True])
         size = np.prod(i_shape)
+
+        timer = time.time() - timer
+        logger.log('TOOLBOX.PY register("attribute") took {}s'.format(timer))
+        timer = time.time()
+
 
         # MUTATION
         def mutate_individual(ind):
@@ -81,6 +120,11 @@ def es_toolbox(strategy_name,
             ind[idx] = np.invert(ind[idx])
             return ind
         toolbox.register("mutate", mutate_individual)
+
+        timer = time.time() - timer
+        logger.log('TOOLBOX.PY register("mutate") took {}s'.format(timer))
+        timer = time.time()
+
 
         # POPULATION
         def init_population(ind_class, n):
@@ -90,11 +134,22 @@ def es_toolbox(strategy_name,
                          init_population,
                          getattr(creator, 'Individual'))
 
+        timer = time.time() - timer
+        logger.log('TOOLBOX.PY register("population") took {}s'.format(timer))
+        timer = time.time()
+
+
         # MATING
         from varro.fpga.cross_over import cross_over
         toolbox.register("mate", cross_over)
 
+        timer = time.time() - timer
+        logger.log('TOOLBOX.PY register("mate") took {}s'.format(timer))
+        timer = time.time()
+
+
     # SELECTION METHOD
+    timer = time.time()
     if strategy_name == 'nsr-es':
         toolbox.register("select_elite",
                          getattr(tools, 'selSPEA2')) # Use Multi-objective selection method
@@ -107,8 +162,17 @@ def es_toolbox(strategy_name,
         toolbox.register("select",
                          getattr(tools, 'selRandom'))
 
+    timer = time.time() - timer
+    logger.log('TOOLBOX.PY register("select") took {}s'.format(timer))
+    timer = time.time()
+
+
     # EVALUATE
     toolbox.register("evaluate",
                      evaluate)
 
+    timer = time.time() - timer
+    logger.log('TOOLBOX.PY register("evaluate") took {}s'.format(timer))
+    timer = time.time()
+    
     return toolbox

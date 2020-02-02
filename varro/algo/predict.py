@@ -2,6 +2,7 @@ import pickle
 import numpy as np
 from dowel import logger
 from os.path import join
+import time
 
 from varro.algo.problems import Problem, ProblemFuncApprox, ProblemMNIST
 from varro.algo.strategies.sga import StrategySGA
@@ -31,11 +32,17 @@ def predict(model_type,
 
     # 1. Choose Problem and get the specific evaluation function
     # for that problem
+
+    timer = time.time()
     logger.log("Loading problem...")
     if problem_type == 'mnist':
         problem = ProblemMNIST()
     else:
         problem = ProblemFuncApprox(func=problem_type)
+
+    timer = time.time() - timer
+    logger.log('PREDICT.PY Choosing evaluation function for problem took {}s'.format(timer))
+    timer = time.time()
 
     # 1. Choose Target Platform
     logger.log("Loading target platform...")
@@ -45,12 +52,26 @@ def predict(model_type,
         from varro.algo.models import ModelFPGA as Model
     model = Model(problem)
 
+    timer = time.time() - timer
+    logger.log('PREDICT.PY Choosing target platform took {}s'.format(timer))
+    timer = time.time()
+
+
     if ckpt.endswith(".bit"):
         logger.log("Loading data from bit file...")
         from varro.fpga.util import bit_to_cram
+
+        timer = time.time()
         predict_ind = bit_to_cram(ckpt)
+        
+        timer = time.time() - timer
+        logger.log('PREDICT.PY Loading data from bit file took {}s'.format(timer))
+        timer = time.time()
+
     elif ckpt.endswith(".pkl"):
         logger.log("Loading data from pickle file...")
+
+        timer = time.time()
         with open(ckpt, "rb") as cp_file:
             if strategy == 'sga':
                 StrategySGA.init_fitness_and_inds()
@@ -68,16 +89,27 @@ def predict(model_type,
             # Initialize individual based on strategy
             cp = pickle.load(cp_file)
             predict_ind = cp["halloffame"][0]
+        timer = time.time() - timer
+        logger.log('PREDICT.PY Loading data from pickle file took {}s'.format(timer))
+        timer = time.time()
+
     else:
         raise ValueError("Checkpoint file has unrecognised extension.")
 
+    timer = time.time()
     # Load Weights into model using individual
     model.load_parameters(predict_ind)
+
+    timer = time.time() - timer
+    logger.log('PREDICT.PY Loading weights into model took {}s'.format(timer))
+    timer = time.time()
 
     # Predict labels using np array in X
     logger.log("Running model.predict")
     y_pred = np.array(model.predict(np.load(X)))
     logger.log(str(y_pred))
+    timer = time.time() - timer
+    logger.log('PREDICT.PY Predicting labels using np array took {}s'.format(timer))
 
     # Save the y_pred into a file
     y_pred_path = join(save_dir, ckpt.split('_')[-1][:-4] + '_' + X[:-4].split('/')[-1] + '_y_pred.npy')

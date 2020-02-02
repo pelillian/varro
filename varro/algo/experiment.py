@@ -8,6 +8,7 @@ import datetime
 from dowel import logger, TextOutput, StdOutput
 from os import listdir
 from os.path import isfile, join
+import time
 
 from varro.algo.fit import fit
 from varro.algo.predict import predict
@@ -47,6 +48,8 @@ def main():
     # Check if we're fitting or predicting
     if args.purpose == 'fit':
         # Start Optimization
+
+        timer = time.time()
         fit(model_type=args.model_type,
             problem_type=args.problem_type,
             strategy=args.strategy,
@@ -63,11 +66,18 @@ def main():
             halloffamesize=args.halloffamesize,
             earlystop=args.earlystop)
 
+        timer = time.time() - timer
+        logger.log('EXPERIMENT.PY Fitting took {}s'.format(timer))
+        timer = time.time()
+
+
     else:
         if args.ckptfolder:
             # Make predictions using the best
             # individual from each generation
             # in ckptfolder
+
+            timer = time.time()
             save_dir = join(ABS_ALGO_PREDICTIONS_PATH, args.ckptfolder.split('/')[-1])
             make_path(save_dir)
             ckpt_files = [join(args.ckptfolder, f) for f in listdir(args.ckptfolder) if isfile(join(args.ckptfolder, f))]
@@ -78,8 +88,15 @@ def main():
                         X=args.X,
                         ckpt=ckpt,
                         save_dir=save_dir)
+
+            timer = time.time() - timer
+            logger.log('EXPERIMENT.PY Making predictions using the best individual from each generation took {}s'.format(timer))
+            timer = time.time()
+
         else:
             # Make a single prediction
+
+            timer = time.time()
             save_dir = join(ABS_ALGO_PREDICTIONS_PATH, args.ckpt.split('/')[-2])
             make_path(save_dir)
             predict(model_type=args.model_type,
@@ -88,6 +105,11 @@ def main():
                     X=args.X,
                     ckpt=args.ckpt,
                     save_dir=save_dir)
+
+            timer = time.time() - timer
+            logger.log('EXPERIMENT.PY Making a single prediction took {}s'.format(timer))
+            timer = time.time()
+
 
 if __name__ == "__main__":
     main()
