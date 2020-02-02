@@ -86,7 +86,6 @@ def fit(model_type,
     logger.log("Loading strategy...")
     if strategy == 'sga':
         strategy = StrategySGA(**strategy_args)
-
     elif strategy == 'moga':
         strategy = StrategyMOGA(**strategy_argsp)
     elif strategy == 'ns-es':
@@ -94,7 +93,7 @@ def fit(model_type,
     elif strategy == 'nsr-es':
         strategy = StrategyNSRES(**strategy_args)
     elif strategy == 'cma-es':
-        raise NotImplementedError
+        strategy = StrategyCMAES(**strategy_args)
     else:
         raise NotImplementedError
 
