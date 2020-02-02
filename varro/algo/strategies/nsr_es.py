@@ -19,14 +19,6 @@ class StrategyNSRES(StrategyNSES):
         super().__init__(self, name='nsr-es', **kwargs)
 
     #############
-    # VARIABLES #
-    #############
-    @property
-    def novelty_metric(self):
-        """The distance metric to be used to measure an Individual's novelty"""
-        return self._novelty_metric
-
-    #############
     # FUNCTIONS #
     #############
     @staticmethod
@@ -102,26 +94,6 @@ class StrategyNSRES(StrategyNSES):
         # If we have a multiobjective strategy,
         # we also need to keep the Pareto Fronts
         self.paretofront = cp["paretofront"] if self.ckpt else tools.ParetoFront(similar=np.array_equal)
-
-
-    def save_ckpt(self, exp_ckpt_dir):
-        """Saves the checkpoint of the current generation of Population
-        and some other information
-
-        Args:
-            exp_ckpt_dir (str): The experiment's checkpointing directory
-        """
-        # Fill the dictionary using the dict(key=value[, ...]) constructor
-        cp = dict(pop=self.pop,
-                  strategy=self.name,
-                  curr_gen=self.curr_gen,
-                  halloffame=self.halloffame,
-                  paretofront=self.paretofront,
-                  logbook=self.logbook,
-                  rndstate=self.rndstate)
-
-        with open(os.path.join(exp_ckpt_dir, '{}.pkl'.format(self.curr_gen)), "wb") as cp_file:
-            pickle.dump(cp, cp_file)
 
 
     def evaluate(self, pop):
