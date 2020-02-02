@@ -59,6 +59,7 @@ def main():
             elitesize=args.elitesize,
             ngen=args.ngen,
             ckpt=args.ckpt,
+            ckpt_freq=args.ckpt_freq,
             novelty_metric=args.novelty_metric,
             halloffamesize=args.halloffamesize,
             earlystop=args.earlystop)

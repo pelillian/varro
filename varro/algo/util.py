@@ -259,6 +259,16 @@ def get_args():
                         choices=[None, 'grid_search', 'bayesian_opt'],
                         help='The type of hyperparameter optimization to run')
 
+    ######################################################################################
+    # 21. Frequency to store checkpoints
+    ######################################################################################
+    parser.add_argument('--ckpt_freq',
+                        default=10,
+                        nargs='?',
+                        metavar='CHECKPOINT-FREQUENCY',
+                        action='store',
+                        help='Determines how many generations before a training run checkpoints')
+
     settings = parser.parse_args()
 
     # If we are predicting, we need to specify a

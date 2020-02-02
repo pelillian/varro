@@ -23,6 +23,7 @@ def fit(model_type,
         elitesize=None,
         ngen=None,
         ckpt=None,
+        ckpt_freq=10,
         novelty_metric=None,
         halloffamesize=None,
         earlystop=False,
@@ -98,6 +99,6 @@ def fit(model_type,
         raise NotImplementedError
 
     # 4. Evolve
-    pop, avg_fitness_scores, fittest_ind_score = evolve(strategy=strategy, grid_search=grid_search)
+    pop, avg_fitness_scores, fittest_ind_score = evolve(strategy=strategy, grid_search=grid_search, ckpt_freq=ckpt_freq)
 
     return fittest_ind_score
