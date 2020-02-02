@@ -87,7 +87,7 @@ def grid_search():
         # Create temp folder to house checkpoints
         experiment_path = os.path.join(GRID_SEARCH_CHECKPOINTS_PATH, 'tmp')
         last_gen = max([int(f.split('_')[-1].split('.')[0][3:]) for f in os.listdir(experiment_path)])
-        pkl_path = os.path.join(experiment_path, 'checkpoint_gen{}.pkl'.format(last_gen))
+        pkl_path = os.path.join(experiment_path, '{}.pkl'.format(last_gen))
 
         with open(pkl_path, 'rb') as cp_file:
             cp = pickle.load(cp_file)

@@ -120,7 +120,7 @@ class StrategyNSRES(StrategyNSES):
                   logbook=self.logbook,
                   rndstate=self.rndstate)
 
-        with open(os.path.join(exp_ckpt_dir, 'checkpoint_gen{}.pkl'.format(self.curr_gen)), "wb") as cp_file:
+        with open(os.path.join(exp_ckpt_dir, '{}.pkl'.format(self.curr_gen)), "wb") as cp_file:
             pickle.dump(cp, cp_file)
 
 

@@ -10,7 +10,7 @@ import numpy as np
 
 from varro.cython.fast_cram import load_cram_fast
 from varro.misc.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
-from varro.fpga.util import make_path, get_new_id, get_config_dir
+from varro.fpga.util import get_new_id, get_config_dir, clean_config_dir
 from varro.fpga.flash import flash_config_file
 from varro.arduino.communication import initialize_connection, send, receive
 
@@ -22,6 +22,7 @@ class FpgaConfig:
     def __init__(self, config_data=None):
         """This class handles flashing and evaluating the FGPA bitstream"""
         self.chip = pytrellis.Chip(CHIP_NAME)
+        clean_config_dir()
         self.id = get_new_id()
         if config_data is not None:
             self.load_cram(config_data)
@@ -93,7 +94,7 @@ class FpgaConfig:
             while pred is None:
                 try:
                     pred = self.evaluate_one(datum)
-                except UnicodeDecodeError:
+                except (UnicodeDecodeError, ValueError):
                     pass
             results.append(pred)
 

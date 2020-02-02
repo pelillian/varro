@@ -79,7 +79,7 @@ class StrategySGA(Strategy):
                 cp = pickle.load(cp_file)
 
             self.rndstate = random.seed(cp["rndstate"])
-            self.pop = cp["population"]
+            self.pop = cp["pop"]
             self.curr_gen = int(cp["curr_gen"])
             self.halloffame = cp["halloffame"]
             self.logbook = cp["logbook"]
@@ -108,7 +108,7 @@ class StrategySGA(Strategy):
                   logbook=self.logbook,
                   rndstate=self.rndstate)
 
-        with open(os.path.join(exp_ckpt_dir, 'checkpoint_gen{}.pkl'.format(self.curr_gen)), "wb") as cp_file:
+        with open(os.path.join(exp_ckpt_dir, '{}.pkl'.format(self.curr_gen)), "wb") as cp_file:
             pickle.dump(cp, cp_file)
 
 
