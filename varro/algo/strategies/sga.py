@@ -17,9 +17,6 @@ class StrategySGA(Strategy):
     def __init__(self, **kwargs):
         super().__init__(name='sga', **kwargs)
 
-    #############
-    # FUNCTIONS #
-    #############
     @staticmethod
     def init_fitness_and_inds():
         """Initializes the fitness and definition of individuals"""
@@ -92,6 +89,8 @@ class StrategySGA(Strategy):
             self.halloffame = tools.HallOfFame(maxsize=int(self.halloffamesize*self.popsize), similar=np.array_equal)
             self.logbook = tools.Logbook()
 
+        self.paretofront = None
+
 
     def save_ckpt(self, exp_ckpt_dir):
         """Saves the checkpoint of the current generation of Population
@@ -105,6 +104,7 @@ class StrategySGA(Strategy):
                   strategy=self.name,
                   curr_gen=self.curr_gen,
                   halloffame=self.halloffame,
+                  paretofront=self.paretofront,
                   logbook=self.logbook,
                   rndstate=self.rndstate)
 
