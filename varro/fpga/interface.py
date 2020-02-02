@@ -94,7 +94,7 @@ class FpgaConfig:
             while pred is None:
                 try:
                     pred = self.evaluate_one(datum)
-                except UnicodeDecodeError:
+                except (UnicodeDecodeError, ValueError):
                     pass
             results.append(pred)
 
