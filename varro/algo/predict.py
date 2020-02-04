@@ -62,7 +62,7 @@ def predict(model_type,
         from varro.fpga.util import bit_to_cram
 
         timer = time.time()
-        predict_ind = bit_to_cram(ckpt)
+        parameters = bit_to_cram(ckpt)
         
         timer = time.time() - timer
         logger.log('PREDICT.PY Loading data from bit file took {}s'.format(timer))
@@ -88,7 +88,7 @@ def predict(model_type,
 
             # Initialize individual based on strategy
             cp = pickle.load(cp_file)
-            predict_ind = cp["halloffame"][0]
+            parameters = cp["halloffame"][0]
         timer = time.time() - timer
         logger.log('PREDICT.PY Loading data from pickle file took {}s'.format(timer))
         timer = time.time()
@@ -98,7 +98,7 @@ def predict(model_type,
 
     timer = time.time()
     # Load Weights into model using individual
-    model.load_parameters(predict_ind)
+    model.load_parameters(parameters)
 
     timer = time.time() - timer
     logger.log('PREDICT.PY Loading weights into model took {}s'.format(timer))
