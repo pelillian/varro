@@ -13,7 +13,7 @@ class ModelFPGA(Model):
 
     def __init__(self, problem):
         """FPGA architecture wrapper class"""
-        pass
+        self.name = 'fpga'
 
     def load_parameters(self, parameters):
         """Loads an array of parameters into this model.

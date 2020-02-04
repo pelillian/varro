@@ -201,7 +201,7 @@ class StrategySGA(Strategy):
         # evaluated offspring
         self.pop[:] = pop
         timer = time.time() - timer
-        logger.log('SGA.PY Replace populatin with evaluated offspring {}s'.format(timer))
+        logger.log('SGA.PY Replace population with evaluated offspring {}s'.format(timer))
         timer = time.time()
 
         # Update population statistics
