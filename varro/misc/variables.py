@@ -35,10 +35,6 @@ GRID_SEARCH_CHECKPOINTS_PATH = os.path.join(ROOT_DIR, 'checkpoints/varro/algo/gr
 # This is the folder that houses the config for grid search
 GRID_SEARCH_CONFIG_PATH = os.path.join(ROOT_DIR, 'tests/varro/algo/grid_search')
 
-# Whole population will be written in a pickled
-# dictionary every FREQ generations
-FREQ = 10
-
 # Interface
 FPGA_BITSTREAM_SHAPE = (13294, 1136)
 PRJTRELLIS_DATABASE = "../prjtrellis-db"
