@@ -88,6 +88,7 @@ class FpgaConfig:
 
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
+        logger.start_timer()
         results = []
         for datum in data:
             pred = None
@@ -97,5 +98,5 @@ class FpgaConfig:
                 except (UnicodeDecodeError, ValueError):
                     pass
             results.append(pred)
-
+        logger.stop_timer('INTERFACE.PY Evaluate complete')
         return results

@@ -21,7 +21,7 @@ class StrategySGA(Strategy):
 
     @staticmethod
     def init_fitness_and_inds():
-        timer = time.time()
+        logger.start_timer()
         """Initializes the fitness and definition of individuals"""
 
         class Fitness(base.Fitness):
@@ -57,23 +57,21 @@ class StrategySGA(Strategy):
         creator.create("FitnessMin", Fitness, weights=(-1.0,)) # Just Fitness
         creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
 
-        timer = time.time() - timer
-        logger.log('SGA.PY Initializing fitness and individuals took {}s'.format(timer))
-        timer = time.time()
+        logger.stop_timer('SGA.PY Initializing fitness and individuals')
+        logger.start_timer()
 
 
     def init_toolbox(self):
         """Initializes the toolbox according to strategy"""
         # Define specific Fitness and Individual for SGA
-        timer = time.time()
+        logger.start_timer()
         self.init_fitness_and_inds()
 
         # Configure the rest of the toolbox that is independent
         # of which evolutionary strategy
         super().config_toolbox()
 
-        timer = time.time() - timer
-        logger.log('SGA.PY Initializing toolboox took {}s'.format(timer))
+        logger.stop_timer('SGA.PY Initializing toolboox')
 
 
     def load_es_vars(self):
@@ -81,7 +79,7 @@ class StrategySGA(Strategy):
         creating the fitness and individual templates for DEAP evolution or initializes them
         """
 
-        timer = time.time()
+        logger.start_timer()
 
         if self.ckpt:
             # A file name has been given, then load the data from the file
@@ -104,8 +102,7 @@ class StrategySGA(Strategy):
             self.logbook = tools.Logbook()
 
         self.paretofront = None
-        timer = time.time() - timer
-        logger.log('SGA.PY Loading ES Vars took {}s'.format(timer))
+        logger.stop_timer('SGA.PY Loading ES Vars')
 
 
     def save_ckpt(self, exp_ckpt_dir):
@@ -116,7 +113,7 @@ class StrategySGA(Strategy):
             exp_ckpt_dir (str): The experiment's checkpointing directory
         """
 
-        timer = time.time()
+        logger.start_timer()
 
         # Fill the dictionary using the dict(key=value[, ...]) constructor
         cp = dict(pop=self.pop,
@@ -130,8 +127,7 @@ class StrategySGA(Strategy):
         with open(os.path.join(exp_ckpt_dir, '{}.pkl'.format(self.curr_gen)), "wb") as cp_file:
             pickle.dump(cp, cp_file)
 
-        timer = time.time() - timer
-        logger.log('SGA.PY Saving checkpoint took {}s'.format(timer))
+        logger.stop_timer('SGA.PY Saving checkpoint')
 
 
     def compute_fitness(self, pop):
@@ -144,7 +140,7 @@ class StrategySGA(Strategy):
             Number of individuals with invalid fitness scores we updated
         """
 
-        timer = time.time()
+        logger.start_timer()
 
         # Evaluate the individuals with an invalid fitness or if we are at the start
         # of the evolutionary algo, AKA curr_gen == 0
@@ -163,15 +159,14 @@ class StrategySGA(Strategy):
             # Calculate the Fitness score of the individual
             ind.fitness.fitness_score = self.fitness_score()
 
-        timer = time.time() - timer
-        logger.log('SGA.PY Computing fitness took {}s'.format(timer))
+        logger.stop_timer('SGA.PY Computing fitness')
 
         return len(invalid_inds)
 
 
     def evaluate(self, pop):
 
-        timer = time.time()
+        logger.start_timer()
 
         """Evaluates an entire population on a dataset on the neural net / fpga
         architecture specified by the model, and calculates the fitness scores for
@@ -187,36 +182,31 @@ class StrategySGA(Strategy):
         # Re-generates the training set for the problem (if possible) to prevent overfitting
         self.problem.reset_train_set()
 
-        timer = time.time() - timer
-        logger.log('SGA.PY Regenerate the training set took {}s'.format(timer))
-        timer = time.time()
+        logger.stop_timer('SGA.PY Regenerate the training set')
+        logger.start_timer()
 
         # Compute all fitness for population
         num_invalid_inds = self.compute_fitness(pop)
-        timer = time.time() - timer
-        logger.log('SGA.PY Computing all fitness for population took {}s'.format(timer))
-        timer = time.time()
+        logger.stop_timer('SGA.PY Computing all fitness for population')
+        logger.start_timer()
 
         # The population is entirely replaced by the
         # evaluated offspring
         self.pop[:] = pop
-        timer = time.time() - timer
-        logger.log('SGA.PY Replace populatin with evaluated offspring {}s'.format(timer))
-        timer = time.time()
+        logger.stop_timer('SGA.PY Replace populatin with evaluated offspring')
+        logger.start_timer()
 
         # Update population statistics
         self.halloffame.update(self.pop)
         # record = self.stats.compile(self.pop)
         # self.logbook.record(gen=self.curr_gen, evals=num_invalid_inds, **record)
-        timer = time.time() - timer
-        logger.log('SGA.PY Updating population statistics took {}s'.format(timer))
+        logger.stop_timer('SGA.PY Updating population statistics')
 
         return np.mean([ind.fitness.fitness_score for ind in pop])
 
 
     def generate_offspring(self):
 
-        timer = time.time()
         """Generates new offspring using a combination of the selection methods
         specified to choose fittest individuals and custom preference
 
@@ -229,21 +219,12 @@ class StrategySGA(Strategy):
         elite_num = int(self.elitesize*self.popsize)
         elite = self.toolbox.select_elite(self.pop, k=elite_num)
 
-        timer = time.time() - timer
-        logger.log('SGA.PY Keeping elite individuals took {}s'.format(timer))
-        timer = time.time()
-
         # Clone the selected individuals
         non_alterable_elite_offspring = list(map(self.toolbox.clone, elite))
-        timer = time.time() - timer
-        logger.log('SGA.PY Cloning the selected individuals took {}s'.format(timer))
-        timer = time.time()
 
         # Choose the rest of the individuals
         # to be altered
         random_inds = self.toolbox.select(self.pop, k=self.popsize-elite_num)
         alterable_offspring = list(map(self.toolbox.clone, random_inds))
-        timer = time.time() - timer
-        logger.log('SGA.PY Choosing the rest of the individuals to be altered {}'.format(timer))
 
         return non_alterable_elite_offspring, alterable_offspring
