@@ -46,7 +46,7 @@ def evolve(strategy,
     if grid_search:
         experiment_checkpoints_dir = os.path.join(GRID_SEARCH_CHECKPOINTS_PATH, 'tmp')
     else:
-        experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, strategy.model.name + '_' + strategy.problem.name + '_' + datetime.now().strftime(DATE_NAME_FORMAT))
+        experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, strategy.problem.name + '_' + datetime.now().strftime(DATE_NAME_FORMAT))
 
     # Create experiment folder to store
     # snapshots of population
@@ -123,13 +123,11 @@ def evolve(strategy,
         # ones that have been mutated / cross-overed
         offspring = non_alterable + alterable
 
-        logger.start_timer()
         # Evaluate the entire population
         strategy.curr_gen = g # Set the current generation
         avg_fitness_score = strategy.toolbox.evaluate(pop=offspring)
         avg_fitness_scores.append(avg_fitness_score)
 
-        logger.stop_timer('EVOLVE.PY Evaulating the entire population')
 
         # Save snapshot of population (offspring)
         if g % ckpt_freq == 0 or g == strategy.ngen-1:

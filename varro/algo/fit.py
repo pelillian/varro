@@ -106,9 +106,7 @@ def fit(model_type,
     else:
         raise NotImplementedError
 
-    logger.stop_timer('FIT.PY Setting strategy')
     logger.start_timer()
-
     # 4. Evolve
     pop, avg_fitness_scores, fittest_ind_score = evolve(strategy=strategy, grid_search=grid_search, ckpt_freq=ckpt_freq)
 

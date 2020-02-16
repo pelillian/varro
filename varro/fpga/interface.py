@@ -5,6 +5,7 @@ This module handles communication of data to the FPGA
 import os
 from os.path import join
 import pytrellis
+from dowel import logger
 from time import sleep
 import numpy as np
 
@@ -68,10 +69,11 @@ class FpgaConfig:
 
     def load_fpga(self, config_data):
         """Loads a 2d array of configuration data onto to the FPGA"""
-
+        logger.start_timer() 
         self.load_cram(config_data)
         self.write_config_file()
         flash_config_file(self.base_file_name)
+        logger.stop_timer('INTERFACE.PY load_fpga')
 
     def evaluate_one(self, datum):
         send(arduino_connection, [datum])
@@ -97,6 +99,6 @@ class FpgaConfig:
                     pred = self.evaluate_one(datum)
                 except (UnicodeDecodeError, ValueError):
                     pass
-            results.append(pred)
-        logger.stop_timer('INTERFACE.PY Evaluate complete')
+            results.append(pred)    
+        logger.stop_timer('INTERFACE.PY Evaluation complete')
         return results

@@ -64,14 +64,12 @@ class StrategySGA(Strategy):
     def init_toolbox(self):
         """Initializes the toolbox according to strategy"""
         # Define specific Fitness and Individual for SGA
-        logger.start_timer()
         self.init_fitness_and_inds()
 
         # Configure the rest of the toolbox that is independent
         # of which evolutionary strategy
         super().config_toolbox()
 
-        logger.stop_timer('SGA.PY Initializing toolboox')
 
 
     def load_es_vars(self):
@@ -187,13 +185,14 @@ class StrategySGA(Strategy):
 
         # Compute all fitness for population
         num_invalid_inds = self.compute_fitness(pop)
+        logger.start_timer()
         logger.stop_timer('SGA.PY Computing all fitness for population')
         logger.start_timer()
 
         # The population is entirely replaced by the
         # evaluated offspring
         self.pop[:] = pop
-        logger.stop_timer('SGA.PY Replace populatin with evaluated offspring')
+        logger.stop_timer('SGA.PY Replace population with evaluated offspring')
         logger.start_timer()
 
         # Update population statistics
