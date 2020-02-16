@@ -23,6 +23,8 @@ class ModelNN(Model):
         # Suppress Tensorflow / Keras warnings
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+        self.name = 'nn'
+
         self.model = Sequential()
         if problem.approx_type == Problem.CLASSIFICATION:
             if problem.name == 'mnist':

@@ -61,6 +61,7 @@ def predict(model_type,
 
         logger.start_timer()
         predict_ind = bit_to_cram(ckpt)
+        parameters = bit_to_cram(ckpt)
         
         logger.stop_timer('PREDICT.PY Loading data from bit file')
         logger.start_timer()
@@ -86,15 +87,16 @@ def predict(model_type,
             # Initialize individual based on strategy
             cp = pickle.load(cp_file)
             predict_ind = cp["halloffame"][0]
-        logger.stop_timer('PREDICT.PY Loading data from pickle file')
-        logger.start_timer()
+            logger.stop_timer('PREDICT.PY Loading data from pickle file')
+            logger.start_timer()
+            parameters = cp["halloffame"][0]
 
     else:
         raise ValueError("Checkpoint file has unrecognised extension.")
 
     logger.start_timer()
     # Load Weights into model using individual
-    model.load_parameters(predict_ind)
+    model.load_parameters(parameters)
 
     logger.stop_timer('PREDICT.PY Loading weights into model')
     logger.start_timer()

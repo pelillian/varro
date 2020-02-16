@@ -46,7 +46,7 @@ def evolve(strategy,
     if grid_search:
         experiment_checkpoints_dir = os.path.join(GRID_SEARCH_CHECKPOINTS_PATH, 'tmp')
     else:
-        experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, strategy.problem.name + '_' + datetime.now().strftime(DATE_NAME_FORMAT))
+        experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, strategy.model.name + '_' + strategy.problem.name + '_' + datetime.now().strftime(DATE_NAME_FORMAT))
 
     # Create experiment folder to store
     # snapshots of population
