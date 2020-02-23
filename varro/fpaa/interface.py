@@ -15,7 +15,7 @@ class FpaaConfig:
         clean_config_dir()
         self.id = get_new_id()
         if config_data is not None:
-            self.load_cram(config_data)
+            self.load_fpaa(config_data)
 
     @property
     def basedir(self):

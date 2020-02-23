@@ -27,8 +27,8 @@ class ModelFPAA(Model):
 
         """
         from varro.fpaa.interface import FpaaConfig
-        self.config = FpaaConfig(parameters.reshape(self.FPAA_BITSTREAM_SHAPE))
-        self.config.load_fpaa(parameters.reshape(self.FPAA_BITSTREAM_SHAPE))
+        reshaped_parameters = parameters.reshape(self.FPAA_BITSTREAM_SHAPE)
+        self.config = FpaaConfig(reshaped_parameters)
 
     def predict(self, X, problem=None):
         """Evaluates the model on given data."""

@@ -25,7 +25,7 @@ class FpgaConfig:
         clean_config_dir()
         self.id = get_new_id()
         if config_data is not None:
-            self.load_cram(config_data)
+            self.load_fpga(config_data)
 
     @property
     def basedir(self):
