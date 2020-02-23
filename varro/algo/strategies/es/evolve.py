@@ -4,6 +4,7 @@ This module contains the evolutionary algorithm logic
 
 from dowel import logger
 import os
+import time
 import json
 import pickle
 import random
@@ -11,7 +12,6 @@ import numpy as np
 import functools
 from deap import base, creator, tools
 from datetime import datetime
-import time
 
 from varro.misc.util import make_path, get_problem_range, get_tb_fig
 from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH, DATE_NAME_FORMAT
@@ -46,7 +46,7 @@ def evolve(strategy,
     if grid_search:
         experiment_checkpoints_dir = os.path.join(GRID_SEARCH_CHECKPOINTS_PATH, 'tmp')
     else:
-        experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, strategy.model.name + '_' + strategy.problem.name + '_' + datetime.now().strftime(DATE_NAME_FORMAT))
+        experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, strategy.problem.name + '_' + datetime.now().strftime(DATE_NAME_FORMAT))
 
     # Create experiment folder to store
     # snapshots of population
@@ -88,12 +88,10 @@ def evolve(strategy,
     avg_fitness_scores = []
 
     # Evaluate the entire population
-    timer = time.time()
+    logger.start_timer()
     avg_fitness_score = strategy.toolbox.evaluate(pop=strategy.pop)
     avg_fitness_scores.append(avg_fitness_score)
-    timer = time.time() - timer
-    logger.log('EVOLVE.PY strategy.toolbox.evaluate took {}s'.format(timer))
-    timer = time.time()
+    logger.stop_timer('EVOLVE.PY strategy.toolbox.evaluate complete')
 
     #################################
     # 4. EVOLVE THROUGH GENERATIONS #
@@ -102,42 +100,33 @@ def evolve(strategy,
     start_gen = strategy.curr_gen
     for g in range(start_gen, strategy.ngen):
 
-        timer = time.time()
+        logger.start_timer()
 
         # Select the next generation individuals
         non_alterable, alterable = strategy.generate_offspring()
+
+        logger.stop_timer('EVOLVE.PY Selecting the next generation of individuals')
         
-        timer = time.time() - timer
-        logger.log('EVOLVE.PY Selecting the next generation individuals took {}s'.format(timer))
-        timer = time.time()
+        logger.start_timer()
 
         # Mate offspring
         strategy.mate(alterable)
 
-        timer = time.time() - timer
-        logger.log('EVOLVE.PY Mating offspring took {}s'.format(timer))
-        timer = time.time()
+        logger.stop_timer('EVOLVE.PY Mating offspring')
+        logger.start_timer()
 
         # Mutate offspring
-        strategy.mutate(alterable)
-
-        timer = time.time() - timer
-        logger.log('EVOLVE.PY Mutating offspring took {}s'.format(timer))
-        timer = time.time()
+        strategy.mutate(alterable) 
+        logger.stop_timer('EVOLVE.PY Mutating offspring')
 
         # Recombine Non-alterable offspring with the
         # ones that have been mutated / cross-overed
         offspring = non_alterable + alterable
 
-        timer = time.time()
         # Evaluate the entire population
         strategy.curr_gen = g # Set the current generation
         avg_fitness_score = strategy.toolbox.evaluate(pop=offspring)
         avg_fitness_scores.append(avg_fitness_score)
-
-        timer = time.time() - timer
-        logger.log('EVOLVE.PY Evaulating the entire population took {}s'.format(timer))
-        timer = time.time()
 
 
         # Save snapshot of population (offspring)

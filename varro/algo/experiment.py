@@ -45,11 +45,14 @@ def main():
     logger.log("Running Project Varro")
     logger.log("Purpose: " + args.purpose)
 
+    if args.use_timer is True: 
+        logger.set_timer(True)
+
     # Check if we're fitting or predicting
     if args.purpose == 'fit':
         # Start Optimization
 
-        timer = time.time()
+        logger.start_timer()
         fit(model_type=args.model_type,
             problem_type=args.problem_type,
             strategy=args.strategy,
@@ -66,11 +69,7 @@ def main():
             novelty_metric=args.novelty_metric,
             halloffamesize=args.halloffamesize,
             earlystop=args.earlystop)
-
-        timer = time.time() - timer
-        logger.log('EXPERIMENT.PY Fitting took {}s'.format(timer))
-        timer = time.time()
-
+        logger.stop_timer('EXPERIMENT.PY Fitting complete')
 
     else:
         if args.ckptfolder:
@@ -78,7 +77,7 @@ def main():
             # individual from each generation
             # in ckptfolder
 
-            timer = time.time()
+            logger.start_timer()
             save_dir = join(ABS_ALGO_PREDICTIONS_PATH, args.ckptfolder.split('/')[-1])
             make_path(save_dir)
             ckpt_files = [join(args.ckptfolder, f) for f in listdir(args.ckptfolder) if isfile(join(args.ckptfolder, f))]
@@ -90,14 +89,13 @@ def main():
                         ckpt=ckpt,
                         save_dir=save_dir)
 
-            timer = time.time() - timer
-            logger.log('EXPERIMENT.PY Making predictions using the best individual from each generation took {}s'.format(timer))
-            timer = time.time()
+            logger.stop_timer('EXPERIMENT.PY Making predictions using the best individual from each generation')
+            logger.start_timer()
 
         else:
             # Make a single prediction
 
-            timer = time.time()
+            logger.start_timer()
             save_dir = join(ABS_ALGO_PREDICTIONS_PATH, args.ckpt.split('/')[-2])
             make_path(save_dir)
             predict(model_type=args.model_type,
@@ -107,9 +105,9 @@ def main():
                     ckpt=args.ckpt,
                     save_dir=save_dir)
 
-            timer = time.time() - timer
-            logger.log('EXPERIMENT.PY Making a single prediction took {}s'.format(timer))
-            timer = time.time()
+            logger.start_timer() - timer
+            logger.stop_timer('EXPERIMENT.PY Making a single prediction')
+            logger.start_timer()
 
 
 if __name__ == "__main__":

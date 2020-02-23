@@ -270,6 +270,19 @@ def get_args():
                         action='store',
                         help='Determines how many generations before a training run checkpoints')
 
+
+    ######################################################################################
+    # 22. Determine whether timing messages are logged
+    ######################################################################################
+
+    parser.add_argument('--use_timer',
+                        default=False,
+                        const=False,
+                        nargs='?',
+                        action='store',
+                        help='Determine whether timing messages are logged',
+                        type=bool)
+
     settings = parser.parse_args()
 
     # If we are predicting, we need to specify a

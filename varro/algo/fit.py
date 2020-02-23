@@ -55,16 +55,15 @@ def fit(model_type,
     """
     # 1. Choose Problem and get the specific evaluation function for that problem
 
-    timer = time.time()
+    logger.start_timer()
     logger.log("Loading problem...")
     if problem_type == 'mnist':
         problem = ProblemMNIST()
     else:
         problem = ProblemFuncApprox(func=problem_type)
 
-    timer = time.time() - timer
-    logger.log('FIT.PY Choosing problem and getting specific evaluation function took {}s'.format(timer))
-    timer = time.time()
+    logger.stop_timer('FIT.PY Choosing problem and getting specific evaluation function')
+    logger.start_timer()
 
     # 2. Choose Target Platform
     logger.log("Loading target platform...")
@@ -74,10 +73,8 @@ def fit(model_type,
         from varro.algo.models import ModelFPGA as Model
     model = Model(problem)
 
-    timer = time.time() - timer
-    logger.log('FIT.PY Loading target platform took {}s'.format(timer))
-    timer = time.time()
-
+    logger.stop_timer('FIT.PY Loading target platform')
+    logger.start_timer()
 
     strategy_args = {'novelty_metric' : novelty_metric,
             'model' : model,
@@ -109,16 +106,12 @@ def fit(model_type,
     else:
         raise NotImplementedError
 
-    timer = time.time() - timer
-    logger.log('FIT.PY Setting strategy took {}s'.format(timer))
-    timer = time.time()
-
+    logger.start_timer()
     # 4. Evolve
     pop, avg_fitness_scores, fittest_ind_score = evolve(strategy=strategy, grid_search=grid_search, ckpt_freq=ckpt_freq)
 
-    timer = time.time() - timer
-    logger.log('FIT.PY Evolving took {}s'.format(timer))
-    timer = time.time()
+    logger.stop_timer('FIT.PY Evolving')
+    logger.start_timer()
 
 
     return fittest_ind_score
