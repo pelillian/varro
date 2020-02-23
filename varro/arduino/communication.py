@@ -2,6 +2,8 @@ import serial
 import time
 from varro.misc.variables import ARDUINO_PORT
 
+arduino = initialize_connection()
+
 
 def initialize_connection():
     ard = serial.Serial(ARDUINO_PORT,9600,timeout=5)
@@ -17,17 +19,16 @@ def send_char(arduino, val):
 
     return retval
 
-def send(arduino, val):
+def send(val):
     # TODO: Flush arduino serial buffer before recieve is called
     for c in val:
         send_char(arduino, c)
 
-def receive(arduino):
+def receive():
     msg = arduino.read(arduino.in_waiting)
     return msg
 
 if __name__=="__main__":
-    arduino = initialize_connection()
     val = 1
 
     while True:

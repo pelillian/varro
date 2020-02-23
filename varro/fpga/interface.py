@@ -15,7 +15,6 @@ from varro.fpga.flash import flash_config_file
 from varro.arduino.communication import initialize_connection, send, receive
 
 pytrellis.load_database(PRJTRELLIS_DATABASE)
-arduino_connection = initialize_connection() # TODO: Move this over to arduino/communication.py
 
 
 class FpgaConfig:
@@ -74,9 +73,9 @@ class FpgaConfig:
         flash_config_file(self.base_file_name)
 
     def evaluate_one(self, datum):
-        send(arduino_connection, [datum])
+        send([datum])
         sleep(0.05)
-        return_value = receive(arduino_connection)
+        return_value = receive()
         return_value = return_value.decode("utf-8")
         if return_value[-1] == ';':
             return_value = return_value[:-1]
