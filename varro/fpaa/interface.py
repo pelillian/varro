@@ -6,7 +6,6 @@ import os
 from os.path import join
 from dowel import logger
 from time import sleep
-import numpy as np
 
 
 class FpaaConfig:
@@ -28,9 +27,6 @@ class FpaaConfig:
         raise NotImplementedError
         logger.stop_timer('INTERFACE.PY load_fpaa')
 
-    def evaluate_one(self, datum):
-        return None
-
     def evaluate(self, data):
         """Evaluates given data on the FPAA."""
         logger.start_timer()
@@ -39,7 +35,7 @@ class FpaaConfig:
             pred = None
             while pred is None:
                 try:
-                    pred = self.evaluate_one(datum)
+                    raise NotImplementedError
                 except (UnicodeDecodeError, ValueError):
                     pass
             results.append(pred)    
