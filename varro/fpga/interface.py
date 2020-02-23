@@ -20,7 +20,7 @@ pytrellis.load_database(PRJTRELLIS_DATABASE)
 
 class FpgaConfig:
     def __init__(self, config_data=None):
-        """This class handles flashing and evaluating the FGPA bitstream"""
+        """This class handles flashing and evaluating the FPGA bitstream"""
         self.chip = pytrellis.Chip(CHIP_NAME)
         clean_config_dir()
         self.id = get_new_id()

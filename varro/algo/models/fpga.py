@@ -1,5 +1,5 @@
 """
-This module contains classes for defining each type of model.
+This module contains the FPGA model class.
 """
 
 import numbers
