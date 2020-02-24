@@ -13,8 +13,8 @@ import functools
 from deap import base, creator, tools
 from datetime import datetime
 
-from varro.misc.util import make_path, get_problem_range, get_tb_fig
-from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH, DATE_NAME_FORMAT
+from varro.util.util import make_path, get_problem_range, get_tb_fig
+from varro.util.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH, DATE_NAME_FORMAT
 from varro.algo.problems import Problem
 from varro.algo.problems.func_approx import rastrigin, rosenbrock
 

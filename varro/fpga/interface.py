@@ -8,8 +8,8 @@ import pytrellis
 from dowel import logger
 
 from varro.cython.fast_cram import load_cram_fast
-from varro.misc.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
-from varro.fpga.util import get_new_id, get_config_dir, clean_config_dir
+from varro.util.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
+from varro.fpga.config import get_new_id, get_config_dir, clean_config_dir
 from varro.fpga.flash import flash_config_file
 from varro.arduino.communication import evaluate_arduino
 

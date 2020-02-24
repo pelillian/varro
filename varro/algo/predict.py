@@ -57,7 +57,7 @@ def predict(model_type,
 
     if ckpt.endswith(".bit"):
         logger.log("Loading data from bit file...")
-        from varro.fpga.util import bit_to_cram
+        from varro.fpga.config import bit_to_cram
 
         logger.start_timer()
         predict_ind = bit_to_cram(ckpt)

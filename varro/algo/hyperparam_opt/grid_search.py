@@ -29,9 +29,9 @@ import os
 import pickle
 from shutil import rmtree
 
-from varro.misc.variables import GRID_SEARCH_CHECKPOINTS_PATH
+from varro.util.variables import GRID_SEARCH_CHECKPOINTS_PATH
+from varro.util.util import make_path
 from varro.algo.fit import fit
-from varro.misc.util import make_path
 
 HYPERPARAM_DICT = {}
 HYPERPARAM_DICT['cxpb'] = [0.0]

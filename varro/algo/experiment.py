@@ -12,9 +12,9 @@ import time
 
 from varro.algo.fit import fit
 from varro.algo.predict import predict
-from varro.misc.util import make_path
-from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, ABS_ALGO_PREDICTIONS_PATH, DATE_NAME_FORMAT
-from varro.algo.util import get_args
+from varro.util.util import make_path
+from varro.util.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, ABS_ALGO_PREDICTIONS_PATH, DATE_NAME_FORMAT
+from varro.util.args import get_args
 from varro.algo.hyperparam_opt.grid_search import grid_search
 
 

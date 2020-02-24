@@ -8,9 +8,9 @@ import shutil
 import numpy as np
 import pytrellis
 
-from varro.misc.util import make_path
-from varro.misc.variables import FPGA_CONFIG_DIR
-from varro.misc.variables import FPGA_BITSTREAM_SHAPE
+from varro.util.util import make_path
+from varro.util.variables import FPGA_CONFIG_DIR
+from varro.util.variables import FPGA_BITSTREAM_SHAPE
 
 
 def get_config_dir():

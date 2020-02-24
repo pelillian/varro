@@ -1,7 +1,7 @@
 import numpy as np
 import serial
 from time import sleep
-from varro.misc.variables import ARDUINO_PORT
+from varro.util.variables import ARDUINO_PORT
 
 
 def initialize_connection():
