@@ -73,9 +73,7 @@ def main():
 
     else:
         if args.ckptfolder:
-            # Make predictions using the best
-            # individual from each generation
-            # in ckptfolder
+            # Make predictions using the best individual from each generation in ckptfolder
 
             logger.start_timer()
             save_dir = join(ABS_ALGO_PREDICTIONS_PATH, args.ckptfolder.split('/')[-1])
