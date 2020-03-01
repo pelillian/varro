@@ -85,12 +85,11 @@ def main():
                 predict(model_type=args.model_type,
                         problem_type=args.problem_type,
                         strategy=args.strategy,
-                        X=args.X,
+                        input_data=args.input_data,
                         ckpt=ckpt,
                         save_dir=save_dir)
 
             logger.stop_timer('EXPERIMENT.PY Making predictions using the best individual from each generation')
-            logger.start_timer()
 
         else:
             # Make a single prediction
@@ -101,13 +100,11 @@ def main():
             predict(model_type=args.model_type,
                     problem_type=args.problem_type,
                     strategy=args.strategy,
-                    X=args.X,
+                    input_data=args.input_data,
                     ckpt=args.ckpt,
                     save_dir=save_dir)
 
-            logger.start_timer() - timer
             logger.stop_timer('EXPERIMENT.PY Making a single prediction')
-            logger.start_timer()
 
 
 if __name__ == "__main__":

@@ -13,18 +13,18 @@ from varro.algo.strategies.nsr_es import StrategyNSRES
 def predict(model_type,
             problem_type,
             strategy,
-            X,
+            input_data,
             ckpt,
             save_dir):
     """Predicts the output from loading the model saved in checkpoint
-    and saves y_pred into same path as X but with a _y_pred in the name
+    and saves y_pred into same path as input_data but with a _y_pred in the name
 
     Args:
         model_type (str): A string specifying whether we're optimizing on a neural network
             or field programmable gate array
         problem_type (str): A string specifying what type of problem we're trying to optimize
         strategy (str): A string specifying what type of optimization algorithm to use
-        X (str): Path to the .npy that stores the np.ndarray to use as Input data for model
+        input_data (str): Path to the .npy that stores the np.ndarray to use as Input data for model
         ckpt (str): Location of checkpoint to load the population
         save_dir (str): Location of where to store the predictions
 
@@ -101,12 +101,12 @@ def predict(model_type,
     logger.stop_timer('PREDICT.PY Loading weights into model')
     logger.start_timer()
 
-    # Predict labels using np array in X
+    # Predict labels using np array in input_data
     logger.log("Running model.predict")
-    y_pred = np.array(model.predict(np.load(X)))
+    y_pred = np.array(model.predict(np.load(input_data)))
     logger.log(str(y_pred))
     logger.stop_timer('PREDICT.PY Predicting labels using np array')
 
     # Save the y_pred into a file
-    y_pred_path = join(save_dir, ckpt.split('_')[-1][:-4] + '_' + X[:-4].split('/')[-1] + '_y_pred.npy')
+    y_pred_path = join(save_dir, ckpt.split('/')[-1][:-4] + '_' + input_data[:-4].split('/')[-1] + '_y_pred.npy')
     np.save(y_pred_path, y_pred)
