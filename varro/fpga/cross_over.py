@@ -6,7 +6,7 @@ import numpy as np
 import pytrellis
 
 from varro.fpga.interface import FpgaConfig
-from varro.misc.variables import FPGA_BITSTREAM_SHAPE
+from varro.util.variables import FPGA_BITSTREAM_SHAPE
 
 
 def cross_over(ind1, ind2):

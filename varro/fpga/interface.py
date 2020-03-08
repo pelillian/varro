@@ -6,27 +6,24 @@ import os
 from os.path import join
 import pytrellis
 from dowel import logger
-from time import sleep
-import numpy as np
 
 from varro.cython.fast_cram import load_cram_fast
-from varro.misc.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
-from varro.fpga.util import get_new_id, get_config_dir, clean_config_dir
+from varro.util.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
+from varro.fpga.config import get_new_id, get_config_dir, clean_config_dir
 from varro.fpga.flash import flash_config_file
-from varro.arduino.communication import initialize_connection, send, receive
+from varro.arduino.communication import evaluate_arduino
 
 pytrellis.load_database(PRJTRELLIS_DATABASE)
-arduino_connection = initialize_connection() # TODO: Move this over to arduino/communication.py
 
 
 class FpgaConfig:
     def __init__(self, config_data=None):
-        """This class handles flashing and evaluating the FGPA bitstream"""
+        """This class handles flashing and evaluating the FPGA bitstream"""
         self.chip = pytrellis.Chip(CHIP_NAME)
         clean_config_dir()
         self.id = get_new_id()
         if config_data is not None:
-            self.load_cram(config_data)
+            self.load_fpga(config_data)
 
     @property
     def basedir(self):
@@ -75,19 +72,6 @@ class FpgaConfig:
         flash_config_file(self.base_file_name)
         logger.stop_timer('INTERFACE.PY load_fpga')
 
-    def evaluate_one(self, datum):
-        send(arduino_connection, [datum])
-        sleep(0.05)
-        return_value = receive(arduino_connection)
-        return_value = return_value.decode("utf-8")
-        if return_value[-1] == ';':
-            return_value = return_value[:-1]
-        return_value = return_value.split(";")[-1]
-        return_value = return_value.split(",")
-        return_value = list(map(int, return_value))
-        pred = np.mean(return_value) / 1024
-        return pred
-
     def evaluate(self, data):
         """Evaluates given data on the FPGA."""
         logger.start_timer()
@@ -96,7 +80,7 @@ class FpgaConfig:
             pred = None
             while pred is None:
                 try:
-                    pred = self.evaluate_one(datum)
+                    pred = evaluate_arduino(datum)
                 except (UnicodeDecodeError, ValueError):
                     pass
             results.append(pred)    

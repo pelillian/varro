@@ -1,5 +1,5 @@
 """
-This module contains the FPGA model class.
+This module contains the FPAA model class.
 """
 
 import numbers
@@ -8,12 +8,12 @@ import numpy as np
 from varro.algo.models import Model
 
 
-class ModelFPGA(Model):
-    FPGA_BITSTREAM_SHAPE = (13294, 1136)
+class ModelFPAA(Model):
+    FPAA_BITSTREAM_SHAPE = (None, None)
 
     def __init__(self, problem):
-        """FPGA architecture wrapper class"""
-        self.name = 'fpga'
+        """FPAA architecture wrapper class"""
+        self.name = 'fpaa'
 
     def load_parameters(self, parameters):
         """Loads an array of parameters into this model.
@@ -26,9 +26,9 @@ class ModelFPGA(Model):
                         [0, 0, 1, 0, ..., 0]]
 
         """
-        from varro.fpga.interface import FpgaConfig
-        reshaped_parameters = parameters.reshape(self.FPGA_BITSTREAM_SHAPE)
-        self.config = FpgaConfig(reshaped_parameters)
+        from varro.fpaa.interface import FpaaConfig
+        reshaped_parameters = parameters.reshape(self.FPAA_BITSTREAM_SHAPE)
+        self.config = FpaaConfig(reshaped_parameters)
 
     def predict(self, X, problem=None):
         """Evaluates the model on given data."""
@@ -47,4 +47,4 @@ class ModelFPGA(Model):
 
     @property
     def parameters_shape(self):
-        return self.FPGA_BITSTREAM_SHAPE
+        return self.FPAA_BITSTREAM_SHAPE

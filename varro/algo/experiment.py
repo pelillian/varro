@@ -12,9 +12,9 @@ import time
 
 from varro.algo.fit import fit
 from varro.algo.predict import predict
-from varro.misc.util import make_path
-from varro.misc.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, ABS_ALGO_PREDICTIONS_PATH, DATE_NAME_FORMAT
-from varro.algo.util import get_args
+from varro.util.util import make_path
+from varro.util.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, ABS_ALGO_PREDICTIONS_PATH, DATE_NAME_FORMAT
+from varro.util.args import get_args
 from varro.algo.hyperparam_opt.grid_search import grid_search
 
 
@@ -73,9 +73,7 @@ def main():
 
     else:
         if args.ckptfolder:
-            # Make predictions using the best
-            # individual from each generation
-            # in ckptfolder
+            # Make predictions using the best individual from each generation in ckptfolder
 
             logger.start_timer()
             save_dir = join(ABS_ALGO_PREDICTIONS_PATH, args.ckptfolder.split('/')[-1])
@@ -85,12 +83,11 @@ def main():
                 predict(model_type=args.model_type,
                         problem_type=args.problem_type,
                         strategy=args.strategy,
-                        X=args.X,
+                        input_data=args.input_data,
                         ckpt=ckpt,
                         save_dir=save_dir)
 
             logger.stop_timer('EXPERIMENT.PY Making predictions using the best individual from each generation')
-            logger.start_timer()
 
         else:
             # Make a single prediction
@@ -101,13 +98,11 @@ def main():
             predict(model_type=args.model_type,
                     problem_type=args.problem_type,
                     strategy=args.strategy,
-                    X=args.X,
+                    input_data=args.input_data,
                     ckpt=args.ckpt,
                     save_dir=save_dir)
 
-            logger.start_timer() - timer
             logger.stop_timer('EXPERIMENT.PY Making a single prediction')
-            logger.start_timer()
 
 
 if __name__ == "__main__":

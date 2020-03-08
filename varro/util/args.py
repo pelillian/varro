@@ -1,5 +1,5 @@
 """
-This module contains the utility functions to run experiment.py
+This module contains the code for parsing arguments used by experiment.py
 """
 
 import os
@@ -53,18 +53,18 @@ def get_args():
                         help='The checkpoint folder that contains the population of each generation')
 
     #######################################################
-    # 4. .npy file to specify X (features for prediction) #
+    # 4. .npy file to specify input data (features for prediction) #
     #######################################################
-    parser.add_argument('--X',
+    parser.add_argument('--input_data',
                         nargs='?',
-                        metavar='FEATURES',
+                        metavar='INPUT-DATA',
                         action='store',
                         help='The features to be used for predict')
 
     ######################################
-    # 5. .npy file to specify y (labels) #
+    # 5. .npy file to specify labels (labels) #
     ######################################
-    parser.add_argument('--y',
+    parser.add_argument('--labels',
                         nargs='?',
                         metavar='LABELS',
                         action='store',
@@ -290,14 +290,14 @@ def get_args():
     # we can fit the NN or FPGA from scratch / evolve
     # from the checpoint
     if settings.purpose == 'predict' \
-            and ((settings.ckpt is None and settings.ckptfolder is None) or settings.X is None):
-        parser.error("--purpose='predict' requires --X and either --ckpt or --ckptfolder to be specified.")
+            and ((settings.ckpt is None and settings.ckptfolder is None) or settings.input_data is None):
+        parser.error("--purpose='predict' requires --input_data and either --ckpt or --ckptfolder to be specified.")
 
-    # Check that X and y are .npy files
-    if settings.X and settings.X[-3:] != 'npy':
-        parser.error("--X needs to be a .npy file.")
-    if settings.y and settings.y[-3:] != 'npy':
-        parser.error("--y needs to be a .npy file.")
+    # Check that input_data and y are .npy files
+    if settings.input_data and settings.input_data[-3:] != 'npy':
+        parser.error("--input_data needs to be a .npy file.")
+    if settings.labels and settings.labels[-3:] != 'npy':
+        parser.error("--labels needs to be a .npy file.")
 
     # Check that sigma for the gaussian distribution were
     # mutating attribute of individual from is positive
