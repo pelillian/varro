@@ -4,7 +4,6 @@ This module contains classes for defining each type of model.
 
 import os
 import numpy as np
-from datetime import datetime
 
 from varro.algo.models import Model
 from varro.algo.problems import Problem

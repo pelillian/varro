@@ -4,16 +4,15 @@ experiment to solve the problem using a specified
 evolutionary algorithm
 """
 
-import datetime
+from datetime import datetime
 from dowel import logger, TextOutput, StdOutput
 from os import listdir
 from os.path import isfile, join
-import time
 
 from varro.algo.fit import fit
 from varro.algo.predict import predict
 from varro.util.util import make_path
-from varro.util.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, ABS_ALGO_PREDICTIONS_PATH, DATE_NAME_FORMAT
+from varro.util.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, ABS_ALGO_PREDICTIONS_PATH, DATE_NAME_FORMAT, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH
 from varro.util.args import get_args
 from varro.algo.hyperparam_opt.grid_search import grid_search
 
@@ -27,18 +26,18 @@ def main():
     # Get the Arguments parsed from file execution
     args = get_args()
 
-    if args.hyper_opt is not None:
-        if args.hyper_opt == 'grid_search':
-            grid_search()
-        elif args.hyper_opt == 'bayesian_opt':
-            raise NotImplementedError
-        else:
-            raise ValueError("Unknown hyperparameter optimization method.")
-        return
-
+    experiment_name = args.model_type + '_' + args.problem_type + '_' + datetime.now().strftime(DATE_NAME_FORMAT)
 
     # Init Loggers
-    log_path = join(ABS_ALGO_EXP_LOGS_PATH, "{}_{}.log".format(args.problem_type, datetime.datetime.now().strftime(DATE_NAME_FORMAT)))
+    log_path = join(ABS_ALGO_EXP_LOGS_PATH, experiment_name + '.log')
+
+    # Set checkpoint dirs
+    if grid_search:
+        checkpoint_dir = join(GRID_SEARCH_CHECKPOINTS_PATH, 'tmp')
+    else:
+        checkpoint_dir = join(EXPERIMENT_CHECKPOINTS_PATH, experiment_name)
+
+    make_path(checkpoint_dir)
 
     logger.add_output(StdOutput())
     logger.add_output(TextOutput(log_path))
@@ -47,6 +46,15 @@ def main():
 
     if args.use_timer is True: 
         logger.set_timer(True)
+
+    if args.hyper_opt is not None:
+        if args.hyper_opt == 'grid_search':
+            grid_search()
+        elif args.hyper_opt == 'bayesian_opt':
+            raise NotImplementedError
+        else:
+            raise ValueError("Unknown hyperparameter optimization method.")
+        return
 
     # Check if we're fitting or predicting
     if args.purpose == 'fit':
@@ -68,7 +76,8 @@ def main():
             ckpt_freq=args.ckpt_freq,
             novelty_metric=args.novelty_metric,
             halloffamesize=args.halloffamesize,
-            earlystop=args.earlystop)
+            earlystop=args.earlystop,
+            ckpt_dir=checkpoint_dir)
         logger.stop_timer('EXPERIMENT.PY Fitting complete')
 
     else:

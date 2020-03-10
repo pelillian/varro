@@ -31,7 +31,8 @@ class Strategy(ABC):
                  ckpt,
                  halloffamesize,
                  novelty_metric,
-                 earlystop):
+                 earlystop,
+                 ckpt_dir):
         """This class defines the strategy and the methods that come with that strategy."""
         self.name = name
         self.cxpb = cxpb
@@ -46,6 +47,7 @@ class Strategy(ABC):
         self.halloffamesize = halloffamesize
         self.earlystop = earlystop
         self.noveltymetric = novelty_metric
+        self.ckpt_dir = ckpt_dir
 
         # Storing model and problem
         self.model = model
@@ -82,13 +84,8 @@ class Strategy(ABC):
 
 
     @abstractmethod
-    def save_ckpt(self, exp_ckpt_dir):
-        """Saves the checkpoint of the current generation of Population
-        and some other information
-
-        Args:
-            exp_ckpt_dir (str): The experiment's checkpointing directory
-        """
+    def save_ckpt(self):
+        """Saves information necessary to resume algorithm after stopping"""
         pass
 
 

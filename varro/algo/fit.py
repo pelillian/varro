@@ -28,7 +28,8 @@ def fit(model_type,
         novelty_metric=None,
         halloffamesize=None,
         earlystop=False,
-        grid_search=False):
+        grid_search=False,
+        ckpt_dir=None):
     """Control center to call other modules to execute the optimization
 
     Args:
@@ -48,6 +49,7 @@ def fit(model_type,
         novelty_metric (str): The distance metric to be used to measure an Individual's novelty
         halloffamesize (float): Percentage of individuals in population we store in the HallOfFame / Archive
         grid_search (bool): Whether grid search will be in effect
+        ckpt_dir (bool): Directory to save checkpoints in
 
     Returns:
         fittest_ind_score: Scalar of the best individual in the population's fitness score
@@ -76,20 +78,23 @@ def fit(model_type,
     logger.stop_timer('FIT.PY Loading target platform')
     logger.start_timer()
 
-    strategy_args = {'novelty_metric' : novelty_metric,
-            'model' : model,
-            'problem' : problem,
-            'cxpb' : cxpb,
-            'mutpb' : mutpb,
-            'popsize' : popsize,
-            'elitesize' : elitesize,
-            'ngen' : ngen,
-            'imutpb' : imutpb,
-            'imutmu' : imutmu,
-            'imutsigma' : imutsigma,
-            'ckpt' : ckpt,
-            'halloffamesize' : halloffamesize,
-            'earlystop' : earlystop}
+    strategy_args = dict(
+            novelty_metric=novelty_metric,
+            model=model,
+            problem=problem,
+            cxpb=cxpb,
+            mutpb=mutpb,
+            popsize=popsize,
+            elitesize=elitesize,
+            ngen=ngen,
+            imutpb=imutpb,
+            imutmu=imutmu,
+            imutsigma=imutsigma,
+            ckpt=ckpt,
+            halloffamesize=halloffamesize,
+            earlystop=earlystop,
+            ckpt_dir=ckpt_dir
+        )
 
     # 3. Set Strategy
     logger.log("Loading strategy...")

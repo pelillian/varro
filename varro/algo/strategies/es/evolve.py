@@ -3,33 +3,20 @@ This module contains the evolutionary algorithm logic
 """
 
 from dowel import logger
-import os
-import time
-import json
-import pickle
-import random
 import numpy as np
-import functools
 from deap import base, creator, tools
 from datetime import datetime
 
-from varro.util.util import make_path, get_problem_range, get_tb_fig
-from varro.util.variables import ABS_ALGO_EXP_LOGS_PATH, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH, DATE_NAME_FORMAT
 from varro.algo.problems import Problem
-from varro.algo.problems.func_approx import rastrigin, rosenbrock
 
 
 def evolve(strategy,
-           logs_path=ABS_ALGO_EXP_LOGS_PATH,
-           ckpts_path=EXPERIMENT_CHECKPOINTS_PATH,
            grid_search=False,
            ckpt_freq=10):
     """Evolves parameters to train a model on a dataset.
 
     Args:
         strategy (Strategy): The strategy to be used for evolving, Simple Genetic Algorithm (sga) / Novelty Search (ns) / Covariance-Matrix Adaptation (cma-es)
-        logs_path (str): Path to the experiment logs directory
-        ckpts_path (str): Path to the checkpoints directory
         grid_search (bool): Whether grid search will be in effect
 
     Returns:
@@ -41,17 +28,6 @@ def evolve(strategy,
     ########################################################
     # 1. SET UP LOGGER, FOLDERS, AND FILES TO SAVE DATA TO #
     ########################################################
-
-    # Set checkpoint dirs
-    if grid_search:
-        experiment_checkpoints_dir = os.path.join(GRID_SEARCH_CHECKPOINTS_PATH, 'tmp')
-    else:
-        experiment_checkpoints_dir = os.path.join(EXPERIMENT_CHECKPOINTS_PATH, strategy.model.name + '_' + strategy.problem.name + '_' + datetime.now().strftime(DATE_NAME_FORMAT))
-
-    # Create experiment folder to store
-    # snapshots of population
-    make_path(ABS_ALGO_EXP_LOGS_PATH)
-    make_path(experiment_checkpoints_dir)
 
     def process_record(record):
         now = datetime.utcnow()
@@ -132,7 +108,7 @@ def evolve(strategy,
         # Save snapshot of population (offspring)
         if g % ckpt_freq == 0 or g == strategy.ngen-1:
             # Save the checkpoint
-            strategy.save_ckpt(exp_ckpt_dir=experiment_checkpoints_dir)
+            strategy.save_ckpt()
 
         # Best individual's fitness / novelty score,
         # whichever is the first element of the fitness

@@ -7,10 +7,7 @@ import pickle
 import numpy as np
 import random
 from deap import base, creator, tools
-from collections import namedtuple
-from functools import partial
 from dowel import logger
-import time
 
 from varro.algo.strategies.strategy import Strategy
 
@@ -103,13 +100,8 @@ class StrategySGA(Strategy):
         logger.stop_timer('SGA.PY Loading ES Vars')
 
 
-    def save_ckpt(self, exp_ckpt_dir):
-        """Saves the checkpoint of the current generation of Population
-        and some other information
-
-        Args:
-            exp_ckpt_dir (str): The experiment's checkpointing directory
-        """
+    def save_ckpt(self):
+        """Saves information necessary to resume algorithm after stopping"""
 
         logger.start_timer()
 
@@ -122,7 +114,7 @@ class StrategySGA(Strategy):
                   logbook=self.logbook,
                   rndstate=self.rndstate)
 
-        with open(os.path.join(exp_ckpt_dir, '{}.pkl'.format(self.curr_gen)), "wb") as cp_file:
+        with open(os.path.join(self.ckpt_dir, '{}.pkl'.format(self.curr_gen)), "wb") as cp_file:
             pickle.dump(cp, cp_file)
 
         logger.stop_timer('SGA.PY Saving checkpoint')
