@@ -108,7 +108,7 @@ def es_toolbox(strategy_name,
 
         # MUTATION
         def mutate_individual(ind):
-            idx = np.argwhere(np.random.choice([False, True], size, p=[0.9, 0.1]))
+            idx = np.argwhere(np.random.choice([False, True], size, p=[1 - imutpb, imutpb]))
             ind[idx] = np.invert(ind[idx])
             return ind
         toolbox.register("mutate", mutate_individual)
