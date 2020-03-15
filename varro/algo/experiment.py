@@ -35,7 +35,7 @@ def main():
     logger.log("Running Project Varro")
     logger.log("Purpose: " + args.purpose)
 
-    if args.use_timer is True: 
+    if args.use_timer: 
         logger.set_timer(True)
 
     if args.hyper_opt is not None:
