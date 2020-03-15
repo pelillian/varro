@@ -16,11 +16,11 @@ def get_problem_range(problem):
     # Returns np.linspace(x_lower_bound, x_upper_bound, num_steps) for a given problem.__name__
     import numpy as np
 
-    if problem == 'sinx':
+    if problem == 'sin':
         return np.linspace(-2*np.pi, 2*np.pi, 500)
-    elif problem == 'cosx':
+    elif problem == 'cos':
         return np.linspace(-2*np.pi, 2*np.pi, 500)
-    elif problem == 'tanx':
+    elif problem == 'tan':
         return np.linspace(-2*np.pi, 2*np.pi, 500)
     elif problem == 'x':
         return np.linspace(-10, 10, 500)
@@ -47,11 +47,11 @@ def get_tb_fig(problem, y_pred):
     range_max = np.max(get_problem_range(problem))
     X = np.linspace(range_min, range_max, 500)
 
-    if problem == 'sinx':
+    if problem == 'sin':
         Y = np.sin(X)
-    elif problem == 'cosx':
+    elif problem == 'cos':
         Y = np.cos(X)
-    elif problem == 'tanx':
+    elif problem == 'tan':
         Y = np.tan(X)
     elif problem == 'x':
         Y = X

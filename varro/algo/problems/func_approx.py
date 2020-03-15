@@ -101,13 +101,13 @@ class ProblemFuncApprox(Problem):
 
         """
         func = self._name
-        if func == 'sinx':
+        if func == 'sin':
             self.X_train = self.sample_float(-2*np.pi, 2*np.pi, 0.001)
             self.y_train = np.sin(self.X_train)
-        elif func == 'cosx':
+        elif func == 'cos':
             self.X_train = self.sample_float(-2*np.pi, 2*np.pi, 0.001)
             self.y_train = np.cos(self.X_train)
-        elif func == 'tanx':
+        elif func == 'tan':
             self.X_train = self.sample_float(-2*np.pi, 2*np.pi, 0.001)
             self.y_train = np.tan(self.X_train)
         elif func == 'x':

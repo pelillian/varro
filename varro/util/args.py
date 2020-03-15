@@ -86,8 +86,8 @@ def get_args():
     # 7. What problem are we trying to solve / optimize? #
     ######################################################
     parser.add_argument('--problem_type',
-                        default='sinx',
-                        const='sinx',
+                        default='sin',
+                        const='sin',
                         nargs='?',
                         metavar='PROBLEM-TO-TACKLE',
                         action='store',

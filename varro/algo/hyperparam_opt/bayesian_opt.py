@@ -52,7 +52,7 @@ def best_fitness_score(parameters, model_type=MODEL_TYPE):
     if MODEL_TYPE == 'nn':
         score = np.array(
             fit(model_type=MODEL_TYPE,
-                problem_type='sinx',
+                problem_type='sin',
                 strategy='nsr-es',
                 cxpb=parameters[0],
                 mutpb=parameters[1],
@@ -69,7 +69,7 @@ def best_fitness_score(parameters, model_type=MODEL_TYPE):
     else:
         score = np.array(
             fit(model_type=MODEL_TYPE,
-                problem_type='sinx',
+                problem_type='sin',
                 strategy='nsr-es',
                 cxpb=parameters[0],
                 mutpb=parameters[1],
