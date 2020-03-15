@@ -14,7 +14,6 @@ from varro.algo.predict import predict
 from varro.util.util import make_path
 from varro.util.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, ABS_ALGO_PREDICTIONS_PATH, DATE_NAME_FORMAT, EXPERIMENT_CHECKPOINTS_PATH, GRID_SEARCH_CHECKPOINTS_PATH
 from varro.util.args import get_args
-from varro.algo.hyperparam_opt.grid_search import grid_search
 
 
 def main():
@@ -31,14 +30,6 @@ def main():
     # Init Loggers
     log_path = join(ABS_ALGO_EXP_LOGS_PATH, experiment_name + '.log')
 
-    # Set checkpoint dirs
-    if grid_search:
-        checkpoint_dir = join(GRID_SEARCH_CHECKPOINTS_PATH, 'tmp')
-    else:
-        checkpoint_dir = join(EXPERIMENT_CHECKPOINTS_PATH, experiment_name)
-
-    make_path(checkpoint_dir)
-
     logger.add_output(StdOutput())
     logger.add_output(TextOutput(log_path))
     logger.log("Running Project Varro")
@@ -49,12 +40,19 @@ def main():
 
     if args.hyper_opt is not None:
         if args.hyper_opt == 'grid_search':
+            from varro.algo.hyperparam_opt.grid_search import grid_search
+            checkpoint_dir = join(GRID_SEARCH_CHECKPOINTS_PATH, 'tmp')
+            make_path(checkpoint_dir)
             grid_search()
         elif args.hyper_opt == 'bayesian_opt':
             raise NotImplementedError
         else:
             raise ValueError("Unknown hyperparameter optimization method.")
         return
+    else:
+        checkpoint_dir = join(EXPERIMENT_CHECKPOINTS_PATH, experiment_name)
+        make_path(checkpoint_dir)
+
 
     # Check if we're fitting or predicting
     if args.purpose == 'fit':
