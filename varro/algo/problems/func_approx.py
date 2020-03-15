@@ -69,8 +69,8 @@ class ProblemFuncApprox(Problem):
         """Gets a random list of ints from a range of ints
 
         Args:
-            start (int): The lower bound of our range
-            end (int): The upper bound of our range
+            start (int): The lower bound of our range (inclusive)
+            end (int): The upper bound of our range (exclusive)
             size (int): Number of ints to sample from list
 
         Returns:
@@ -78,7 +78,7 @@ class ProblemFuncApprox(Problem):
         """
         self.minimum = start
         self.maximum = end
-        return np.random.randint(start, end + 1, size=size)
+        return np.random.randint(start, end, size=size)
 
     def sample_bool(self, size=500):
         """Gets a random list of bools, with the same number of 1's and 0's
@@ -103,6 +103,11 @@ class ProblemFuncApprox(Problem):
         func = self._name
         if func == 'sin':
             self.X_train = self.sample_float(-2*np.pi, 2*np.pi, 0.001)
+            self.y_train = np.sin(self.X_train)
+        elif func == 'sin:int12':
+            self.X_train = self.sample_int(0, 2^12, size=40)
+            X_unscaled = np.copy(self.X_train).astype(float)
+            X_unscaled *= 2*np.pi / float(2^12)
             self.y_train = np.sin(self.X_train)
         elif func == 'cos':
             self.X_train = self.sample_float(-2*np.pi, 2*np.pi, 0.001)
