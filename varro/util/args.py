@@ -109,8 +109,8 @@ def get_args():
     # 9. What cross-over probability do you want for the evolutionary algo? #
     #########################################################################
     parser.add_argument('--cxpb',
-                        default=0.5,
-                        const=0.5,
+                        default=0,
+                        const=0,
                         nargs='?',
                         metavar='CROSSOVER-PROBABILITY',
                         action='store',
@@ -121,8 +121,8 @@ def get_args():
     # 10. What mutation probability do you want for the evolutionary algo? #
     ########################################################################
     parser.add_argument('--mutpb',
-                        default=0.01,
-                        const=0.01,
+                        default=0.4,
+                        const=0.4,
                         nargs='?',
                         metavar='MUTATION-PROBABILITY',
                         action='store',
@@ -133,8 +133,8 @@ def get_args():
     # 11. What is the individual attribute mutation probability #
     #############################################################
     parser.add_argument('--imutpb',
-                        default=0.5,
-                        const=0.5,
+                        default=0.05,
+                        const=0.05,
                         nargs='?',
                         metavar='IND-MUTATION-PROBABILITY',
                         action='store',
