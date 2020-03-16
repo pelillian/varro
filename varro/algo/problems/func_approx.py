@@ -2,6 +2,7 @@
 This module contains a function that returns training set for functions to approximate
 """
 
+import re
 import random
 import numpy as np
 
@@ -17,6 +18,7 @@ def rastrigin(x):
     Returns:
         Outputs of the rastrigin function given the inputs
     """
+    raise NotImplementedError
     x = np.asarray_chkfinite(x)
     n = len(x)
     return 10*n + np.sum(x**2 - 10 * np.cos( 2 * np.pi * x))
@@ -30,10 +32,14 @@ def rosenbrock(x):
     Returns:
         Outputs of the rosenbrock function given the inputs
     """
+    raise NotImplementedError
     x = np.asarray_chkfinite(x)
     x0 = x[:-1]
     x1 = x[1:]
     return (np.sum( (1 - x0) **2 ) + 100 * np.sum( (x1 - x0**2) **2 ))
+
+def step_function(x):
+    return (np.array(x) > 0).astype(float)
 
 class ProblemFuncApprox(Problem):
     def __init__(self, func):
@@ -95,40 +101,45 @@ class ProblemFuncApprox(Problem):
         np.random.shuffle(sample)
         return sample
 
-    def reset_train_set(self):
+    def get_func_dtype(self):
+        split = re.split(':', self._name)
+        func = split[0]
+        datatype = None
+        if len(split) > 1:
+            datatype = split[1]
+        return func, datatype
+
+    def reset_train_set(self, minimum=-2*np.pi, maximum=2*np.pi):
         """Sets the ground truth training input X_train and output y_train
         for the function specified to approximate
 
         """
-        func = self._name
-        if func == 'sin':
-            self.X_train = self.sample_float(-2*np.pi, 2*np.pi, 0.001)
-            self.y_train = np.sin(self.X_train)
-        elif func == 'sin:int12':
-            self.X_train = self.sample_int(0, 2^12, size=40)
-            X_unscaled = np.copy(self.X_train).astype(float)
-            X_unscaled *= 2*np.pi / float(2^12)
-            self.y_train = np.sin(self.X_train)
-        elif func == 'cos':
-            self.X_train = self.sample_float(-2*np.pi, 2*np.pi, 0.001)
-            self.y_train = np.cos(self.X_train)
-        elif func == 'tan':
-            self.X_train = self.sample_float(-2*np.pi, 2*np.pi, 0.001)
-            self.y_train = np.tan(self.X_train)
-        elif func == 'x':
-            self.X_train = self.sample_float(-10, 10, 0.001)
-            self.y_train = self.X_train
-        elif func == 'ras':
-            self.X_train = self.sample_float(-5.12, 5.12, 0.01)
-            self.y_train = rastrigin(self.X_train)
-        elif func == 'rosen':
-            self.X_train = self.sample_float(-10, 10, 0.001)
-            self.y_train = rosenbrock(self.X_train)
-        elif func == 'step':
-            self.X_train = self.sample_float(-10, 10, 0.001)
-            self.y_train = (np.array(self.X_train) > 0).astype(float)
-        elif func == 'simple_step':
+        func, datatype = self.get_func_dtype() # Example: sin:int12 becomes func=sin, datatype=int12
+        
+        func_dict = dict(
+                sin=np.sin,
+                cos=np.cos,
+                tan=np.tan,
+                x=np.copy,
+                ras=rastrigin,
+                rosen=rosenbrock,
+                step=step_function,
+            )
+        if func not in func_dict.keys():
+            raise ValueError('Problem \'' + func + '\' not recognised')
+        
+        if 'float' in datatype:
+            self.X_train = self.sample_float(minimum, maximum, 0.001, size=400)
+            self.y_train = func_dict[func](self.X_train)
+        elif 'int' in datatype:
+            values = 2 ** int(re.sub('\D', '', datatype)) # For example, sin:int12 has 4096 values
+            self.X_train = self.sample_int(0, values, size=40)
+            X_unscaled = self.X_train.astype(float)
+            X_unscaled *= (maximum - minimum) / float(values)
+            X_unscaled += minimum
+            self.y_train = func_dict[func](X_unscaled)
+        elif 'bool' in datatype:
             self.X_train = self.sample_bool(size=40)
-            self.y_train = self.X_train
+            self.y_train = func_dict[func](self.X_train.astype(float))
         else:
-            raise ValueError('Problem \'' + str(func) + '\' not recognised')
+            raise ValueError('Problem Datatype \'' + datatype + '\' not recognised')
