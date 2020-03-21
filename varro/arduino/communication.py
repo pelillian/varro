@@ -13,9 +13,9 @@ def initialize_connection():
 
 arduino = initialize_connection() # This has to be here
 
-def evaluate_arduino(datum):
+def evaluate_arduino(datum, sleep_time=0.05):
     send(str(datum))
-    sleep(0.05)
+    sleep(sleep_time)
     return_value = receive()
     return_value = return_value.decode("utf-8")
     if return_value[-1] == ';':
