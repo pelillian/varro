@@ -62,7 +62,7 @@ def fit(model_type,
     if problem_type == 'mnist':
         problem = ProblemMNIST()
     else:
-        problem = ProblemFuncApprox(func=problem_type)
+        problem = ProblemFuncApprox(problem_type)
 
     logger.stop_timer('FIT.PY Choosing problem and getting specific evaluation function')
     logger.start_timer()

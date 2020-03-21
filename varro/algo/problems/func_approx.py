@@ -42,15 +42,40 @@ def step_function(x):
     return (np.array(x) > 0).astype(float)
 
 class ProblemFuncApprox(Problem):
-    def __init__(self, func):
+    func_dict = dict(
+            sin=np.sin,
+            cos=np.cos,
+            tan=np.tan,
+            x=np.copy,
+            ras=rastrigin,
+            rosen=rosenbrock,
+            step=step_function,
+        )
+    range_dict = dict(
+            sin=(-1,1),
+            cos=(-1,1),
+            tan=(-np.inf, np.inf),
+            x=(-np.inf, np.inf),
+            step=(0,1),
+        )
+    def __init__(self, name):
         # Set seed
         random.seed(100)
 
         # Choose classification or regression
         self._approx_type = Problem.REGRESSION
-        self._name = func
+        self._name = name
         self._input_dim = 1
         self._output_dim = 1
+
+        split = re.split(':', name)
+        self.func = split[0]
+        self.datatype = None
+        if len(split) > 1:
+            self.datatype = split[1]
+        
+        if self.func not in self.func_dict.keys():
+            raise ValueError('Problem \'' + self.func + '\' not recognised')
 
         # Set the X_train and y_train for function to approximate
         self.reset_train_set()
@@ -101,45 +126,40 @@ class ProblemFuncApprox(Problem):
         np.random.shuffle(sample)
         return sample
 
-    def get_func_dtype(self):
-        split = re.split(':', self._name)
-        func = split[0]
-        datatype = None
-        if len(split) > 1:
-            datatype = split[1]
-        return func, datatype
+    @property
+    def range(self):
+        return self.range_dict[self.func]
 
-    def reset_train_set(self, minimum=-2*np.pi, maximum=2*np.pi):
+    def unscale_y(self, data, values=64449):
+        ymin, ymax = self.range
+        return self.unscale(data, unscaled_min=ymin, unscaled_max=ymax, values=values)
+
+    def unscale(self, data, unscaled_min, unscaled_max, values=4096):
+        assert np.max(data) <= values
+        unscaled = data.astype(float)
+        unscaled *= (unscaled_max - unscaled_min) / float(values)
+        unscaled += unscaled_min
+        return unscaled
+
+    def apply_func(self, X):
+        return self.func_dict[self.func](X)
+
+    def reset_train_set(self, xmin=-2*np.pi, xmax=2*np.pi):
         """Sets the ground truth training input X_train and output y_train
         for the function specified to approximate
 
         """
-        func, datatype = self.get_func_dtype() # Example: sin:int12 becomes func=sin, datatype=int12
         
-        func_dict = dict(
-                sin=np.sin,
-                cos=np.cos,
-                tan=np.tan,
-                x=np.copy,
-                ras=rastrigin,
-                rosen=rosenbrock,
-                step=step_function,
-            )
-        if func not in func_dict.keys():
-            raise ValueError('Problem \'' + func + '\' not recognised')
-        
-        if 'float' in datatype:
-            self.X_train = self.sample_float(minimum, maximum, 0.001, size=400)
-            self.y_train = func_dict[func](self.X_train)
-        elif 'int' in datatype:
-            values = 2 ** int(re.sub('\D', '', datatype)) # For example, sin:int12 has 4096 values
-            self.X_train = self.sample_int(0, values, size=40)
-            X_unscaled = self.X_train.astype(float)
-            X_unscaled *= (maximum - minimum) / float(values)
-            X_unscaled += minimum
-            self.y_train = func_dict[func](X_unscaled)
-        elif 'bool' in datatype:
+        if 'float' in self.datatype:
+            self.X_train = self.sample_float(xmin, xmax, 0.001, size=400)
+            self.y_train = self.apply_func(self.X_train)
+        elif 'uint' in self.datatype:
+            values = 2 ** int(re.sub('\D', '', self.datatype)) # For example, sin:uint12 has 4096 values
+            self.X_train = self.sample_int(0, values, size=40) # X_train is scaled
+            X_unscaled = self.unscale(self.X_train, values=values, unscaled_min=xmin, unscaled_max=xmax)
+            self.y_train = self.apply_func(X_unscaled) # y_train is unscaled
+        elif 'bool' in self.datatype:
             self.X_train = self.sample_bool(size=40)
-            self.y_train = func_dict[func](self.X_train.astype(float))
+            self.y_train = self.apply_func(self.X_train.astype(float))
         else:
-            raise ValueError('Problem Datatype \'' + datatype + '\' not recognised')
+            raise ValueError('Problem Datatype \'' + self.datatype + '\' not recognised')

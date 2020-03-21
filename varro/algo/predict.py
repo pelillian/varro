@@ -38,7 +38,7 @@ def predict(model_type,
     if problem_type == 'mnist':
         problem = ProblemMNIST()
     else:
-        problem = ProblemFuncApprox(func=problem_type)
+        problem = ProblemFuncApprox(problem_type)
 
     logger.stop_timer('PREDICT.PY Choosing evaluation function for problem')
     logger.start_timer()
