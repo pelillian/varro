@@ -14,7 +14,7 @@ def initialize_connection():
 arduino = initialize_connection() # This has to be here
 
 def evaluate_arduino(datum):
-    send([datum])
+    send(str(datum))
     sleep(0.05)
     return_value = receive()
     return_value = return_value.decode("utf-8")
@@ -34,9 +34,9 @@ def send_char(arduino, val):
     return retval
 
 def send(val):
-    # TODO: Flush arduino serial buffer before recieve is called
     for c in val:
         send_char(arduino, c)
+    send_char(arduino, '\n')
 
 def receive():
     msg = arduino.read(arduino.in_waiting)
