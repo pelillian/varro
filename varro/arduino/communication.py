@@ -36,7 +36,8 @@ def send_char(arduino, val):
 def send(val):
     for c in val:
         send_char(arduino, c)
-    send_char(arduino, '\n')
+    arduino.write('\n')
+    arduino.flush()
 
 def receive():
     msg = arduino.read(arduino.in_waiting)
