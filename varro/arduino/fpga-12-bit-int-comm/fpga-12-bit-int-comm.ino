@@ -39,7 +39,7 @@ void receiveInt() {
     static byte ndx = 0; 
     char endMarker = '\n'; 
     char rc; 
-    int numChars = sizeof(receivedChars);
+    int numChars = 32;  
     
     if (Serial.available() > 0) {
         rc = Serial.read(); 
@@ -94,7 +94,6 @@ void sendInt(int num) {
         Serial.print(num % 10); 
         num /= 10;  
     }
-    Serial.println(); 
     Serial.flush();   
 }
 
@@ -121,7 +120,7 @@ int portIndex = 0;
 
 int analogToInt(int* portValues) {
     int result = 0; 
-    for (int i = 0; i < sizeof(portValues); i++) {
+    for (int i = 0; i < 6; i++) {
         result += portValues[i] * pow(2, i); 
     }
     
