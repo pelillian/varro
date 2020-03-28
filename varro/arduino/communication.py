@@ -14,6 +14,8 @@ def initialize_connection():
 arduino = initialize_connection() # This has to be here
 
 def evaluate_arduino(datum, sleep_time=0.05, send_type=int, return_type=int):
+
+    # TODO Break these into separate methods
     if send_type is int and return_type is int: 
         send(str(datum))
         sleep(sleep_time)
