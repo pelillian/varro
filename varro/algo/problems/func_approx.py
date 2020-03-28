@@ -130,6 +130,18 @@ class ProblemFuncApprox(Problem):
     def range(self):
         return self.range_dict[self.func]
 
+    def scale_y(self, data, values=64449):
+        ymin, ymax = self.range
+        return self.scale(data, unscaled_min=ymin, unscaled_max=ymax, values=values)
+
+    def scale(self, data, unscaled_min, unscaled_max, values=64449):
+        assert np.max(data) <= unscaled_max and np.min(data) >= unscaled_min
+        scaled = data.astype(float)
+        scaled -= unscaled_min
+        scaled *= float(values) / (unscaled_max - unscaled_min)
+        scaled = scaled.astype(int)
+        return scaled
+
     def unscale_y(self, data, values=64449):
         ymin, ymax = self.range
         return self.unscale(data, unscaled_min=ymin, unscaled_max=ymax, values=values)
@@ -157,7 +169,8 @@ class ProblemFuncApprox(Problem):
             values = 2 ** int(re.sub('\D', '', self.datatype)) # For example, sin:uint12 has 4096 values
             self.X_train = self.sample_int(0, values, size=40) # X_train is scaled
             X_unscaled = self.unscale(self.X_train, values=values, unscaled_min=xmin, unscaled_max=xmax)
-            self.y_train = self.apply_func(X_unscaled) # y_train is unscaled
+            y_unscaled = self.apply_func(X_unscaled)
+            self.y_train = self.scale_y(y_unscaled, values=64449) # y_train is scaled
         elif 'bool' in self.datatype:
             self.X_train = self.sample_bool(size=40)
             self.y_train = self.apply_func(self.X_train.astype(float))
