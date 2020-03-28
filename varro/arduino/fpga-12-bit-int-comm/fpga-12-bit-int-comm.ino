@@ -14,7 +14,7 @@ int digitalPorts[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
  */
 void integerAsCharArray(int num, char* vals) {
 
-    num %= pow(2, 12); 
+    num %= (int)pow(2, 12); 
     
     for (int i = 1; i <= 12; i++) {
         int powerOfTwo = pow(2, 12 - i + 1); 
@@ -39,6 +39,7 @@ void receiveInt() {
     static byte ndx = 0; 
     char endMarker = '\n'; 
     char rc; 
+    int numChars = sizeof(receivedChars);
     
     if (Serial.available() > 0) {
         rc = Serial.read(); 
@@ -64,7 +65,7 @@ void receiveInt() {
  */
 void setDigitalPins(char* vals) {
     for (int i = 0; i < 12; i++) {
-        if (arr[i] == 1) 
+        if (vals[i] == 1) 
            digitalWrite(digitalPorts[i], HIGH); 
         else 
            digitalWrite(digitalPorts[i], LOW); 
@@ -121,7 +122,7 @@ int portIndex = 0;
 int analogToInt(int* portValues) {
     int result = 0; 
     for (int i = 0; i < sizeof(portValues); i++) {
-        result += portValuess[i] * pow(2, i); 
+        result += portValues[i] * pow(2, i); 
     }
     
     return result; 
@@ -140,16 +141,16 @@ void loop()
         int num = atoi(receivedChars); 
         integerAsCharArray(num, vals);        
         
-        // TODO Send values to FPGA
+        // Send values to FPGA
         setDigitalPins(vals); 
 
-        // TODO Read analog pins
+        // Read analog pins
         readAnalogPins(portValues);  
 
-        // TODO Convert analog values to denormalized int
+        // Convert analog values to denormalized int
         num = analogToInt(portValues); 
 
-        // TODO Send resulting int over serial
+        // Send resulting int over serial
         sendInt(num); 
     }
 //    // Read in data from serial buffer
