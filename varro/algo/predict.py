@@ -103,8 +103,17 @@ def predict(model_type,
 
     # Predict labels using np array in input_data
     logger.log("Running model.predict")
-    y_pred = np.array(model.predict(np.load(input_data)))
-    logger.log(str(y_pred))
+    if input_data.endswith(".pkl"):
+        with open(input_data, "rb") as input_data_file:
+            problem = pickle.load(input_data_file)
+            X = problem.X_train
+            y_true = problem.y_train
+        y_pred = np.array(model.predict(X))
+        logger.log(str(np.column_stack((X, y_pred, y_true))))
+    elif input_data.endswith(".npy"):
+        X = np.load(input_data)
+        y_pred = np.array(model.predict(X))
+        logger.log(str(y_pred))
     logger.stop_timer('PREDICT.PY Predicting labels using np array')
 
     # Save the y_pred into a file

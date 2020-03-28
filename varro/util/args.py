@@ -53,7 +53,7 @@ def get_args():
                         help='The checkpoint folder that contains the population of each generation')
 
     #######################################################
-    # 4. .npy file to specify input data (features for prediction) #
+    # 4. File to specify input data (features for prediction) #
     #######################################################
     parser.add_argument('--input_data',
                         nargs='?',
@@ -294,8 +294,8 @@ def get_args():
         parser.error("--purpose='predict' requires --input_data and either --ckpt or --ckptfolder to be specified.")
 
     # Check that input_data and y are .npy files
-    if settings.input_data and settings.input_data[-3:] != 'npy':
-        parser.error("--input_data needs to be a .npy file.")
+    if settings.input_data and settings.input_data[-3:] != 'npy' and settings.input_data[-3:] != 'pkl':
+        parser.error("--input_data needs to be a .npy or .pkl file.")
     if settings.labels and settings.labels[-3:] != 'npy':
         parser.error("--labels needs to be a .npy file.")
 
