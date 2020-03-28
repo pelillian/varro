@@ -145,23 +145,25 @@ class Strategy(ABC):
         """
         # Predict labels
         y_pred = np.array(self.model.predict(self.problem.X_train, problem=self.problem))
+        y_pred = y_pred.astype(float)
+        y_train = self.problem.y_train.astype(float)
 
         if self.problem.approx_type == Problem.CLASSIFICATION:
             if self.problem.name == 'mnist':
-                categorical_accuracy = accuracy_score(y_true=self.problem.y_train,
+                categorical_accuracy = accuracy_score(y_true=y_train,
                                                       y_pred=np.argmax(y_pred, axis=-1))
             else:
-                categorical_accuracy = accuracy_score(y_true=self.problem.y_train,
+                categorical_accuracy = accuracy_score(y_true=y_train,
                                                       y_pred=(np.array(y_pred) > 0.5).astype(float))
             return -categorical_accuracy
 
         elif self.problem.approx_type == Problem.REGRESSION:
             if reg_metric == 'rmse':
-                return sqrt(mean_squared_error(self.problem.y_train, y_pred))
+                return sqrt(mean_squared_error(y_train, y_pred))
             elif reg_metric == 'mae':
-                return mean_absolute_error(self.problem.y_train, y_pred)
+                return mean_absolute_error(y_train, y_pred)
             elif reg_metric == 'wasserstein':
-                return wasserstein_distance(self.problem.y_train, y_pred)
+                return wasserstein_distance(y_train, y_pred)
             else:
                 raise ValueError('Unknown reg metric ' + str(reg_metric))
 
