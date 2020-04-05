@@ -13,28 +13,32 @@ def initialize_connection():
 
 arduino = initialize_connection() # This has to be here
 
-def evaluate_arduino(datum, sleep_time=0.05, send_type=int, return_type=int):
+def send_datum(datum, sleep_time=0.05): 
+    send(str(datum))
+    sleep(sleep_time)
+    return_value = receive()
+    return_value = return_value.decode("utf-8")
 
-    # TODO Break these into separate methods
+def evaluate_int_int(datum, sleep_time=0.05): 
+    return send_datum(datum, sleep_time)
+
+def evaluate_bool_bool(datum, sleep_time=0.05):
+    return_value = send_datum(datum, sleep_time)
+    if return_value[-1] == ';':
+        return_value = return_value[:-1]
+    return_value = return_value.split(";")[-1]
+    return_value = return_value.split(",")
+    return_value = list(map(int, return_value))
+    pred = np.mean(return_value) / 1024
+    return pred
+
+def evaluate_arduino(datum, sleep_time=0.05, send_type=int, return_type=int):
     if send_type is int and return_type is int: 
-        send(str(datum))
-        sleep(sleep_time)
-        return_value = receive()
-        return_value = return_value.decode("utf-8")
-        return return_value
-    if send_type is bool and return_type is bool: 
-        send(str(datum))
-        sleep(sleep_time)
-        return_value = receive()
-        return_value = return_value.decode("utf-8")
-        if return_value[-1] == ';':
-            return_value = return_value[:-1]
-        return_value = return_value.split(";")[-1]
-        return_value = return_value.split(",")
-        return_value = list(map(int, return_value))
-        pred = np.mean(return_value) / 1024
-        return pred
-    raise NotImplementedError
+        return evaluate_int_int(datum, sleep_time)
+    elif send_type is bool and return_type is bool: 
+        return evaluate_bool_bool(datum, sleep_time)
+    else
+        raise NotImplementedError
 
 def send_char(arduino, val):
     send_byte = int(val).to_bytes(1, byteorder="big") # Makes sure that the value can be represented as one byte
