@@ -67,6 +67,7 @@ def main():
             imutpb=args.imutpb,
             imutmu=args.imutmu,
             imutsigma=args.imutsigma,
+            sample_size=args.samplesize,
             popsize=args.popsize,
             elitesize=args.elitesize,
             ngen=args.ngen,

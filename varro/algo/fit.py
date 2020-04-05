@@ -20,6 +20,7 @@ def fit(model_type,
         imutpb=None,
         imutmu=None,
         imutsigma=None,
+        sample_size=500,
         popsize=None,
         elitesize=None,
         ngen=None,
@@ -62,7 +63,7 @@ def fit(model_type,
     if problem_type == 'mnist':
         problem = ProblemMNIST()
     else:
-        problem = ProblemFuncApprox(problem_type)
+        problem = ProblemFuncApprox(problem_type, sample_size)
 
     logger.stop_timer('FIT.PY Choosing problem and getting specific evaluation function')
     logger.start_timer()

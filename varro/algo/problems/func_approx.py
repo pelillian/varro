@@ -58,7 +58,7 @@ class ProblemFuncApprox(Problem):
             x=(-np.inf, np.inf),
             step=(0,1),
         )
-    def __init__(self, name):
+    def __init__(self, name, sample_size=500):
         # Set seed
         random.seed(100)
 
@@ -67,6 +67,7 @@ class ProblemFuncApprox(Problem):
         self._name = name
         self._input_dim = 1
         self._output_dim = 1
+        self._sample_size = sample_size
 
         split = re.split(':', name)
         self.func = split[0]
@@ -80,49 +81,44 @@ class ProblemFuncApprox(Problem):
         # Set the X_train and y_train for function to approximate
         self.reset_train_set()
 
-    def sample_float(self, start, end, step, size=500):
+    def sample_float(self, start, end, step):
         """Gets a random list of floats from a range of floats
 
         Args:
             start (float): The lower bound of our range
             end (float): The upper bound of our range
             step (float): The precision of our floats to be sampled
-            size (int): Number of floats to sample from list
 
         Returns:
             A random sample of floats from the list
         """
         self.minimum = start
         self.maximum = end
-        return random.sample(list(np.arange(start, end, step)), k=size)
+        return random.sample(list(np.arange(start, end, step)), k=self._sample_size)
 
-    def sample_int(self, start, end, size=500):
+    def sample_int(self, start, end):
         """Gets a random list of ints from a range of ints
 
         Args:
             start (int): The lower bound of our range (inclusive)
             end (int): The upper bound of our range (exclusive)
-            size (int): Number of ints to sample from list
 
         Returns:
             A random sample of ints from the list
         """
         self.minimum = start
         self.maximum = end
-        return np.random.randint(start, end, size=size)
+        return np.random.randint(start, end, size=self._sample_size)
 
-    def sample_bool(self, size=500):
+    def sample_bool(self):
         """Gets a random list of bools, with the same number of 1's and 0's
-
-        Args:
-            size (int): Number of bools to sample
 
         Returns:
             A random sample of bools from the list
         """
         self.minimum = 0
         self.maximum = 1
-        sample = np.concatenate((np.zeros(size//2, dtype=np.int8), np.ones(size//2, dtype=np.int8)))
+        sample = np.concatenate((np.zeros(self._sample_size//2, dtype=np.int8), np.ones(self._sample_size//2, dtype=np.int8)))
         np.random.shuffle(sample)
         return sample
 
@@ -163,16 +159,16 @@ class ProblemFuncApprox(Problem):
         """
         
         if 'float' in self.datatype:
-            self.X_train = self.sample_float(xmin, xmax, 0.001, size=400)
+            self.X_train = self.sample_float(xmin, xmax, 0.001)
             self.y_train = self.apply_func(self.X_train)
         elif 'uint' in self.datatype:
             values = 2 ** int(re.sub('\D', '', self.datatype)) # For example, sin:uint12 has 4096 values
-            self.X_train = self.sample_int(0, values, size=40) # X_train is scaled
+            self.X_train = self.sample_int(0, values) # X_train is scaled
             X_unscaled = self.unscale(self.X_train, values=values, unscaled_min=xmin, unscaled_max=xmax)
             y_unscaled = self.apply_func(X_unscaled)
             self.y_train = self.scale_y(y_unscaled, values=64449) # y_train is scaled
         elif 'bool' in self.datatype:
-            self.X_train = self.sample_bool(size=40)
+            self.X_train = self.sample_bool()
             self.y_train = self.apply_func(self.X_train.astype(float))
         else:
             raise ValueError('Problem Datatype \'' + self.datatype + '\' not recognised')

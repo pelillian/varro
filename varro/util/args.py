@@ -165,6 +165,19 @@ def get_args():
                         help='Set the standard deviation for mutation probability distribution',
                         type=float)
 
+    ###############################################
+    # What training data sample size do you want? #
+    ###############################################
+    parser.add_argument('--samplesize',
+                        default=500,
+                        const=500,
+                        nargs='?',
+                        metavar='SAMPLE-SIZE',
+                        action='store',
+                        help='The size of the training set for each generation',
+                        type=int,
+                        choices=range(2, 10000))
+
     #########################################
     # 14. What population size do you want? #
     #########################################
