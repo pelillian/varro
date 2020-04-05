@@ -37,7 +37,7 @@ def evaluate_arduino(datum, sleep_time=0.05, send_type=int, return_type=int):
         return evaluate_int_int(datum, sleep_time)
     elif send_type is bool and return_type is bool: 
         return evaluate_bool_bool(datum, sleep_time)
-    else
+    else:
         raise NotImplementedError
 
 def send_char(arduino, val):
