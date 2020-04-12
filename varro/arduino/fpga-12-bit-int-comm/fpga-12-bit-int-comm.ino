@@ -143,6 +143,8 @@ void loop()
         // Send values to FPGA
         setDigitalPins(vals); 
 
+        delayMicroseconds(10); 
+
         // Read analog pins
         readAnalogPins(portValues);  
 
