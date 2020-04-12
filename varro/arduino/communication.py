@@ -18,6 +18,7 @@ def send_datum(datum, sleep_time=0.05):
     sleep(sleep_time)
     return_value = receive()
     return_value = return_value.decode("utf-8")
+    return return_value
 
 def evaluate_int_int(datum, sleep_time=0.05): 
     return send_datum(datum, sleep_time)
@@ -44,7 +45,6 @@ def send_char(arduino, val):
     send_byte = int(val).to_bytes(1, byteorder="big") # Makes sure that the value can be represented as one byte
     retval = arduino.write(send_byte)
     arduino.flush()
-
     return retval
 
 def send(val):
