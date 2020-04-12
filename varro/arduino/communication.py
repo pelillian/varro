@@ -23,7 +23,7 @@ def send_datum(datum, sleep_time=0.05):
     return return_value
 
 def evaluate_int_int(datum, sleep_time=0.05): 
-    return send_datum(datum, sleep_time)
+    return int(send_datum(datum, sleep_time))
 
 def evaluate_bool_bool(datum, sleep_time=0.05):
     return_value = send_datum(datum, sleep_time)
@@ -42,7 +42,7 @@ def evaluate_arduino(datum, sleep_time=0.05, send_type=int, return_type=int):
         return_val = evaluate_bool_bool(datum, sleep_time)
     else:
         raise NotImplementedError
-    if not return_val.isinstance(return_type):
+    if not isinstance(return_val, return_type):
         logger.log(return_val)
         import pdb; pdb.set_trace()
     return return_val
