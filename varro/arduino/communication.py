@@ -4,8 +4,8 @@ from time import sleep
 from varro.util.variables import ARDUINO_PORT
 
 
-def initialize_connection():
-    ard = serial.Serial(ARDUINO_PORT,9600,timeout=5)
+def initialize_connection(baud_rate=14400):
+    ard = serial.Serial(ARDUINO_PORT,baud_rate,timeout=5)
     sleep(2) # wait for the Arduino to initialize
     ard.flush()
 

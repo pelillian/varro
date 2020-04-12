@@ -103,7 +103,7 @@ int portValues[6];
 void setup()
 {
 
-    Serial.begin(9600);  // initialize serial communications at 9600 bps
+    Serial.begin(14400);  // initialize serial communications at 9600 bps
     pinMode(CLOCK_SIGNAL, OUTPUT);
     // int output = 0; 
     // Config all pins that will have inputs at some point
