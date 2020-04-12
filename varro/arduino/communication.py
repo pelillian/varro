@@ -1,6 +1,8 @@
 import numpy as np
 import serial
 from time import sleep
+from dowel import logger
+
 from varro.util.variables import ARDUINO_PORT
 
 
@@ -35,11 +37,15 @@ def evaluate_bool_bool(datum, sleep_time=0.05):
 
 def evaluate_arduino(datum, sleep_time=0.05, send_type=int, return_type=int):
     if send_type is int and return_type is int: 
-        return evaluate_int_int(datum, sleep_time)
+        return_val = evaluate_int_int(datum, sleep_time)
     elif send_type is bool and return_type is bool: 
-        return evaluate_bool_bool(datum, sleep_time)
+        return_val = evaluate_bool_bool(datum, sleep_time)
     else:
         raise NotImplementedError
+    if not return_val.isinstance(return_type):
+        logger.log(return_val)
+        import pdb; pdb.set_trace()
+    return return_val
 
 def send_char(arduino, val):
     send_byte = int(val).to_bytes(1, byteorder="big") # Makes sure that the value can be represented as one byte
