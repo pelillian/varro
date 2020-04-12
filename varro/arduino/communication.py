@@ -23,10 +23,10 @@ def send_datum(datum):
     return return_value
 
 def evaluate_int_int(datum): 
-    return int(send_datum(datum, SLEEP_TIME))
+    return int(send_datum(datum))
 
 def evaluate_bool_bool(datum):
-    return_value = send_datum(datum, SLEEP_TIME)
+    return_value = send_datum(datum)
     if return_value[-1] == ';':
         return_value = return_value[:-1]
     return_value = return_value.split(";")[-1]
@@ -37,9 +37,9 @@ def evaluate_bool_bool(datum):
 
 def evaluate_arduino(datum, send_type=int, return_type=int):
     if send_type is int and return_type is int: 
-        return_val = evaluate_int_int(datum, SLEEP_TIME)
+        return_val = evaluate_int_int(datum)
     elif send_type is bool and return_type is bool: 
-        return_val = evaluate_bool_bool(datum, SLEEP_TIME)
+        return_val = evaluate_bool_bool(datum)
     else:
         raise NotImplementedError
     if not isinstance(return_val, return_type):
