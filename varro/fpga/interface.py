@@ -58,7 +58,7 @@ class FpgaConfig:
                     continue
                 row = tile.info.get_row_col().first
                 col = tile.info.get_row_col().second
-                if row < 90 or col < 122:
+                if row < 81 or col < 113 or row == 95 or col == 126:
                     continue
                 config = tile.dump_config()
 #                config = os.linesep.join([line for line in config.splitlines() if "unknown" not in line])

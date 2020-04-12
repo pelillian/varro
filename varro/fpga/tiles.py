@@ -53,7 +53,7 @@ FIXED_TYPES = [
     'DLL',
     'BANK',
 #    'DSP',
-#    'CIB',
+#    'CIB', # This should probably be evolved
 ]
 
 CONFIG = """
