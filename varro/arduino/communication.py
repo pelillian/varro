@@ -3,7 +3,7 @@ import serial
 from time import sleep
 from dowel import logger
 
-from varro.util.variables import ARDUINO_PORT
+from varro.util.variables import ARDUINO_PORT, SLEEP_TIME
 
 
 def initialize_connection(baud_rate=14400):
@@ -15,18 +15,18 @@ def initialize_connection(baud_rate=14400):
 
 arduino = initialize_connection() # This has to be here
 
-def send_datum(datum, sleep_time=0.05): 
+def send_datum(datum): 
     send(str(datum))
-    sleep(sleep_time)
+    sleep(SLEEP_TIME)
     return_value = receive()
     return_value = return_value.decode("utf-8")
     return return_value
 
-def evaluate_int_int(datum, sleep_time=0.05): 
-    return int(send_datum(datum, sleep_time))
+def evaluate_int_int(datum): 
+    return int(send_datum(datum, SLEEP_TIME))
 
-def evaluate_bool_bool(datum, sleep_time=0.05):
-    return_value = send_datum(datum, sleep_time)
+def evaluate_bool_bool(datum):
+    return_value = send_datum(datum, SLEEP_TIME)
     if return_value[-1] == ';':
         return_value = return_value[:-1]
     return_value = return_value.split(";")[-1]
@@ -35,11 +35,11 @@ def evaluate_bool_bool(datum, sleep_time=0.05):
     pred = np.mean(return_value) / 1024
     return pred
 
-def evaluate_arduino(datum, sleep_time=0.05, send_type=int, return_type=int):
+def evaluate_arduino(datum, send_type=int, return_type=int):
     if send_type is int and return_type is int: 
-        return_val = evaluate_int_int(datum, sleep_time)
+        return_val = evaluate_int_int(datum, SLEEP_TIME)
     elif send_type is bool and return_type is bool: 
-        return_val = evaluate_bool_bool(datum, sleep_time)
+        return_val = evaluate_bool_bool(datum, SLEEP_TIME)
     else:
         raise NotImplementedError
     if not isinstance(return_val, return_type):
