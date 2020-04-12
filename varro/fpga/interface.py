@@ -82,7 +82,11 @@ class FpgaConfig:
         results = []
         for datum in data:
             pred = None
+            attempts = 0
             while pred is None:
+                attempts += 1
+                if attempts > 10:
+                    raise ValueError('Tried 10 times to evaluate_arduino')
                 try:
                     pred = evaluate_arduino(datum)
                 except (UnicodeDecodeError, ValueError):
