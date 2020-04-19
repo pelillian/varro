@@ -41,6 +41,9 @@ def rosenbrock(x):
 def step_function(x):
     return (np.array(x) > 0).astype(float)
 
+def notstep_function(x):
+    return (np.array(x) <= 0).astype(float)
+
 class ProblemFuncApprox(Problem):
     func_dict = dict(
             sin=np.sin,
@@ -50,6 +53,7 @@ class ProblemFuncApprox(Problem):
             ras=rastrigin,
             rosen=rosenbrock,
             step=step_function,
+            notstep=notstep_function,
         )
     range_dict = dict(
             sin=(-1,1),
@@ -57,6 +61,11 @@ class ProblemFuncApprox(Problem):
             tan=(-np.inf, np.inf),
             x=(-np.inf, np.inf),
             step=(0,1),
+        )
+    datatype_dict = dict(
+            int=int,
+            bool=bool,
+            float=float,
         )
     def __init__(self, name, sample_size=500):
         # Set seed
@@ -74,6 +83,13 @@ class ProblemFuncApprox(Problem):
         self.datatype = None
         if len(split) > 1:
             self.datatype = split[1]
+            self.values = 2 ** int(re.sub('\D', '', self.datatype)) # For example, sin:uint12 has 4096 values
+            for key in self.datatype_dict.keys():
+                if key in self.datatype:
+                    self.datatype = self.datatype_dict[key]
+                    break
+            if isinstance(self.datatype, str):
+                raise ValueError('Problem Datatype \'' + self.datatype + '\' not recognised')
         
         if self.func not in self.func_dict.keys():
             raise ValueError('Problem \'' + self.func + '\' not recognised')
@@ -158,17 +174,16 @@ class ProblemFuncApprox(Problem):
 
         """
         
-        if 'float' in self.datatype:
+        if self.datatype is float:
             self.X_train = self.sample_float(xmin, xmax, 0.001)
             self.y_train = self.apply_func(self.X_train)
-        elif 'uint' in self.datatype:
-            values = 2 ** int(re.sub('\D', '', self.datatype)) # For example, sin:uint12 has 4096 values
-            self.X_train = self.sample_int(0, values) # X_train is scaled
-            X_unscaled = self.unscale(self.X_train, values=values, unscaled_min=xmin, unscaled_max=xmax)
+        elif self.datatype is int:
+            self.X_train = self.sample_int(0, self.values) # X_train is scaled
+            X_unscaled = self.unscale(self.X_train, values=self.values, unscaled_min=xmin, unscaled_max=xmax)
             y_unscaled = self.apply_func(X_unscaled)
             self.y_train = self.scale_y(y_unscaled, values=64449) # y_train is scaled
-        elif 'bool' in self.datatype:
+        elif self.datatype is bool:
             self.X_train = self.sample_bool()
             self.y_train = self.apply_func(self.X_train.astype(float))
         else:
-            raise ValueError('Problem Datatype \'' + self.datatype + '\' not recognised')
+            raise NotImplementedError
