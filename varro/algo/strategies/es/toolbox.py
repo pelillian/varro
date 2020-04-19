@@ -45,6 +45,7 @@ def es_toolbox(strategy_name,
     toolbox = base.Toolbox()
 
     logger.stop_timer('TOOLBOX.PY Initializing toolbox')
+
     logger.start_timer()
     # Defining tools specific to model
     if model_type == "nn":
@@ -53,10 +54,9 @@ def es_toolbox(strategy_name,
         toolbox.register("attribute", random.random)
 
         logger.stop_timer('TOOLBOX.PY register("attribute")')
-        logger.start_timer()
-
 
         # INDIVIDUAL
+        logger.start_timer()
         toolbox.register("individual",
                          getattr(tools, 'initRepeat'),
                          getattr(creator, 'Individual'),
@@ -64,9 +64,9 @@ def es_toolbox(strategy_name,
                          n=i_shape)
 
         logger.stop_timer('TOOLBOX.PY register("individual")')
-        logger.start_timer()
 
         # MUTATION
+        logger.start_timer()
         toolbox.register("mutate",
                          getattr(tools, 'mutGaussian'),
                          mu=imutmu,
@@ -74,39 +74,35 @@ def es_toolbox(strategy_name,
                          indpb=imutpb)
 
         logger.stop_timer('TOOLBOX.PY register("mutate")')
-        logger.start_timer()
-
 
         # POPULATION
+        logger.start_timer()
         toolbox.register("population",
                          getattr(tools, 'initRepeat'),
                          list,
                          getattr(toolbox, 'individual'))
 
         logger.stop_timer('TOOLBOX.PY register("population")')
-        logger.start_timer()
 
         # MATING
+        logger.start_timer()
         toolbox.register("mate",
                          getattr(tools, 'cxTwoPoint'))
 
         logger.stop_timer('TOOLBOX.PY register("mate")')
-        logger.start_timer()
 
 
     elif model_type == "fpga":
 
-        logger.start_timer()
-
         # ATTRIBUTE
+        logger.start_timer()
         toolbox.register("attribute", np.random.choice, [False, True])
         size = np.prod(i_shape)
 
         logger.stop_timer('TOOLBOX.PY register("attribute")')
-        logger.start_timer()
-
 
         # MUTATION
+        logger.start_timer()
         def mutate_individual(ind):
             idx = np.argwhere(np.random.choice([False, True], size, p=[1 - imutpb, imutpb]))
             ind[idx] = np.invert(ind[idx])
@@ -114,10 +110,9 @@ def es_toolbox(strategy_name,
         toolbox.register("mutate", mutate_individual)
 
         logger.stop_timer('TOOLBOX.PY register("mutate")')
-        logger.start_timer()
-
 
         # POPULATION
+        logger.start_timer()
         def init_population(ind_class, n):
             pop = np.random.choice([False, True], size=(n, size))
             return [ind_class(ind) for ind in pop]
@@ -126,15 +121,13 @@ def es_toolbox(strategy_name,
                          getattr(creator, 'Individual'))
 
         logger.stop_timer('TOOLBOX.PY register("population")')
-        logger.start_timer()
-
 
         # MATING
+        logger.start_timer()
         from varro.fpga.cross_over import cross_over
         toolbox.register("mate", cross_over)
 
         logger.stop_timer('TOOLBOX.PY register("mate")')
-        logger.start_timer()
 
 
     # SELECTION METHOD
@@ -152,13 +145,12 @@ def es_toolbox(strategy_name,
                          getattr(tools, 'selRandom'))
 
     logger.stop_timer('TOOLBOX.PY register("select")')
-    logger.start_timer()
 
 
     # EVALUATE
+    logger.start_timer()
     toolbox.register("evaluate",
                      evaluate)
-
     logger.stop_timer('TOOLBOX.PY register("evaluate")')
     
     return toolbox
