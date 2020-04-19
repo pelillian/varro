@@ -2,7 +2,7 @@
 This module contains the main function we'll use to run the
 experiment to solve the problem using a specified
 evolutionary algorithm
-"""
+""" 
 
 from datetime import datetime
 from dowel import logger, TextOutput, StdOutput
