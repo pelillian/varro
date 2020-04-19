@@ -33,7 +33,10 @@ class ModelFPGA(Model):
     def predict(self, X, problem=None):
         """Evaluates the model on given data."""
         X = np.asarray(X)
-        y = self.config.evaluate(X)
+        if problem is not None:
+            y = self.config.evaluate(X, datatype=problem.datatype)
+        else:
+            raise NotImplementedError
         #TODO: scale y if necessary
         #if isinstance(X[0], numbers.Real) and not isinstance(X[0], numbers.Integral):
         return y
