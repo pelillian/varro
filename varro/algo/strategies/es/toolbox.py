@@ -77,10 +77,12 @@ def es_toolbox(strategy_name,
 
         # POPULATION
         logger.start_timer()
+        def init_population(ind_class, n):
+            pop = np.random.uniform(low=-1, high=1, size=(n, size))
+            return [ind_class(ind) for ind in pop]
         toolbox.register("population",
-                         getattr(tools, 'initRepeat'),
-                         list,
-                         getattr(toolbox, 'individual'))
+                         init_population,
+                         getattr(creator, 'Individual'))
 
         logger.stop_timer('TOOLBOX.PY register("population")')
 
