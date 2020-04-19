@@ -27,12 +27,7 @@ def evaluate_int_int(datum):
 
 def evaluate_bool_bool(datum):
     return_value = send_datum(datum)
-    if return_value[-1] == ';':
-        return_value = return_value[:-1]
-    return_value = return_value.split(";")[-1]
-    return_value = return_value.split(",")
-    return_value = list(map(int, return_value))
-    pred = np.mean(return_value) / 1024
+    pred = float(return_value) / 64449
     return pred
 
 def evaluate_arduino(datum, send_type=int, return_type=int):
@@ -42,7 +37,7 @@ def evaluate_arduino(datum, send_type=int, return_type=int):
         return_val = evaluate_bool_bool(datum)
     else:
         raise NotImplementedError
-    if not isinstance(return_val, return_type):
+    if send_type is int and not isinstance(return_val, return_type):
         logger.log(return_val)
         import pdb; pdb.set_trace()
     return return_val
