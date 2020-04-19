@@ -182,6 +182,7 @@ class ProblemFuncApprox(Problem):
             # The unscaled space is comprised of floats from xmin to xmax
             # Each integer in the scaled space represents a different value in the unscaled space
             # We have to unscale it to apply the function, and then we have to rescale the output of the function
+            # The scaled data is what is sent to the FPGA
             self.X_train = self.sample_int(0, self.values) # X_train is scaled
             X_unscaled = self.unscale(self.X_train, values=self.values, unscaled_min=xmin, unscaled_max=xmax)
             y_unscaled = self.apply_func(X_unscaled)
