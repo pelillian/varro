@@ -76,7 +76,7 @@ class FpgaConfig:
         flash_config_file(self.base_file_name)
         logger.stop_timer('INTERFACE.PY load_fpga')
 
-    def evaluate(self, data):
+    def evaluate(self, data, data_type=int):
         """Evaluates given data on the FPGA."""
         logger.start_timer()
         results = []
@@ -88,7 +88,7 @@ class FpgaConfig:
                 if attempts > 10:
                     raise ValueError('Tried 10 times to evaluate_arduino')
                 try:
-                    pred = evaluate_arduino(datum)
+                    pred = evaluate_arduino(datum, send_type=data_type, return_type=data_type)
                 except (UnicodeDecodeError, ValueError):
                     pass
             results.append(pred)    
