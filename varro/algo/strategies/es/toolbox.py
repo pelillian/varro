@@ -48,6 +48,9 @@ def es_toolbox(strategy_name,
 
     logger.start_timer()
     # Defining tools specific to model
+    
+    size = np.prod(i_shape)
+    
     if model_type == "nn":
 
         # ATTRIBUTE
@@ -99,7 +102,6 @@ def es_toolbox(strategy_name,
         # ATTRIBUTE
         logger.start_timer()
         toolbox.register("attribute", np.random.choice, [False, True])
-        size = np.prod(i_shape)
 
         logger.stop_timer('TOOLBOX.PY register("attribute")')
 
