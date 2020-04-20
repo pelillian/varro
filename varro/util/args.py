@@ -288,12 +288,12 @@ def get_args():
     # 22. Determine whether timing messages are logged
     ######################################################################################
 
-    parser.add_argument('--use_timer',
+    parser.add_argument('--verbose',
                         default=False,
                         const=False,
                         nargs='?',
                         action='store',
-                        help='Determine whether timing messages are logged',
+                        help='Determine whether timing messages, etc are logged',
                         type=bool)
 
     settings = parser.parse_args()

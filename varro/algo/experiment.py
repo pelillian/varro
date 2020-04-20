@@ -2,7 +2,7 @@
 This module contains the main function we'll use to run the
 experiment to solve the problem using a specified
 evolutionary algorithm
-"""
+""" 
 
 from datetime import datetime
 from dowel import logger, TextOutput, StdOutput
@@ -35,7 +35,7 @@ def main():
     logger.log("Running Project Varro")
     logger.log("Purpose: " + args.purpose)
 
-    if args.use_timer: 
+    if args.verbose: 
         logger.set_timer(True)
 
     if args.hyper_opt is not None:
