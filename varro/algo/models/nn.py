@@ -46,13 +46,13 @@ class ModelNN(Model):
                 self.model.add(Dense(problem.output_dim, activation='sigmoid'))
 
         elif problem.approx_type == Problem.REGRESSION:
-            self.model.add(Dense(6, input_dim=problem.input_dim, activation='tanh'))
-            self.model.add(Dense(4, activation='tanh'))
-            self.model.add(Dense(2, activation='tanh'))
+            self.model.add(Dense(6, input_dim=14, activation='relu'))
+            self.model.add(Dense(4, activation='relu'))
+            self.model.add(Dense(2, activation='relu'))
 
             # LAST LAYER:
             # Problem-specific - if y is [-1, 1], use tanh
-            self.model.add(Dense(problem.output_dim, activation='tanh'))
+            self.model.add(Dense(problem.output_dim, activation='relu'))
         else:
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
 
@@ -82,6 +82,9 @@ class ModelNN(Model):
 
     def predict(self, X, problem=None):
         """Evaluates the model on given data."""
+        
+        X = [np.array([int(i) for i in format(j, 'b')]) for j in problem.X_train]
+        X = np.array([np.pad(i, (14-len(i), 0), 'constant') for i in X])
         return self.model.predict(X)
 
     @property
