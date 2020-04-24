@@ -85,7 +85,9 @@ class ModelNN(Model):
         
         X = [np.array([int(i) for i in format(j, 'b')]) for j in problem.X_train]
         X = np.array([np.pad(i, (14-len(i), 0), 'constant') for i in X])
-        return self.model.predict(X)
+        y_pred = self.model.predict(X)
+        y_pred = [float(sum([2**(15-i) * y for i, y in enumerate(list(j.flatten()))])) for j in y_pred] 
+        return y_pred
 
     @property
     def parameters_shape(self):
