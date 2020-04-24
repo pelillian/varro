@@ -144,9 +144,8 @@ class Strategy(ABC):
             REGRESSION fitness score: Root Mean Squared Error
         """
         # Predict labels
-#        y_pred = np.array(self.model.predict(self.problem.X_train, problem=self.problem))
-#        y_pred = y_pred.astype(float)
-        y_pred = [float(sum([2**(15-i) * y for i, y in enumerate(list(j.flatten()))])) for j in self.model.predict(self.problem.X_train, problem=self.problem)] 
+        y_pred = np.array(self.model.predict(self.problem.X_train, problem=self.problem))
+        y_pred = y_pred.astype(float)
         y_train = self.problem.y_train.astype(float)
 
         if self.problem.approx_type == Problem.CLASSIFICATION:
