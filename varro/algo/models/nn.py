@@ -46,13 +46,12 @@ class ModelNN(Model):
                 self.model.add(Dense(problem.output_dim, activation='sigmoid'))
 
         elif problem.approx_type == Problem.REGRESSION:
-            self.model.add(Dense(6, input_dim=14, activation='relu'))
-            self.model.add(Dense(4, activation='relu'))
-            self.model.add(Dense(2, activation='relu'))
 
+            self.model.add(Dense(6, input_dim=problem.input_dim, activation=problem.activation))
+            self.model.add(Dense(4, activation=problem.activation))
+            self.model.add(Dense(2, activation=problem.activation))
             # LAST LAYER:
-            # Problem-specific - if y is [-1, 1], use tanh
-            self.model.add(Dense(problem.output_dim, activation='relu'))
+            self.model.add(Dense(problem.output_dim, activation=problem.activation))
         else:
             raise ValueError('Unknown approximation type ' + str(problem.approx_type))
 
@@ -82,12 +81,14 @@ class ModelNN(Model):
 
     def predict(self, X, problem=None):
         """Evaluates the model on given data."""
-        
-        X = [np.array([int(i) for i in format(j, 'b')]) for j in problem.X_train]
-        X = np.array([np.pad(i, (14-len(i), 0), 'constant') for i in X])
-        y_pred = self.model.predict(X)
-        y_pred = [float(sum([2**(15-i) * y for i, y in enumerate(list(j.flatten()))])) for j in y_pred] 
-        return y_pred
+        if problem._name == "sin:uint12":        
+            X = [np.array([int(i) for i in format(j, 'b')]) for j in problem.X_train]
+            X = np.array([np.pad(i, (14-len(i), 0), 'constant') for i in X])
+            y_pred = self.model.predict(X)
+            y_pred = [float(sum([2**(15-i) * y for i, y in enumerate(list(j.flatten()))])) for j in y_pred] 
+            return y_pred
+        else:
+            return self.model.predict(X)
 
     @property
     def parameters_shape(self):
