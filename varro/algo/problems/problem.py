@@ -41,3 +41,8 @@ class Problem(ABC):
     def output_dim(self):
         """Dimension of output vector"""
         return self._output_dim
+   
+    @property
+    def activation(self):
+        """Activation function"""
+        return self._activation
