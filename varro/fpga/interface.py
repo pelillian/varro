@@ -4,6 +4,7 @@ This module handles communication of data to the FPGA
 
 import os
 from os.path import join
+import numpy as np
 import pytrellis
 from dowel import logger
 
@@ -58,7 +59,7 @@ class FpgaConfig:
                     continue
                 row = tile.info.get_row_col().first
                 col = tile.info.get_row_col().second
-                if row < 81 or col < 113 or row == 95 or col == 126:
+                if row < 81 or col < 113 or row >= 94 or col >= 125:
                     continue
                 config = tile.dump_config()
 #                config = os.linesep.join([line for line in config.splitlines() if "unknown" not in line])
@@ -93,7 +94,9 @@ class FpgaConfig:
                     pass
             results.append(pred)    
         if logger._print_time:
-            print(data)
-            print(results)
+            d = np.array(data)
+            r = np.array(results)
+            arr = np.column_stack((d,r))
+            print(arr)
         logger.stop_timer('INTERFACE.PY Evaluation complete')
         return results
