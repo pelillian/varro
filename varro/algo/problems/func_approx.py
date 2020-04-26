@@ -74,8 +74,15 @@ class ProblemFuncApprox(Problem):
         # Choose classification or regression
         self._approx_type = Problem.REGRESSION
         self._name = name
-        self._input_dim = 1
-        self._output_dim = 1
+        if self._name == "sin:uint12":
+            self._activation = "relu" 
+            self._input_dim = 14
+            self._output_dim = 16 
+        else:
+            self._activation = "tanh"
+            self._input_dim = 1
+            self._output_dim = 1
+        
         self._sample_size = sample_size
 
         split = re.split(':', name)
