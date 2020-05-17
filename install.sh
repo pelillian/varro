@@ -5,6 +5,6 @@ bash ${DIR}/varro/cython/build_fast_cram.bash
 echo "Flashing Arduino"
 
 
-cd ${DIR}/varro/arduino/fpga-communication 
+cd ${DIR}/varro/arduino/fpga-12-bit-int-comm
 arduino-cli compile --fqbn arduino:sam:arduino_due_x_dbg
 arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:sam:arduino_due_x_dbg
