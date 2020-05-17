@@ -6,7 +6,7 @@ module sinx (input [11:0] digital, output [5:0] analog, input clk);
     reg state = 1'b0; 
     
     always@ (posedge clk) begin
-        assign analog = digital[5:0];
+        analog[5:0] = digital[5:0];
     end
 
 //    initial begin
