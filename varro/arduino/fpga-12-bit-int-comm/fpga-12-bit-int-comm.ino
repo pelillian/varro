@@ -121,7 +121,7 @@ int portIndex = 0;
 int analogToInt(int* portValues) {
     int result = 0; 
     for (int i = 0; i < 6; i++) {
-        result += portValues[i] * pow(2, i); 
+        result += portValues[i]; // * pow(2, i); 
     }
     
     return result; 
