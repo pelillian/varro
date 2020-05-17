@@ -72,9 +72,9 @@ class FpgaConfig:
     def load_fpga(self, config_data):
         """Loads a 2d array of configuration data onto to the FPGA"""
         logger.start_timer() 
-        self.load_cram(config_data)
-        self.write_config_file()
-        flash_config_file(self.base_file_name)
+#        self.load_cram(config_data)
+#        self.write_config_file()
+#        flash_config_file(self.base_file_name)
         logger.stop_timer('INTERFACE.PY load_fpga')
 
     def evaluate(self, data, datatype=int):
@@ -89,14 +89,17 @@ class FpgaConfig:
                 if attempts > 10:
                     raise ValueError('Tried 10 times to evaluate_arduino')
                 try:
-                    pred = evaluate_arduino(datum, send_type=datatype, return_type=datatype)
+                    pred = evaluate_arduino(datum, send_type=datatype, return_type=float)
                 except (UnicodeDecodeError, ValueError):
                     pass
             results.append(pred)    
         if logger._print_time:
-            d = np.array(data)
+            data = np.array(data).astype(float)
+            d = np.array(data/(2**6))
             r = np.array(results)
-            arr = np.column_stack((d,r))
+            mse = (d - r)**2
+            arr = np.column_stack((d,r,mse))
+            np.set_printoptions(suppress=True)
             print(arr)
         logger.stop_timer('INTERFACE.PY Evaluation complete')
         return results

@@ -23,11 +23,14 @@ def send_datum(datum):
     return return_value
 
 def evaluate_int_float(datum): 
-    return float(send_datum(datum)) / 6
+    pred = float(send_datum(datum)) / (6*1024)
+    if pred > 1:
+        logger.log('Returned value is greater than 1: ' + str(pred))
+    return pred
 
 def evaluate_bool_bool(datum):
     return_value = send_datum(datum)
-    pred = float(return_value) / 6
+    pred = float(return_value) / (6*1024)
     return pred
 
 def evaluate_arduino(datum, send_type=int, return_type=float):
