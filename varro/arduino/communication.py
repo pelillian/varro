@@ -22,17 +22,17 @@ def send_datum(datum):
     return_value = return_value.decode("utf-8")
     return return_value
 
-def evaluate_int_int(datum): 
-    return int(send_datum(datum))
+def evaluate_int_float(datum): 
+    return float(send_datum(datum)) / 6
 
 def evaluate_bool_bool(datum):
     return_value = send_datum(datum)
-    pred = float(return_value) / 64449
+    pred = float(return_value) / 6
     return pred
 
-def evaluate_arduino(datum, send_type=int, return_type=int):
-    if send_type is int and return_type is int: 
-        return_val = evaluate_int_int(datum)
+def evaluate_arduino(datum, send_type=int, return_type=float):
+    if send_type is int and return_type is float: 
+        return_val = evaluate_int_float(datum)
     elif send_type is bool and return_type is bool: 
         return_val = evaluate_bool_bool(datum)
     else:
