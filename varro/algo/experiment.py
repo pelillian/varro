@@ -93,8 +93,11 @@ def main():
             # Make a single prediction
 
             logger.start_timer()
-            save_dir = join(ABS_ALGO_PREDICTIONS_PATH, args.ckpt.split('/')[-2])
-            make_path(save_dir)
+            if args.ckpt == "random":
+                save_dir = '.'
+            else:
+                save_dir = join(ABS_ALGO_PREDICTIONS_PATH, args.ckpt.split('/')[-2])
+                make_path(save_dir)
             predict(model_type=args.model_type,
                     problem_type=args.problem_type,
                     strategy=args.strategy,

@@ -90,7 +90,8 @@ def predict(model_type,
             logger.stop_timer('PREDICT.PY Loading data from pickle file')
             logger.start_timer()
             parameters = cp["halloffame"][0]
-
+    elif ckpt == "random":
+        parameters = np.random.choice([False, True], size=13294*1136)
     else:
         raise ValueError("Checkpoint file has unrecognised extension.")
 
