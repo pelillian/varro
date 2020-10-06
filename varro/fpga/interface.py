@@ -6,6 +6,7 @@ import os
 from os.path import join
 import pytrellis
 from dowel import logger
+import numpy as np
 
 from varro.cython.fast_cram import load_cram_fast
 from varro.util.variables import PRJTRELLIS_DATABASE, CHIP_NAME, CHIP_COMMENT
@@ -85,4 +86,5 @@ class FpgaConfig:
                     pass
             results.append(pred)    
         logger.stop_timer('INTERFACE.PY Evaluation complete')
+        print(np.column_stack((data, results)))
         return results
