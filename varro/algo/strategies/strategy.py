@@ -5,7 +5,7 @@ This module contains an abstract class for Strategy
 import random
 from abc import ABC, abstractmethod
 import numpy as np
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, log_loss
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from scipy.stats import wasserstein_distance
 from math import sqrt
@@ -153,6 +153,8 @@ class Strategy(ABC):
             if self.problem.name == 'mnist':
                 categorical_accuracy = accuracy_score(y_true=self.problem.y_train,
                                                       y_pred=np.argmax(y_pred, axis=-1))
+            elif self.problem.name == 'simple_step':
+                return log_loss(y_true=self.problem.y_train, y_pred=y_pred) - 100 * np.std(y_pred)
             else:
                 categorical_accuracy = accuracy_score(y_true=self.problem.y_train,
                                                       y_pred=(np.array(y_pred) > 0.5).astype(float))

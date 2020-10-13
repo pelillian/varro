@@ -46,6 +46,9 @@ class ProblemFuncApprox(Problem):
         self._input_dim = 1
         self._output_dim = 1
 
+        if self._name == "simple_step":
+            self._approx_type = Problem.CLASSIFICATION
+
         # Set the X_train and y_train for function to approximate
         self.reset_train_set()
 
