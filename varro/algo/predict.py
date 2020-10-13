@@ -108,7 +108,7 @@ def predict(model_type,
     x = np.load(input_data)
     y_pred = np.array(model.predict(x))
     logger.log(str(y_pred))
-    logger.log('Accuracy: ', accuracy_score(x, y_pred)) # Predict for simple_step only!
+    logger.log('Accuracy: ', accuracy_score(x.astype('float'), y_pred)) # Predict for simple_step only!
     logger.stop_timer('PREDICT.PY Predicting labels using np array')
 
     # Save the y_pred into a file
