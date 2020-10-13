@@ -3,7 +3,7 @@ import numpy as np
 from dowel import logger
 from os.path import join
 import time
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import mean_squared_error
 
 from varro.algo.problems import Problem, ProblemFuncApprox, ProblemMNIST
 from varro.algo.strategies.sga import StrategySGA
@@ -108,7 +108,7 @@ def predict(model_type,
     x = np.load(input_data)
     y_pred = np.array(model.predict(x))
     logger.log(str(y_pred))
-    logger.log('Accuracy: ', accuracy_score(x.astype('float'), y_pred)) # Predict for simple_step only!
+    logger.log('Accuracy: ', mean_squared_error(x, y_pred)) # Predict for simple_step only!
     logger.stop_timer('PREDICT.PY Predicting labels using np array')
 
     # Save the y_pred into a file
