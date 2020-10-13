@@ -105,9 +105,10 @@ def predict(model_type,
 
     # Predict labels using np array in input_data
     logger.log("Running model.predict")
-    y_pred = np.array(model.predict(np.load(input_data)))
+    x = np.load(input_data)
+    y_pred = np.array(model.predict(x))
     logger.log(str(y_pred))
-    logger.log('Accuracy: ', accuracy_score(input_data, y_pred))
+    logger.log('Accuracy: ', accuracy_score(x, y_pred)) # Predict for simple_step only!
     logger.stop_timer('PREDICT.PY Predicting labels using np array')
 
     # Save the y_pred into a file
