@@ -132,7 +132,12 @@ class Strategy(ABC):
                                   imutpb=self.imutpb,
                                   imutmu=self.imutmu,
                                   imutsigma=self.imutsigma)
-
+    
+    @staticmethod
+    def log_loss_with_abs_diff_penalty(y_true, y_pred, λ=100):
+        y_true_1_idxs = np.argwhere(y_true.astype(int) == 1).flatten()
+        y_true_0_idxs = np.argwhere(y_true.astype(int) == 0).flatten()
+        return log_loss(y_true=y_true, y_pred=y_pred) - λ*np.abs(np.mean(np.abs(y_pred[y_true_1_idxs])) - np.mean(np.abs(y_pred[y_true_0_idxs])))
 
     def fitness_score(self, reg_metric='rmse'):
         """Calculates the fitness score for a particular
@@ -154,7 +159,8 @@ class Strategy(ABC):
                 categorical_accuracy = accuracy_score(y_true=self.problem.y_train,
                                                       y_pred=np.argmax(y_pred, axis=-1))
             elif self.problem.name == 'simple_step':
-                return log_loss(y_true=self.problem.y_train, y_pred=y_pred) - 100 * np.std(y_pred)
+                # return self.log_loss(y_true=self.problem.y_train, y_pred=y_pred) - 100 * np.std(y_pred)
+                return Strategy.log_loss_with_abs_diff_penalty(y_true=self.problem.y_train, y_pred=y_pred) 
             else:
                 categorical_accuracy = accuracy_score(y_true=self.problem.y_train,
                                                       y_pred=(np.array(y_pred) > 0.5).astype(float))
