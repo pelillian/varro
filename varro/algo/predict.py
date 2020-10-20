@@ -10,7 +10,7 @@ from varro.algo.strategies.sga import StrategySGA
 from varro.algo.strategies.moga import StrategyMOGA
 from varro.algo.strategies.ns_es import StrategyNSES
 from varro.algo.strategies.nsr_es import StrategyNSRES
-from varro.algo.strategies.Strategy import log_loss_with_abs_diff_penalty
+from varro.algo.strategies.strategy import Strategy
 
 def predict(model_type,
             problem_type,
@@ -109,7 +109,7 @@ def predict(model_type,
     x = np.load(input_data)
     y_pred = np.array(model.predict(x))
     logger.log(str(y_pred))
-    logger.log('Loss: ' + str(log_loss_with_abs_diff_penalty(x, y_pred))) # Predict for simple_step only!
+    logger.log('Loss: ' + str(Strategy.log_loss_with_abs_diff_penalty(x, y_pred))) # Predict for simple_step only!
     logger.stop_timer('PREDICT.PY Predicting labels using np array')
 
     # Save the y_pred into a file
