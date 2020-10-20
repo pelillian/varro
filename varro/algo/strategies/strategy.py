@@ -164,7 +164,7 @@ class Strategy(ABC):
                 loss = Strategy.log_loss_with_abs_diff_penalty(y_true=self.problem.y_train, y_pred=y_pred) 
                 logger.log('{')
                 logger.log('Data:')
-                logger.log(np.column_stack((data, results)))
+                logger.log(np.column_stack((y_pred, self.problem.y_train)))
                 logger.log('Loss: ' + str(loss))
                 logger.log('}')
                 return loss
