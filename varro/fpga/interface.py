@@ -86,5 +86,4 @@ class FpgaConfig:
                     pass
             results.append(pred)    
         logger.stop_timer('INTERFACE.PY Evaluation complete')
-        print(np.column_stack((data, results)))
         return results

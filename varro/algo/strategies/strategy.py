@@ -10,6 +10,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 from scipy.stats import wasserstein_distance
 from math import sqrt
 from deap import base, creator, tools
+from dowel import logger
 
 from varro.algo.problems import Problem
 from varro.algo.strategies.es.toolbox import es_toolbox
@@ -160,7 +161,13 @@ class Strategy(ABC):
                                                       y_pred=np.argmax(y_pred, axis=-1))
             elif self.problem.name == 'simple_step':
                 # return self.log_loss(y_true=self.problem.y_train, y_pred=y_pred) - 100 * np.std(y_pred)
-                return Strategy.log_loss_with_abs_diff_penalty(y_true=self.problem.y_train, y_pred=y_pred) 
+                loss = Strategy.log_loss_with_abs_diff_penalty(y_true=self.problem.y_train, y_pred=y_pred) 
+                logger.log('{')
+                logger.log('Data:')
+                logger.log(np.column_stack((data, results)))
+                logger.log('Loss: ' + str(loss))
+                logger.log('}')
+                return loss
             else:
                 categorical_accuracy = accuracy_score(y_true=self.problem.y_train,
                                                       y_pred=(np.array(y_pred) > 0.5).astype(float))
