@@ -163,8 +163,7 @@ class Strategy(ABC):
                 # return self.log_loss(y_true=self.problem.y_train, y_pred=y_pred) - 100 * np.std(y_pred)
                 loss = Strategy.log_loss_with_abs_diff_penalty(y_true=self.problem.y_train, y_pred=y_pred) 
                 logger.log('{')
-                logger.log('Data:')
-                logger.log(np.column_stack((y_pred, self.problem.y_train)))
+                logger.log('Data:\n' + str(np.column_stack((y_pred, self.problem.y_train))))
                 logger.log('Loss: ' + str(loss))
                 logger.log('}')
                 return loss
