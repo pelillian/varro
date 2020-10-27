@@ -42,7 +42,7 @@ class Strategy(ABC):
         self.elitesize = elitesize
         self.ngen = ngen
         self.imutpb = imutpb
-	self.imutpb_decay = imutpb_decay
+        self.imutpb_decay = imutpb_decay
         self.imutmu = imutmu
         self.imutsigma = imutsigma
         self.ckpt = ckpt
