@@ -133,7 +133,7 @@ class Strategy(ABC):
                                   evaluate=self.evaluate,
                                   model_type='nn' if type(self.model).__name__ == 'ModelNN' else 'fpga',
                                   imutpb=self.imutpb,
-                                  imutpb=self.imutpb_decay,
+                                  imutpb_decay=self.imutpb_decay,
                                   imutmu=self.imutmu,
                                   imutsigma=self.imutsigma)
     
