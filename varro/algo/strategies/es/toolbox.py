@@ -73,8 +73,7 @@ def es_toolbox(strategy_name,
                          getattr(tools, 'mutGaussian'),
                          mu=imutmu,
                          sigma=imutsigma,
-                         indpb=imutpb,
-			 imutpb_decay=imutpb_decay)
+                         indpb=imutpb)
 
         logger.stop_timer('TOOLBOX.PY register("mutate")')
         logger.start_timer()
