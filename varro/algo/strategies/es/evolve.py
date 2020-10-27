@@ -112,12 +112,12 @@ def evolve(strategy,
 
         # Mate offspring
         strategy.mate(alterable)
-
         logger.stop_timer('EVOLVE.PY Mating offspring')
         logger.start_timer()
 
         # Mutate offspring and update imutpb
         strategy.mutate(alterable)
+        print("imutpb: ", strategy.toolbox.mutate.keywords['indpb'])
         strategy.toolbox.mutate.keywords['indpb'] *= strategy.imutpb_decay
 
         # Recombine Non-alterable offspring with the
