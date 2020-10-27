@@ -118,7 +118,7 @@ def evolve(strategy,
 
         # Mutate offspring and update imutpb
         strategy.mutate(alterable)
-        strategy.toolbox.mutate.keywords['imutpb'] *= imutpb_decay
+        strategy.toolbox.mutate.keywords['indpb'] *= strategy.imutpb_decay
 
         # Recombine Non-alterable offspring with the
         # ones that have been mutated / cross-overed
