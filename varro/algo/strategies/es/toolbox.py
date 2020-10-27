@@ -14,6 +14,7 @@ def es_toolbox(strategy_name,
                evaluate,
                model_type,
                imutpb=None,
+               imutpb_decay=None,
                imutmu=None,
                imutsigma=None):
     """Initializes and configures the DEAP toolbox for evolving the parameters of a model.
@@ -25,6 +26,7 @@ def es_toolbox(strategy_name,
         model_type (str): A string specifying whether we're optimizing on a neural network
             or field programmable gate array
         imutpb (float): Mutation probability for each individual's attribute
+        imutpb_decay (float): Generational decay rate for imutpb
         imutmu (float): Mean parameter for the Gaussian Distribution we're mutating an attribute from
         imutsigma (float): Sigma parameter for the Gaussian Distribution we're mutating an attribute from
 
@@ -71,7 +73,8 @@ def es_toolbox(strategy_name,
                          getattr(tools, 'mutGaussian'),
                          mu=imutmu,
                          sigma=imutsigma,
-                         indpb=imutpb)
+                         indpb=imutpb,
+			 imutpb_decay=imutpb_decay)
 
         logger.stop_timer('TOOLBOX.PY register("mutate")')
         logger.start_timer()

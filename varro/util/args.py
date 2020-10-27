@@ -141,6 +141,17 @@ def get_args():
                         help='Set the Mutation probability for each attribute in the individual',
                         type=float)
 
+    #############################################################
+    # 11. What is the individual attribute mutation probability #
+    #############################################################
+    parser.add_argument('--imutpb_decay',
+                        default=1.0,
+                        nargs='?',
+                        metavar='IND-MUTATION-PROBABILITY DECAY RATE',
+                        action='store',
+                        help='Set the generational decay rate for imutpb',
+                        type=float)
+
     ##############################################################################
     # 12. What mean for gaussian distribution to pull the mutant attribute from? #
     ##############################################################################

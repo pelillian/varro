@@ -71,6 +71,7 @@ def evolve(strategy,
     logger.log('elitesize: {}'.format(strategy.elitesize))
     logger.log('ngen: {}'.format(strategy.ngen))
     logger.log('imutpb: {}'.format(strategy.imutpb))
+    logger.log('imutpb_decay: {}'.format(strategy.imutpb_decay))
     logger.log('imutmu: {}'.format(strategy.imutmu))
     logger.log('imutsigma: {}'.format(strategy.imutsigma))
     logger.log('halloffamesize: {}'.format(strategy.halloffamesize))
@@ -115,9 +116,9 @@ def evolve(strategy,
         logger.stop_timer('EVOLVE.PY Mating offspring')
         logger.start_timer()
 
-        # Mutate offspring
-        strategy.mutate(alterable) 
-        logger.stop_timer('EVOLVE.PY Mutating offspring')
+        # Mutate offspring and update imutpb
+        strategy.mutate(alterable)
+        strategy.toolbox.mutate.keywords['imutpb'] *= imutpb_decay
 
         # Recombine Non-alterable offspring with the
         # ones that have been mutated / cross-overed

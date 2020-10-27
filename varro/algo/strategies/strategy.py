@@ -27,6 +27,7 @@ class Strategy(ABC):
                  elitesize,
                  ngen,
                  imutpb,
+                 imutpb_decay,
                  imutmu,
                  imutsigma,
                  ckpt,
@@ -41,6 +42,7 @@ class Strategy(ABC):
         self.elitesize = elitesize
         self.ngen = ngen
         self.imutpb = imutpb
+	self.imutpb_decay = imutpb_decay
         self.imutmu = imutmu
         self.imutsigma = imutsigma
         self.ckpt = ckpt
@@ -131,6 +133,7 @@ class Strategy(ABC):
                                   evaluate=self.evaluate,
                                   model_type='nn' if type(self.model).__name__ == 'ModelNN' else 'fpga',
                                   imutpb=self.imutpb,
+                                  imutpb=self.imutpb_decay,
                                   imutmu=self.imutmu,
                                   imutsigma=self.imutsigma)
     

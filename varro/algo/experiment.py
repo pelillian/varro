@@ -59,6 +59,7 @@ def main():
             cxpb=args.cxpb,
             mutpb=args.mutpb,
             imutpb=args.imutpb,
+            imutpb_decay=args.imutpb_decay,
             imutmu=args.imutmu,
             imutsigma=args.imutsigma,
             popsize=args.popsize,

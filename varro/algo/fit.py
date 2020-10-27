@@ -18,6 +18,7 @@ def fit(model_type,
         cxpb=None,
         mutpb=None,
         imutpb=None,
+        imutpb_decay=None,
         imutmu=None,
         imutsigma=None,
         popsize=None,
@@ -39,6 +40,7 @@ def fit(model_type,
         cxpb (float): Cross-over probability for evolutionary algorithm
         mutpb (float): Mutation probability for evolutionary algorithm
         imutpb (float): Mutation probability for each individual's attribute
+	imutpb (float): Generational decay rate for imutpb
         imutmu (float): Mean parameter for the Gaussian Distribution we're mutating an attribute from
         imutsigma (float): Sigma parameter for the Gaussian Distribution we're mutating an attribute from
         popsize (int): Number of individuals to keep in each Population
@@ -85,6 +87,7 @@ def fit(model_type,
             'elitesize' : elitesize,
             'ngen' : ngen,
             'imutpb' : imutpb,
+            'imutpb_decay' : imutpb_decay,
             'imutmu' : imutmu,
             'imutsigma' : imutsigma,
             'ckpt' : ckpt,
