@@ -109,11 +109,11 @@ def es_toolbox(strategy_name,
 
 
         # MUTATION
-        def mutate_individual(ind):
-            idx = np.argwhere(np.random.choice([False, True], size, p=[0.9, 0.1]))
+        def mutate_individual(ind, indpb):
+            idx = np.argwhere(np.random.choice([False, True], size, p=[1-indpb, indpb]))
             ind[idx] = np.invert(ind[idx])
             return ind
-        toolbox.register("mutate", mutate_individual)
+        toolbox.register("mutate", mutate_individual, indpb=imutpb)
 
         logger.stop_timer('TOOLBOX.PY register("mutate")')
         logger.start_timer()
