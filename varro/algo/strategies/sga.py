@@ -223,7 +223,7 @@ class StrategySGA(Strategy):
 
         # Choose the rest of the individuals
         # to be altered
-        random_inds = self.toolbox.select(self.pop, k=self.popsize-elite_num)
-        alterable_offspring = list(map(self.toolbox.clone, random_inds))
+        random_inds = self.toolbox.select(self.pop, k=self.popsize-2*elite_num)
+        alterable_offspring = list(map(self.toolbox.clone, random_inds)) + list(map(self.toolbox.clone, elite))
 
         return non_alterable_elite_offspring, alterable_offspring
