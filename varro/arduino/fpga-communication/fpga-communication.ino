@@ -5,7 +5,7 @@ int digitalPorts[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
 void setup()
 {
 
-  Serial.begin(9600);  // initialize serial communications at 9600 bps
+  Serial.begin(115200);  // initialize serial communications at 9600 bps
   pinMode(CLOCK_SIGNAL, OUTPUT);
   // int output = 0; 
   // Config all pins that will have inputs at some point

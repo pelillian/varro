@@ -5,7 +5,7 @@ from varro.util.variables import ARDUINO_PORT
 
 
 def initialize_connection():
-    ard = serial.Serial(ARDUINO_PORT,9600,timeout=5)
+    ard = serial.Serial(ARDUINO_PORT,115200,timeout=5)
     sleep(2) # wait for the Arduino to initialize
     ard.flush()
 
@@ -15,9 +15,10 @@ arduino = initialize_connection() # This has to be here
 
 def evaluate_arduino(datum):
     send([datum])
-    sleep(0.096)
+    sleep(0.0075)
     return_value = receive()
     return_value = return_value.decode("utf-8")
+    print(return_value)
     if return_value[-1] == ';':
         return_value = return_value[:-1]
     return_value = return_value.split(";")[-1]
@@ -41,17 +42,17 @@ def send(val):
 def receive():
     msg = arduino.read(arduino.in_waiting)
     return msg
-
-if __name__=="__main__":
-    val = 1
-
-    while True:
-        # Serial write section
-        arduino.flush()
-        send(arduino, 0)
-        sleep(0.96)
-        msg = receive(arduino)
-        # Serial read section
-        print (msg.decode("utf-8"))
-
-        val = 0 if val else 1
+#
+#if __name__=="__main__":
+#    val = 1
+#
+#    while True:
+#        # Serial write section
+#        arduino.flush()
+#        send(arduino, 0)
+#        sleep(2.88)
+#        msg = receive(arduino)
+#        # Serial read section
+#        print (msg.decode("utf-8"))
+#
+#        val = 0 if val else 1
