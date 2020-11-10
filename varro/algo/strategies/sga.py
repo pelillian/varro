@@ -14,7 +14,8 @@ from varro.algo.strategies.strategy import Strategy
 
 class StrategySGA(Strategy):
     def __init__(self, **kwargs):
-        super().__init__(name='sga', **kwargs)
+        kwargs["name"] = "sga"
+        super().__init__(**kwargs)
 
     @staticmethod
     def init_fitness_and_inds():
