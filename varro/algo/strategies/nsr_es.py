@@ -16,7 +16,8 @@ from varro.algo.strategies.ns_es import StrategyNSES
 
 class StrategyNSRES(StrategyNSES):
     def __init__(self, **kwargs):
-        kwargs["name"] = "nsr-es"
+        if "name" not in kwargs.keys():
+            kwargs["name"] = "nsr-es"
         super().__init__(**kwargs)
 
     @staticmethod
