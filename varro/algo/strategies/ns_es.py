@@ -14,7 +14,8 @@ from varro.algo.strategies.sga import StrategySGA
 
 class StrategyNSES(StrategySGA):
     def __init__(self, **kwargs):
-        super().__init__(name='ns-es', **kwargs)
+        kwargs["name"] = "ns-es"
+        super().__init__(**kwargs)
 
     @staticmethod
     def init_fitness_and_inds():
