@@ -16,7 +16,7 @@ from varro.algo.strategies.ns_es import StrategyNSES
 
 class StrategyNSRES(StrategyNSES):
     def __init__(self, **kwargs):
-        super().__init__(self, name='nsr-es', **kwargs)
+        super().__init__(name='nsr-es', **kwargs)
 
     @staticmethod
     def init_fitness_and_inds():
