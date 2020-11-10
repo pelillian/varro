@@ -17,7 +17,8 @@ from varro.algo.strategies.strategy import Strategy
 
 class StrategySGA(Strategy):
     def __init__(self, **kwargs):
-        kwargs["name"] = "sga"
+        if "name" not in kwargs.keys():
+            kwargs["name"] = "sga"
         super().__init__(**kwargs)
 
     @staticmethod
