@@ -18,7 +18,6 @@ def evaluate_arduino(datum):
     sleep(0.0075)
     return_value = receive()
     return_value = return_value.decode("utf-8")
-    print(return_value)
     if return_value[-1] == ';':
         return_value = return_value[:-1]
     return_value = return_value.split(";")[-1]
