@@ -92,11 +92,9 @@ def fit(model_type,
             'imutmu' : imutmu,
             'imutsigma' : imutsigma,
             'ckpt' : ckpt,
-	    'ckpt_freq' : ckpt_freq,
             'halloffamesize' : halloffamesize,
             'earlystop' : earlystop,
 	    'novelty_metric' : novelty_metric,
-	    'grid_search' : grid_search,
     }
 
     # 3. Set Strategy
