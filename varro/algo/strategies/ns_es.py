@@ -14,7 +14,8 @@ from varro.algo.strategies.sga import StrategySGA
 
 class StrategyNSES(StrategySGA):
     def __init__(self, **kwargs):
-        kwargs["name"] = "ns-es"
+        if "name" not in kwargs.keys():
+            kwargs["name"] = "ns-es"
         super().__init__(**kwargs)
 
     @staticmethod
