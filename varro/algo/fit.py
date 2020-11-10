@@ -78,7 +78,8 @@ def fit(model_type,
     logger.stop_timer('FIT.PY Loading target platform')
     logger.start_timer()
 
-    strategy_args = {'novelty_metric' : novelty_metric,
+    strategy_args = {
+	    'novelty_metric' : novelty_metric,
             'model' : model,
             'problem' : problem,
             'cxpb' : cxpb,
@@ -91,8 +92,12 @@ def fit(model_type,
             'imutmu' : imutmu,
             'imutsigma' : imutsigma,
             'ckpt' : ckpt,
+	    'ckpt_freq' : ckpt_freq,
             'halloffamesize' : halloffamesize,
-            'earlystop' : earlystop}
+            'earlystop' : earlystop,
+	    'novelty_metric' : novelty_metric,
+	    'grid_search' : grid_search,
+    }
 
     # 3. Set Strategy
     logger.log("Loading strategy...")
