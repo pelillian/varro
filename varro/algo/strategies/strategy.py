@@ -48,7 +48,7 @@ class Strategy(ABC):
         self.ckpt = ckpt
         self.halloffamesize = halloffamesize
         self.earlystop = earlystop
-        self.noveltymetric = novelty_metric
+        self.novelty_metric = novelty_metric
 
         # Storing model and problem
         self.model = model
