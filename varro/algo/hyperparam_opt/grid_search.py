@@ -34,15 +34,11 @@ from varro.util.util import make_path
 from varro.algo.fit import fit
 
 HYPERPARAM_DICT = {}
-HYPERPARAM_DICT['cxpb'] = [0.0]
-HYPERPARAM_DICT['elitesize'] = [0.05]
-HYPERPARAM_DICT['imutpb'] = [0.01, 0.05, 0.1, 0.2, 0.5]
-HYPERPARAM_DICT['imutsigma'] = [1, 3, 5, 8, 10]
-HYPERPARAM_DICT['mutpb'] = [0.01, 0.02, 0.03]
+HYPERPARAM_DICT['model_type'] = ['fpga']
+HYPERPARAM_DICT['imutpb'] = [1e-4, 5e-5, 1e-5]
 HYPERPARAM_DICT['ngen'] = [100]
-HYPERPARAM_DICT['popsize'] = [20, 30, 40]
-HYPERPARAM_DICT['problem_type'] = ['x']
-HYPERPARAM_DICT['strategy'] = ['ea']
+HYPERPARAM_DICT['popsize'] = [200, 100, 50, 10, 5]
+HYPERPARAM_DICT['strategy'] = ['sga', 'nsr-es']
 
 # Ensure checkpoints dir is on local
 make_path(GRID_SEARCH_CHECKPOINTS_PATH)
@@ -61,27 +57,18 @@ def grid_search():
     # IF HYPERPARAMETERS ARE ADDED:
     #    note that aperm indexes hyperparams alphabetically
     for aperm in product(*[*params.values()]):
-        args = {'cxpb': aperm[0],
-                'elitesize': aperm[1],
-                'imutpb': aperm[2],
-                'imutsigma': aperm[3],
-                'mutpb': aperm[4],
-                'ngen': aperm[5],
-                'popsize': aperm[6],
-                'problem_type': aperm[7],
-                'strategy': aperm[8]}
+        args = {'model_type': aperm[0],
+                'imutpb': aperm[1],
+                'ngen': aperm[2],
+                'popsize': aperm[3],
+                'strategy': aperm[4],}
 
-        fit(model_type='nn',
-            problem_type=args['problem_type'],
+        fit(model_type=args['model_type'],
             strategy=args['strategy'],
-            cxpb=args['cxpb'],
-            mutpb=args['mutpb'],
             imutpb=args['imutpb'],
-            imutmu=0,
-            imutsigma=args['imutsigma'],
             popsize=args['popsize'],
-            elitesize=args['elitesize'],
             ngen=args['ngen'],
+            novelty_metric='hamming' if args['strategy'] == 'nsr-es' else None,
             grid_search=True)
 
         # Create temp folder to house checkpoints
