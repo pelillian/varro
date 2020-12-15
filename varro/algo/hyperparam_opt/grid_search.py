@@ -34,7 +34,7 @@ def main():
     # IF HYPERPARAMETERS ARE ADDED:
     #    note that aperm indexes hyperparams alphabetically
     for aperm in product(*[*HYPERPARAM_DICT.values()]):
-        print('python3 varro/algo/experiment.py --model_type={} --imputpb={} --ngen={} --popsize={} strategy={} --novelty_metric={}'.format(aperm[1], aperm[0], aperm[2], aperm[4], aperm[3], 'hamming' if aperm[4] == 'nsr-es' else None))
+        os.system('python3 varro/algo/experiment.py --model_type={} --imputpb={} --ngen={} --popsize={} strategy={} --novelty_metric={}'.format(aperm[1], aperm[0], aperm[2], aperm[4], aperm[3], 'hamming' if aperm[4] == 'nsr-es' else None))
 
 if __name__ == '__main__':
     main()
