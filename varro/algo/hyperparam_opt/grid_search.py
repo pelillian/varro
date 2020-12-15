@@ -33,7 +33,8 @@ def main():
     # fit for each argument permutation
     # IF HYPERPARAMETERS ARE ADDED:
     #    note that aperm indexes hyperparams alphabetically
-    for aperm in product(*[*HYPERPARAM_DICT.values()]):
+    for idx, aperm in enumerate(product(*[*HYPERPARAM_DICT.values()])):
+        print('Experiment ', idx)
         os.system('python3 -m varro.algo.experiment --model_type=\'{}\' --imutpb={} --ngen={} --popsize={} --strategy=\'{}\' --novelty_metric=\'{}\''.format(aperm[0], aperm[1], aperm[2], aperm[3], aperm[4], 'hamming' if aperm[4] == 'nsr-es' else None))
 
 if __name__ == '__main__':
