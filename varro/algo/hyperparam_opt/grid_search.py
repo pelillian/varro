@@ -36,8 +36,8 @@ from varro.algo.fit import fit
 HYPERPARAM_DICT = {}
 HYPERPARAM_DICT['model_type'] = ['fpga']
 HYPERPARAM_DICT['imutpb'] = [1e-4, 5e-5, 1e-5]
-HYPERPARAM_DICT['ngen'] = [100]
-HYPERPARAM_DICT['popsize'] = [200, 100, 50, 10, 5]
+HYPERPARAM_DICT['ngen'] = [50]
+HYPERPARAM_DICT['popsize'] = [100, 30, 5]
 HYPERPARAM_DICT['strategy'] = ['sga', 'nsr-es']
 
 # Ensure checkpoints dir is on local
@@ -47,51 +47,11 @@ def grid_search():
     """ Pickles the best permutation for given ranges of hyperparameters
 
     """
-
-    params = HYPERPARAM_DICT
-
-    fittest = {'fitness': 42069, 'args': {}, 'weights': None}
-    all_runs = []
-
+    import pdb;pdb.set_trace()
+    print('o')
     # fit for each argument permutation
     # IF HYPERPARAMETERS ARE ADDED:
     #    note that aperm indexes hyperparams alphabetically
-    for aperm in product(*[*params.values()]):
-        args = {'model_type': aperm[0],
-                'imutpb': aperm[1],
-                'ngen': aperm[2],
-                'popsize': aperm[3],
-                'strategy': aperm[4],}
 
-        fit(model_type=args['model_type'],
-            strategy=args['strategy'],
-            imutpb=args['imutpb'],
-            popsize=args['popsize'],
-            ngen=args['ngen'],
-            novelty_metric='hamming' if args['strategy'] == 'nsr-es' else None,
-            grid_search=True)
-
-        # Create temp folder to house checkpoints
-        experiment_path = os.path.join(GRID_SEARCH_CHECKPOINTS_PATH, 'tmp')
-        last_gen = max([int(f.split('_')[-1].split('.')[0][3:]) for f in os.listdir(experiment_path)])
-        pkl_path = os.path.join(experiment_path, '{}.pkl'.format(last_gen))
-
-        with open(pkl_path, 'rb') as cp_file:
-            cp = pickle.load(cp_file)
-
-        halloffame = cp['halloffame']
-        fitness = halloffame.fitness.values[0]
-
-        if fitness < fittest['fitness']:
-            fittest['args'] = args
-            fittest['fitness'] = fitness
-            fittest['parameters'] = halloffame
-
-        args['fitness'] = fitness
-        all_runs.append(args)
-
-        rmtree(experiment_path)
-
-    fittest_pkl_path = os.path.join(experiment_path, 'fittest.pkl')
-    with open(fittest_pkl_path, 'w') as fittest_file:
-        pickle.dump([fittest, all_runs], fittest_file)
+#    for aperm in product(*[*HYPERPARAM_DICT.values()]):
+#        print('python experiment.py --model_type={} --imputpb={} --ngen={} --popsize={} strategy={} --novelty_metric={} --grid_search=True'.format(aperm[1], aperm[0], aperm[2], aperm[4], aperm[3], 'hamming' if aperm[4] == 'nsr-es' else None))
