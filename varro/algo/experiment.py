@@ -15,7 +15,6 @@ from varro.algo.predict import predict
 from varro.util.util import make_path
 from varro.util.variables import ABS_ALGO_EXP_LOGS_PATH, ABS_ALGO_HYPERPARAMS_PATH, ABS_ALGO_PREDICTIONS_PATH, DATE_NAME_FORMAT
 from varro.util.args import get_args
-from varro.algo.hyperparam_opt.grid_search import grid_search
 
 
 def main():
@@ -28,9 +27,7 @@ def main():
     args = get_args()
 
     if args.hyper_opt is not None:
-        if args.hyper_opt == 'grid_search':
-            grid_search()
-        elif args.hyper_opt == 'bayesian_opt':
+        if args.hyper_opt == 'bayesian_opt':
             raise NotImplementedError
         else:
             raise ValueError("Unknown hyperparameter optimization method.")
