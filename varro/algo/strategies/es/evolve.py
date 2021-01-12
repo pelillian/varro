@@ -74,6 +74,7 @@ def evolve(strategy,
     logger.log('imutpb_decay: {}'.format(strategy.imutpb_decay))
     logger.log('imutmu: {}'.format(strategy.imutmu))
     logger.log('imutsigma: {}'.format(strategy.imutsigma))
+    logger.log('lambda_penalty: {}'.format(strategy.lambda_penalty))
     logger.log('halloffamesize: {}'.format(strategy.halloffamesize))
     logger.log('earlystop: {}'.format(strategy.earlystop))
 
