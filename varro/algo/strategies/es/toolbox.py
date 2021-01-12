@@ -121,7 +121,7 @@ def es_toolbox(strategy_name,
 
         # POPULATION
         def init_population(ind_class, n):
-            pop = np.random.choice([False, True], size=(n, size))
+            pop = np.random.choice(np.array([False, True], dtype=np.bool), size=(n, size))
             return [ind_class(ind) for ind in pop]
         toolbox.register("population",
                          init_population,
