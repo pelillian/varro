@@ -285,7 +285,6 @@ def get_args():
     ######################################################################################
     # 22. Determine whether timing messages are logged
     ######################################################################################
-
     parser.add_argument('--use_timer',
                         default=False,
                         const=False,
@@ -293,6 +292,18 @@ def get_args():
                         action='store',
                         help='Determine whether timing messages are logged',
                         type=bool)
+    
+    ######################################################################################
+    # 23. λ penalization coefficient for Log Loss with Additive Absolute Difference of the predicted values
+    ######################################################################################
+    parser.add_argument('--lambda_penalty',
+                        default=100,
+                        const=100,
+                        nargs='?',
+                        metavar='LAMBDA-PENALTY',
+                        action='store',
+                        help='λ penalization coefficient for Log Loss with Additive Absolute Difference of the predicted values',
+                        type=float)
 
     settings = parser.parse_args()
 

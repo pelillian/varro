@@ -33,7 +33,8 @@ class Strategy(ABC):
                  ckpt,
                  halloffamesize,
                  novelty_metric,
-                 earlystop):
+                 earlystop, 
+                 lambda_penalty):
         """This class defines the strategy and the methods that come with that strategy."""
         self.name = name
         self.cxpb = cxpb
@@ -49,6 +50,7 @@ class Strategy(ABC):
         self.halloffamesize = halloffamesize
         self.earlystop = earlystop
         self.novelty_metric = novelty_metric
+        self.lambda_penalty = lambda_penalty
 
         # Storing model and problem
         self.model = model
@@ -164,7 +166,7 @@ class Strategy(ABC):
                                                       y_pred=np.argmax(y_pred, axis=-1))
             elif self.problem.name == 'simple_step':
                 # return self.log_loss(y_true=self.problem.y_train, y_pred=y_pred) - 100 * np.std(y_pred)
-                loss = Strategy.log_loss_with_abs_diff_penalty(y_true=self.problem.y_train, y_pred=y_pred) 
+                loss = Strategy.log_loss_with_abs_diff_penalty(y_true=self.problem.y_train, y_pred=y_pred, λ=self.lambda_penalty) 
                 if self.model.name == "fpga":
                     logger.log('{')
                     logger.log('Data:\n' + str(np.column_stack((y_pred, self.problem.y_train))))

@@ -29,6 +29,7 @@ def fit(model_type,
         novelty_metric=None,
         halloffamesize=None,
         earlystop=False,
+        lambda_penalty=100,
         grid_search=False):
     """Control center to call other modules to execute the optimization
 
@@ -50,6 +51,7 @@ def fit(model_type,
         novelty_metric (str): The distance metric to be used to measure an Individual's novelty
         halloffamesize (float): Percentage of individuals in population we store in the HallOfFame / Archive
         grid_search (bool): Whether grid search will be in effect
+        lambda_penalty (float): Penalty coefficient for log loss with absolute diff on y_preds
 
     Returns:
         fittest_ind_score: Scalar of the best individual in the population's fitness score
@@ -79,7 +81,7 @@ def fit(model_type,
     logger.start_timer()
 
     strategy_args = {
-	    'novelty_metric' : novelty_metric,
+            'novelty_metric' : novelty_metric,
             'model' : model,
             'problem' : problem,
             'cxpb' : cxpb,
@@ -94,7 +96,7 @@ def fit(model_type,
             'ckpt' : ckpt,
             'halloffamesize' : halloffamesize,
             'earlystop' : earlystop,
-	    'novelty_metric' : novelty_metric,
+            'lambda_penalty' : lambda_penalty,
     }
 
     # 3. Set Strategy

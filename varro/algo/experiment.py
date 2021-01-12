@@ -66,7 +66,8 @@ def main():
             ckpt_freq=args.ckpt_freq,
             novelty_metric=args.novelty_metric,
             halloffamesize=args.halloffamesize,
-            earlystop=args.earlystop)
+            earlystop=args.earlystop,
+            lambda_penalty=args.lambda_penalty)
         logger.stop_timer('EXPERIMENT.PY Fitting complete')
 
     else:
