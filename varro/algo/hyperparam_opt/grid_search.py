@@ -30,7 +30,7 @@ HYPERPARAM_DICT['popsize'] = [30, 5]
 HYPERPARAM_DICT['strategy'] = ['sga', 'nsr-es']
 HYPERPARAM_DICT['problem_type'] = ['simple_step']
 HYPERPARAM_DICT['imutpb_decay'] = [0.8, 0.9, 0.95, 0.99]
-HYPERPARAM_DICT['lambda_penalty'] = [10, 100, 1000]
+HYPERPARAM_DICT['lambda_penalty'] = [0, 10, 1000]
 
 def main():
     # fit for each argument permutation
