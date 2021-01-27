@@ -165,12 +165,13 @@ class Strategy(ABC):
                 categorical_accuracy = accuracy_score(y_true=self.problem.y_train,
                                                       y_pred=np.argmax(y_pred, axis=-1))
             elif self.problem.name == 'simple_step':
-                # return self.log_loss(y_true=self.problem.y_train, y_pred=y_pred) - 100 * np.std(y_pred)
+                logloss = log_loss(y_true=self.problem.y_train, y_pred=y_pred)
                 loss = Strategy.log_loss_with_abs_diff_penalty(y_true=self.problem.y_train, y_pred=y_pred, λ=self.lambda_penalty) 
                 if self.model.name == "fpga":
                     logger.log('{')
                     logger.log('Data:\n' + str(np.column_stack((y_pred, self.problem.y_train))))
                     logger.log('Loss: ' + str(loss))
+                    logger.log('Log Loss: ' + str(logloss))
                     logger.log('}')
                 return loss
             else:
