@@ -25,12 +25,12 @@ import os
 HYPERPARAM_DICT = {}
 HYPERPARAM_DICT['model_type'] = ['fpga']
 HYPERPARAM_DICT['imutpb'] = [1e-3, 1e-4, 1e-5]
-HYPERPARAM_DICT['ngen'] = [25]
+HYPERPARAM_DICT['ngen'] = [30]
 HYPERPARAM_DICT['popsize'] = [30, 5]
 HYPERPARAM_DICT['strategy'] = ['sga', 'nsr-es']
 HYPERPARAM_DICT['problem_type'] = ['simple_step']
 HYPERPARAM_DICT['imutpb_decay'] = [0.8, 0.9, 0.95, 0.99]
-HYPERPARAM_DICT['lambda_penalty'] = [0, 1000]
+HYPERPARAM_DICT['lambda_penalty'] = [0, 100, 1000]
 
 def main():
     # fit for each argument permutation
