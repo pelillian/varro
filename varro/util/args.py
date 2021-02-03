@@ -297,8 +297,8 @@ def get_args():
     # 23. λ penalization coefficient for Log Loss with Additive Absolute Difference of the predicted values
     ######################################################################################
     parser.add_argument('--lambda_penalty',
-                        default=100,
-                        const=100,
+                        default=0,
+                        const=0,
                         nargs='?',
                         metavar='LAMBDA-PENALTY',
                         action='store',
