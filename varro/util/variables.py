@@ -24,7 +24,7 @@ ABS_ALGO_TENSORBOARD_PATH = os.path.join(ROOT_DIR, 'logs/varro/algo/tensorboard'
 # of population in each generation of experiment
 EXPERIMENT_CHECKPOINTS_PATH = os.path.join(ROOT_DIR, 'checkpoints/varro/algo')
 
-DATE_NAME_FORMAT = "%Y-%b-%d-%H:%M:%S"
+DATE_NAME_FORMAT = "%Y-%m-%d-%H:%M:%S"
 
 # Grid Search
 
