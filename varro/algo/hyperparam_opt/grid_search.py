@@ -24,12 +24,13 @@ import os
 
 HYPERPARAM_DICT = {}
 HYPERPARAM_DICT['model_type'] = ['fpga']
-HYPERPARAM_DICT['imutpb'] = [1e-3, 1e-4, 1e-5]
-HYPERPARAM_DICT['ngen'] = [30]
-HYPERPARAM_DICT['popsize'] = [30, 5]
-HYPERPARAM_DICT['strategy'] = ['sga', 'nsr-es']
+HYPERPARAM_DICT['imutpb'] = [1e-2, 1e-4, 1e-6]
+HYPERPARAM_DICT['ngen'] = [50]
+HYPERPARAM_DICT['popsize'] = [50, 5]
+#HYPERPARAM_DICT['strategy'] = ['sga', 'nsr-es']
+HYPERPARAM_DICT['strategy'] = ['nsr-es']
 HYPERPARAM_DICT['problem_type'] = ['simple_step']
-HYPERPARAM_DICT['imutpb_decay'] = [0.8, 0.9, 0.95, 0.99]
+HYPERPARAM_DICT['imutpb_decay'] = [0.8, 0.95, 0.998]
 HYPERPARAM_DICT['lambda_penalty'] = [0]
 
 def main():

@@ -14,6 +14,7 @@ def initialize_connection():
 arduino = initialize_connection() # This has to be here
 
 def evaluate_arduino(datum):
+    import pdb; pdb.set_trace()
     send([datum])
     sleep(0.0075)
     return_value = receive()
